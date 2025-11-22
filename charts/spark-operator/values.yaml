@@ -1,0 +1,87 @@
+# Spark Operator Helm Chart Values
+# Chart: spark-operator/spark-operator
+
+# Image
+image:
+  repository: ghcr.io/kubeflow/spark-operator
+  tag: v1beta2-1.3.8-3.1.1
+  pullPolicy: IfNotPresent
+
+# Replicas
+replicaCount: 1
+
+# Spark Job Namespace
+sparkJobNamespace: "spark"
+
+# Resources
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+# Webhook Configuration
+webhook:
+  enable: true
+  port: 8080
+  namespaceSelector: ""
+
+# Controller Configuration
+controllerThreads: 10
+resyncInterval: 30
+
+# RBAC
+rbac:
+  create: true
+
+# ServiceAccount
+serviceAccounts:
+  spark:
+    create: true
+    name: "spark"
+  sparkoperator:
+    create: true
+    name: "spark-operator"
+
+# Metrics
+metrics:
+  enable: true
+  port: 10254
+  portName: metrics
+  endpoint: /metrics
+  prefix: ""
+
+# Leader Election
+leaderElection:
+  lockName: "spark-operator-lock"
+  lockNamespace: "spark-operator"
+
+# Batch Scheduler
+batchScheduler:
+  enable: false
+
+# Log Level
+logLevel: 2
+
+# Monitoring
+podMonitor:
+  enable: false
+  labels: {}
+  jobLabel: spark-operator-podmonitor
+
+# Security Context
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+# Node Selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}

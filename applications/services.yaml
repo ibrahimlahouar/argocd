@@ -8,7 +8,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/data-platform.git
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
     targetRevision: HEAD
     path: charts/minio
     helm:
@@ -34,7 +34,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/data-platform.git
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
     targetRevision: HEAD
     path: charts/vault
     helm:
@@ -60,7 +60,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/data-platform.git
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
     targetRevision: HEAD
     path: charts/trino
     helm:
@@ -86,7 +86,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/data-platform.git
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
     targetRevision: HEAD
     path: charts/headlamp
     helm:

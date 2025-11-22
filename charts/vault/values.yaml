@@ -1,0 +1,86 @@
+# HashiCorp Vault Helm Chart Values
+# Chart: hashicorp/vault
+
+global:
+  enabled: true
+  tlsDisable: true  # Dev mode
+
+injector:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+server:
+  # Dev Mode (pour POC/développement)
+  dev:
+    enabled: true
+    devRootToken: "root"
+  
+  # Image
+  image:
+    repository: hashicorp/vault
+    tag: "1.15.0"
+    pullPolicy: IfNotPresent
+  
+  # Resources
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  
+  # Service
+  service:
+    enabled: true
+    type: NodePort
+    port: 8200
+    targetPort: 8200
+    nodePort: 30820
+  
+  # Data Storage (pour mode non-dev)
+  dataStorage:
+    enabled: false  # Désactivé en mode dev
+    size: 10Gi
+    storageClass: longhorn
+    accessMode: ReadWriteOnce
+  
+  # HA Configuration (pour production)
+  ha:
+    enabled: false
+    replicas: 3
+    raft:
+      enabled: false
+  
+  # Standalone config (pour mode non-dev)
+  standalone:
+    enabled: false
+    config: |
+      ui = true
+      
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+      
+      storage "file" {
+        path = "/vault/data"
+      }
+
+  # UI
+  ui:
+    enabled: true
+    serviceType: NodePort
+    serviceNodePort: 30820
+
+# CSI Provider
+csi:
+  enabled: false

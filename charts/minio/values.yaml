@@ -1,0 +1,84 @@
+# MinIO Helm Chart Values
+# Chart: bitnami/minio ou custom
+
+## Authentication
+auth:
+  rootUser: minioadmin
+  rootPassword: minioadmin123
+
+## Deployment Mode
+# standalone ou distributed (HA)
+mode: standalone
+
+## Image
+image:
+  repository: minio/minio
+  tag: latest
+  pullPolicy: IfNotPresent
+
+## Persistence
+persistence:
+  enabled: true
+  size: 500Gi
+  storageClass: "longhorn"
+  accessMode: ReadWriteOnce
+
+## Service Configuration
+service:
+  type: NodePort
+  ports:
+    api: 9000
+    console: 9001
+  nodePorts:
+    api: 30900
+    console: 30901
+
+## Resources
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "1000m"
+  limits:
+    memory: "4Gi"
+    cpu: "2000m"
+
+## Buckets à créer automatiquement
+buckets:
+  - name: warehouse
+    policy: none
+    purge: false
+  - name: datalake
+    policy: none
+    purge: false
+  - name: airflow
+    policy: none
+    purge: false
+  - name: harbor
+    policy: none
+    purge: false
+
+## Security Context
+securityContext:
+  enabled: true
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsGroup: 1000
+
+## Ingress (disabled for now)
+ingress:
+  enabled: false
+
+## Metrics (Prometheus)
+metrics:
+  serviceMonitor:
+    enabled: false
+
+## Console Configuration
+consoleService:
+  type: NodePort
+  port: 9001
+
+## Environment Variables
+environment:
+  MINIO_PROMETHEUS_AUTH_TYPE: "public"
+  MINIO_BROWSER_REDIRECT_URL: "http://10.10.0.101:30901"

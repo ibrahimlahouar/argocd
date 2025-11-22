@@ -1,0 +1,77 @@
+# Headlamp Helm Chart Values
+# Chart: headlamp/headlamp
+
+# Replicas
+replicaCount: 1
+
+# Image
+image:
+  registry: ghcr.io
+  repository: headlamp-k8s/headlamp
+  tag: v0.21.0
+  pullPolicy: IfNotPresent
+
+# Service
+service:
+  type: NodePort
+  port: 80
+  targetPort: 4466
+  nodePort: 30098
+
+# Resources
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Configuration
+config:
+  baseURL: ""
+  pluginsDir: "/headlamp/plugins"
+  oidc:
+    enabled: false
+
+# ServiceAccount
+serviceAccount:
+  create: true
+  name: headlamp-admin
+  annotations: {}
+
+# RBAC
+clusterRoleBinding:
+  create: true
+  annotations: {}
+
+# Ingress
+ingress:
+  enabled: false
+
+# Persistence for plugins
+persistentVolumeClaim:
+  enabled: false
+  size: 1Gi
+  storageClassName: ""
+
+# Environment Variables
+env: []
+
+# Pod Annotations
+podAnnotations: {}
+
+# Security Context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 100
+  fsGroup: 101
+
+# Node Selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
