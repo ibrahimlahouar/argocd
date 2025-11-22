@@ -169,9 +169,44 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/docker-registry
-    targetRevision: main
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: harbor
+    targetRevision: 27.0.3
+    helm:
+      values: |
+        expose:
+          type: nodePort
+          tls:
+            enabled: false
+          nodePorts:
+            http: 30500
+        externalURL: http://10.10.0.101:30500
+        harborAdminPassword: "Harbor123!"
+        persistence:
+          enabled: true
+          resourcePolicy: "keep"
+          persistentVolumeClaim:
+            registry:
+              size: 100Gi
+              storageClass: local-path
+            jobservice:
+              size: 20Gi
+              storageClass: local-path
+            database:
+              size: 20Gi
+              storageClass: local-path
+            redis:
+              size: 8Gi
+              storageClass: local-path
+            trivy:
+              size: 20Gi
+              storageClass: local-path
+        metrics:
+          enabled: false
+        chartmuseum:
+          enabled: false
+        notary:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor
