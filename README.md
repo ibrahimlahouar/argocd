@@ -56,31 +56,31 @@ data-platform/
 ### Prérequis
 
 - Kubernetes cluster (v1.24+)
-- Helm 3.x
-- kubectl configuré
+- ArgoCD installé (`argocd` namespace)
+- `kubectl` configuré
 
-### Déployer un service
+### Déployer toute la plateforme (GitOps avec ArgoCD)
 
 ```bash
-# Exemple: Déployer MinIO
-cd charts/minio
-helm install minio . -f values.yaml -n minio --create-namespace
+# Appliquer l'application racine ArgoCD
+kubectl apply -n argocd -f root-app.yaml
 
-# Avec des valeurs personnalisées
-helm install minio . -f values-dev.yaml -n minio --create-namespace
+# ArgoCD va créer et synchroniser automatiquement :
+# - MinIO (chart officiel minio/minio)
+# - Registry (déploiement simple docker-registry)
+# - Vault, Trino, Headlamp, Spark Operator
 ```
 
-### Mettre à jour un service
+### Gérer un service (exemple MinIO)
 
 ```bash
-cd charts/minio
-helm upgrade minio . -f values.yaml -n minio
-```
+# Voir l'état de l'application MinIO
+kubectl get application minio -n argocd
 
-### Désinstaller un service
-
-```bash
-helm uninstall minio -n minio
+# Forcer une resynchronisation
+kubectl patch application minio -n argocd \
+  --type merge \
+  -p '{"operation": {"sync": {"prune": true}}}'
 ```
 
 ## 📊 Architecture

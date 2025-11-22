@@ -35,6 +35,7 @@ function start_tunnels() {
         # Mode foreground pour launchd
         echo "Mode foreground activé..."
         ssh -N $SSH_OPTS \
+            -L 6443:10.10.0.101:6443 \
             -L 8080:10.10.0.101:30098 \
             -L 9001:10.10.0.101:30901 \
             -L 9000:10.10.0.101:30900 \
@@ -48,6 +49,7 @@ function start_tunnels() {
         # Mode background (défaut)
         # Créer le tunnel multi-ports
         ssh -N -f $SSH_OPTS \
+            -L 6443:10.10.0.101:6443 \
             -L 8080:10.10.0.101:30098 \
             -L 9001:10.10.0.101:30901 \
             -L 9000:10.10.0.101:30900 \
@@ -118,6 +120,10 @@ function show_status() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo -e "${BLUE}🌐 Services disponibles:${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo -e "${GREEN}0. Kubernetes API Server${NC}"
+    echo "   🔗 https://localhost:6443"
+    echo "   ☸️  Utilisez: kubectl config set-cluster default --server=https://localhost:6443 --insecure-skip-tls-verify=true"
     echo ""
     echo -e "${GREEN}1. Headlamp (Kubernetes UI)${NC}"
     echo "   🔗 http://localhost:8080"

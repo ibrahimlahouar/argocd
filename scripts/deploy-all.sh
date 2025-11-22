@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Script de déploiement de tous les services
+# Script historique de déploiement de tous les services via charts locaux Helm.
+# ⚠️ Aujourd'hui, la plateforme est gérée en GitOps via ArgoCD (voir root-app.yaml).
+# Usage recommandé: appliquer root-app.yaml plutôt que ce script.
 # Usage: ./deploy-all.sh [environment]
 
 set -e
@@ -54,14 +56,14 @@ deploy_chart() {
 
 # Déployer dans l'ordre (dépendances d'abord)
 
-# 1. Stockage
-deploy_chart "minio" "minio"
+# 1. Stockage (déployé maintenant via ArgoCD, laissé ici pour compatibilité éventuelle)
+# deploy_chart "minio" "minio"
 
 # 2. Sécurité
 deploy_chart "vault" "vault"
 
-# 3. Registry
-deploy_chart "docker-registry" "harbor"
+# 3. Registry (déployé maintenant via ArgoCD sous forme de manifests)
+# deploy_chart "docker-registry" "harbor"
 
 # 4. Compute
 deploy_chart "spark-operator" "spark-operator"

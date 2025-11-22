@@ -78,12 +78,12 @@ cat >> "$OUTPUT_DIR/README.md" <<EOF
 
 ## Restauration
 
-Pour restaurer un service:
+La restauration recommandée consiste à réappliquer la configuration GitOps (ArgoCD)
+et à laisser ArgoCD resynchroniser les applications (MinIO, registry, etc.).
 
 \`\`\`bash
-# Exemple pour MinIO
-kubectl create namespace minio
-helm install minio ./charts/minio -n minio -f $OUTPUT_DIR/minio/minio-values.yaml
+# Exemple: re-déployer la plateforme complète
+kubectl apply -n argocd -f root-app.yaml
 \`\`\`
 
 ## Fichiers
