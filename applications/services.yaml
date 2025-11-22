@@ -13,6 +13,8 @@ spec:
     targetRevision: 14.6.2
     helm:
       values: |
+        image:
+          tag: latest
         auth:
           rootUser: minioadmin
           rootPassword: minioadmin123
