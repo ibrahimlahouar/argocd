@@ -10,10 +10,12 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: minio
-    targetRevision: 14.6.2
+    targetRevision: 14.8.0
     helm:
       values: |
         image:
+          registry: docker.io
+          repository: bitnami/minio
           tag: latest
         auth:
           rootUser: minioadmin
