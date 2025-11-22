@@ -171,25 +171,42 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/twuni/docker-registry-helm
-    targetRevision: HEAD
-    path: .
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: harbor
+    targetRevision: 20.3.0
     helm:
       values: |
         service:
           type: NodePort
-          nodePort: 30500
+          ports:
+            http: 80
+            https: 443
+          nodePorts:
+            http: 30500
+            https: 30501
         persistence:
           enabled: true
-          size: 100Gi
-          storageClass: "local-path"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "200m"
+          resourcePolicy: "keep"
+          persistentVolumeClaim:
+            registry:
+              size: 10Gi
+              storageClass: "local-path"
+            jobservice:
+              size: 1Gi
+              storageClass: "local-path"
+            database:
+              size: 1Gi
+              storageClass: "local-path"
+            redis:
+              size: 1Gi
+              storageClass: "local-path"
+            trivy:
+              size: 5Gi
+              storageClass: "local-path"
+        expose:
+          type: NodePort
+          tls:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor
