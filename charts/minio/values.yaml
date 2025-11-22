@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: minio/minio
+  repository: docker-registry.harbor.svc:5000/data-platform/minio
   tag: "RELEASE.2024-08-29T01-40-52Z"
   pullPolicy: IfNotPresent
 

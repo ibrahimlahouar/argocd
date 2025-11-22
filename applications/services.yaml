@@ -42,6 +42,13 @@ spec:
           service:
             type: NodePort
             nodePort: 30820
+          image:
+            repository: docker-registry.harbor.svc:5000/data-platform/vault
+            tag: "1.15.2"
+        injector:
+          image:
+            repository: docker-registry.harbor.svc:5000/data-platform/vault-k8s
+            tag: "1.3.1"
           resources:
             requests:
               memory: "256Mi"
@@ -83,6 +90,9 @@ spec:
         service:
           type: NodePort
           nodePort: 30808
+        image:
+          repository: docker-registry.harbor.svc:5000/data-platform/trino
+          tag: "432"
         coordinator:
           resources:
             requests:
@@ -128,6 +138,10 @@ spec:
         service:
           type: NodePort
           nodePort: 30880
+        image:
+          registry: docker-registry.harbor.svc:5000
+          repository: data-platform/headlamp
+          tag: v0.24.1
         resources:
           requests:
             memory: "128Mi"
@@ -184,6 +198,9 @@ spec:
     helm:
       values: |
         sparkJobNamespace: spark
+        image:
+          repository: docker-registry.harbor.svc:5000/data-platform/spark-operator
+          tag: v1beta2-1.3.8-3.1.1
         webhook:
           enable: true
         resources:
