@@ -175,7 +175,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://helm.twun.io
+    repoURL: https://distribution.github.io/distribution
     chart: docker-registry
     targetRevision: 2.2.3
     helm:
@@ -216,7 +216,6 @@ spec:
   source:
     repoURL: https://kubeflow.github.io/spark-operator
     chart: spark-operator
-    targetRevision: 1.4.8
     helm:
       values: |
         sparkJobNamespace: spark
