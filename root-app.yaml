@@ -13,6 +13,8 @@ spec:
     path: .
     directory:
       recurse: true
+      exclude: |
+        charts/**
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
