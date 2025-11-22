@@ -13,10 +13,6 @@ spec:
     targetRevision: 14.8.0
     helm:
       values: |
-        image:
-          registry: docker.io
-          repository: bitnami/minio
-          tag: latest
         auth:
           rootUser: minioadmin
           rootPassword: minioadmin123
