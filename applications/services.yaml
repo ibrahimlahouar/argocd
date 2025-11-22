@@ -8,28 +8,23 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://charts.bitnami.com/bitnami
+    repoURL: https://charts.min.io/
     chart: minio
-    targetRevision: 14.8.0
+    targetRevision: 5.0.16
     helm:
       values: |
-        image:
-          registry: docker.io
-          repository: minio/minio
-          tag: RELEASE.2024-01-18T22-51-28Z
-        auth:
-          rootUser: minioadmin
-          rootPassword: minioadmin123
-        mode: standalone
+        rootUser: minioadmin
+        rootPassword: minioadmin123
         persistence:
           enabled: true
           size: 500Gi
           storageClass: "local-path"
         service:
           type: NodePort
-          nodePorts:
-            api: 30900
-            console: 30901
+          nodePort: 30900
+        consoleService:
+          type: NodePort
+          nodePort: 30901
         resources:
           requests:
             memory: "2Gi"
@@ -175,9 +170,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://twuni.github.io/docker-registry-helm/
-    chart: docker-registry
-    targetRevision: 2.2.3
+    repoURL: https://github.com/twuni/docker-registry-helm.git
+    targetRevision: HEAD
+    path: .
     helm:
       values: |
         service:
