@@ -20,7 +20,7 @@ spec:
         persistence:
           enabled: true
           size: 500Gi
-          storageClass: "longhorn"
+          storageClass: "local-path"
         service:
           type: NodePort
           nodePorts:
@@ -136,7 +136,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://headlamp-k8s.github.io/headlamp/
+    repoURL: https://kubernetes-sigs.github.io/headlamp
     chart: headlamp
     targetRevision: 0.23.0
     helm:
@@ -171,7 +171,7 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://charts.helm.sh/stable
+    repoURL: https://helm.twun.io
     chart: docker-registry
     targetRevision: 2.2.3
     helm:
@@ -182,7 +182,7 @@ spec:
         persistence:
           enabled: true
           size: 100Gi
-          storageClass: "longhorn"
+          storageClass: "local-path"
         resources:
           requests:
             memory: "256Mi"
@@ -210,9 +210,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
+    repoURL: https://kubeflow.github.io/spark-operator
     chart: spark-operator
-    targetRevision: 1.1.27
+    targetRevision: 1.4.8
     helm:
       values: |
         sparkJobNamespace: spark
