@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: minio
-    targetRevision: 17.0.21
+    targetRevision: 14.8.0
     helm:
       values: |
         auth:
@@ -173,7 +173,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: harbor
-    targetRevision: 27.0.3
+    targetRevision: 25.0.0
     helm:
       values: |
         service:
