@@ -1,13 +1,7 @@
 apiVersion: v2
 name: minio
-description: MinIO - Object Storage (wrapper chart for official minio/minio)
+description: MinIO - simple single-node object storage for the data platform
 type: application
 version: 1.0.0
-appVersion: "RELEASE.2024-12-18T13-15-44Z"
-
-dependencies:
-  - name: minio
-    version: "5.4.0"
-    repository: https://charts.min.io/
-
+appVersion: "RELEASE.2024-08-29T01-40-52Z"
 

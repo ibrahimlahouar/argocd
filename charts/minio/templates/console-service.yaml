@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-console
+  labels:
+    app: minio
+spec:
+  type: {{ .Values.consoleService.type }}
+  selector:
+    app: minio
+  ports:
+    - name: console
+      port: {{ .Values.consoleService.port }}
+      targetPort: console
+      nodePort: {{ .Values.consoleService.nodePort }}
+
+
