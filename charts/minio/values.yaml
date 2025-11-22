@@ -1,34 +1,32 @@
-# Wrapper values for official minio/minio chart
+minio:
+  rootUser: minioadmin
+  rootPassword: minioadmin123
 
-rootUser: minioadmin
-rootPassword: minioadmin123
+  mode: standalone
+  drivesPerNode: 1
+  replicas: 1
+  pools: 1
 
-mode: standalone
-drivesPerNode: 1
-replicas: 1
-pools: 1
+  persistence:
+    enabled: true
+    size: 100Gi
+    storageClass: "local-path"
 
-persistence:
-  enabled: true
-  size: 500Gi
-  storageClass: "local-path"
+  service:
+    type: NodePort
+    port: "9000"
+    nodePort: 30900
 
-service:
-  type: NodePort
-  port: "9000"
-  nodePort: 30900
+  consoleService:
+    type: NodePort
+    port: "9001"
+    nodePort: 30901
 
-consoleService:
-  type: NodePort
-  port: "9001"
-  nodePort: 30901
-
-resources:
-  requests:
-    memory: "2Gi"
-    cpu: "1000m"
-  limits:
-    memory: "4Gi"
-    cpu: "2000m"
-
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "500m"
+    limits:
+      memory: "4Gi"
+      cpu: "1000m"
 
