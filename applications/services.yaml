@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: minio
-    targetRevision: 12.13.4
+    targetRevision: 14.6.2
     helm:
       values: |
         auth:
@@ -136,9 +136,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://headlamp-k8s.github.io/headlamp
+    repoURL: https://headlamp-k8s.github.io/headlamp/
     chart: headlamp
-    targetRevision: 0.20.0
+    targetRevision: 0.23.0
     helm:
       values: |
         service:
@@ -171,9 +171,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://helm.twun.io
+    repoURL: https://charts.helm.sh/stable
     chart: docker-registry
-    targetRevision: 2.2.2
+    targetRevision: 2.2.3
     helm:
       values: |
         service:
