@@ -1,0 +1,10 @@
+apiVersion: v2
+name: docker-registry
+description: Docker Registry for container image storage
+type: application
+version: 1.0.0
+appVersion: "2.8.3"
+dependencies:
+  - name: docker-registry
+    version: "2.2.2"
+    repository: https://helm.twun.io

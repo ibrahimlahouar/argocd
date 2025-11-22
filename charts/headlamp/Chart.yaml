@@ -1,0 +1,10 @@
+apiVersion: v2
+name: headlamp
+description: Kubernetes UI for cluster management
+type: application
+version: 1.0.0
+appVersion: "0.20.0"
+dependencies:
+  - name: headlamp
+    version: "0.20.0"
+    repository: https://headlamp-k8s.github.io/headlamp/
