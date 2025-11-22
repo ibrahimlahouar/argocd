@@ -178,35 +178,40 @@ spec:
           type: nodePort
           tls:
             enabled: false
-          nodePorts:
-            http: 30500
+          nodePort:
+            ports:
+              http:
+                nodePort: 30500
+              https:
+                nodePort: 30501
         externalURL: http://10.10.0.101:30500
         harborAdminPassword: "Harbor123!"
-        persistence:
-          enabled: true
-          resourcePolicy: "keep"
-          persistentVolumeClaim:
-            registry:
-              size: 100Gi
-              storageClass: local-path
-            jobservice:
-              size: 20Gi
-              storageClass: local-path
-            database:
-              size: 20Gi
-              storageClass: local-path
-            redis:
-              size: 8Gi
-              storageClass: local-path
-            trivy:
-              size: 20Gi
-              storageClass: local-path
-        metrics:
-          enabled: false
         chartmuseum:
           enabled: false
         notary:
           enabled: false
+        persistence:
+          enabled: true
+          persistentVolumeClaim:
+            registry:
+              storageClass: local-path
+              size: 100Gi
+            jobservice:
+              jobLog:
+                storageClass: local-path
+                size: 20Gi
+              scanDataExports:
+                storageClass: local-path
+                size: 20Gi
+            database:
+              storageClass: local-path
+              size: 20Gi
+            redis:
+              storageClass: local-path
+              size: 8Gi
+            trivy:
+              storageClass: local-path
+              size: 20Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor
