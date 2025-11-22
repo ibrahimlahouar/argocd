@@ -8,12 +8,31 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    targetRevision: HEAD
-    path: charts/minio
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: minio
+    targetRevision: 12.13.4
     helm:
-      valueFiles:
-      - values.yaml
+      values: |
+        auth:
+          rootUser: minioadmin
+          rootPassword: minioadmin123
+        mode: standalone
+        persistence:
+          enabled: true
+          size: 500Gi
+          storageClass: "longhorn"
+        service:
+          type: NodePort
+          nodePorts:
+            api: 30900
+            console: 30901
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
   destination:
     server: https://kubernetes.default.svc
     namespace: minio
@@ -34,12 +53,24 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    targetRevision: HEAD
-    path: charts/vault
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: 0.27.0
     helm:
-      valueFiles:
-      - values.yaml
+      values: |
+        server:
+          dev:
+            enabled: true
+          service:
+            type: NodePort
+            nodePort: 30820
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
   destination:
     server: https://kubernetes.default.svc
     namespace: vault
@@ -60,12 +91,31 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    targetRevision: HEAD
-    path: charts/trino
+    repoURL: https://trinodb.github.io/charts
+    chart: trino
+    targetRevision: 0.19.0
     helm:
-      valueFiles:
-      - values.yaml
+      values: |
+        service:
+          type: NodePort
+          nodePort: 30808
+        coordinator:
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+        worker:
+          replicas: 2
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
   destination:
     server: https://kubernetes.default.svc
     namespace: trino
@@ -86,12 +136,21 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    targetRevision: HEAD
-    path: charts/headlamp
+    repoURL: https://headlamp-k8s.github.io/headlamp
+    chart: headlamp
+    targetRevision: 0.20.0
     helm:
-      valueFiles:
-      - values.yaml
+      values: |
+        service:
+          type: NodePort
+          nodePort: 30880
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp
@@ -112,12 +171,25 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/data-platform.git
-    targetRevision: HEAD
-    path: charts/docker-registry
+    repoURL: https://helm.twun.io
+    chart: docker-registry
+    targetRevision: 2.2.2
     helm:
-      valueFiles:
-      - values.yaml
+      values: |
+        service:
+          type: NodePort
+          nodePort: 30500
+        persistence:
+          enabled: true
+          size: 100Gi
+          storageClass: "longhorn"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor
@@ -138,12 +210,21 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://github.com/ibrahimlahouar/data-platform.git
-    targetRevision: HEAD
-    path: charts/spark-operator
+    repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
+    chart: spark-operator
+    targetRevision: 1.1.27
     helm:
-      valueFiles:
-      - values.yaml
+      values: |
+        sparkJobNamespace: spark
+        webhook:
+          enable: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
   destination:
     server: https://kubernetes.default.svc
     namespace: spark-operator
