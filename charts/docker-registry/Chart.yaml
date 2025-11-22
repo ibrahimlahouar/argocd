@@ -1,0 +1,8 @@
+apiVersion: v2
+name: docker-registry
+description: Simple Docker Registry for the data platform
+type: application
+version: 1.0.0
+appVersion: "2"
+
+

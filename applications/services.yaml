@@ -8,36 +8,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://charts.min.io/
-    chart: minio
-    targetRevision: 5.4.0
-    helm:
-      values: |
-        rootUser: minioadmin
-        rootPassword: minioadmin123
-        mode: standalone
-        drivesPerNode: 1
-        replicas: 1
-        pools: 1
-        persistence:
-          enabled: true
-          size: 500Gi
-          storageClass: "local-path"
-        service:
-          type: NodePort
-          port: "9000"
-          nodePort: 30900
-        consoleService:
-          type: NodePort
-          port: "9001"
-          nodePort: 30901
-        resources:
-          requests:
-            memory: "2Gi"
-            cpu: "1000m"
-          limits:
-            memory: "4Gi"
-            cpu: "2000m"
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/minio
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: minio
@@ -177,7 +150,7 @@ spec:
   project: data-platform
   source:
     repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: manifests/docker-registry
+    path: charts/docker-registry
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
