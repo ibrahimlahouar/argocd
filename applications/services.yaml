@@ -169,9 +169,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: harbor
-    targetRevision: 27.0.3
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/harbor
+    targetRevision: main
     helm:
       values: |
         expose:
