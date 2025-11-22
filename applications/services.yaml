@@ -216,6 +216,7 @@ spec:
   source:
     repoURL: https://kubeflow.github.io/spark-operator
     chart: spark-operator
+    targetRevision: 1.1.27
     helm:
       values: |
         sparkJobNamespace: spark
