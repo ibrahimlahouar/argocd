@@ -10,11 +10,9 @@ spec:
   source:
     repoURL: https://github.com/ibrahimlahouar/argocd.git
     targetRevision: HEAD
-    path: .
+    path: applications
     directory:
       recurse: true
-      exclude: |
-        charts/**
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
