@@ -16,6 +16,8 @@ injector:
     repository: 10.10.0.101:30500/data-platform/vault-k8s
     tag: "1.3.1"
     pullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: harbor-registry
   agentDefaults:
     cpuLimit: "500m"
     cpuRequest: "250m"
