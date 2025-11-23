@@ -40,6 +40,9 @@ config:
     clientSecret: ""
     issuerURL: ""
     scopes: ""
+    externalSecret:
+      enabled: false
+      name: ""
 
 # ServiceAccount
 serviceAccount:
