@@ -39,6 +39,9 @@ injector:
     caBundle: ""
     certName: tls.crt
     keyName: tls.key
+  securityContext:
+    pod: {}
+    container: {}
 
 server:
   # Dev Mode (pour POC/développement)
