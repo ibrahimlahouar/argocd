@@ -18,7 +18,7 @@ image:
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
-  - harbor-registry
+  - name: harbor-registry
 # - name: "image-pull-secret"
 
 ## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
