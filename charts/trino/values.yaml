@@ -4,12 +4,17 @@
 # Image
 image:
   repository: 10.10.0.101:30500/data-platform/trino
-  tag: "435"
+  tag: "432"
   pullPolicy: IfNotPresent
+
+# ImagePullSecrets
+imagePullSecrets:
+  - name: harbor-registry
 
 # Server Configuration
 server:
-  workers: 3
+  workers: 2
+  coordinatorExtraConfig: ""
   node:
     environment: production
     dataDir: /data/trino
@@ -26,6 +31,7 @@ server:
       level: INFO
   config:
     path: /etc/trino
+    authenticationType: ""
     http:
       port: 8080
     https:
@@ -130,6 +136,9 @@ additionalCatalogs:
 # Security
 auth:
   enabled: false
+
+# Access Control
+accessControl: {}
 
 # Ingress
 ingress:

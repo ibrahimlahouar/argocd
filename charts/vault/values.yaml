@@ -16,6 +16,14 @@ injector:
     repository: 10.10.0.101:30500/data-platform/vault-k8s
     tag: "1.3.1"
     pullPolicy: IfNotPresent
+  agentDefaults:
+    cpuLimit: "500m"
+    cpuRequest: "250m"
+    memLimit: "128Mi"
+    memRequest: "64Mi"
+    template: "map"
+    templateConfig:
+      exitOnRetryFailure: true
   resources:
     requests:
       memory: 256Mi
@@ -41,12 +49,30 @@ injector:
     keyName: tls.key
   agentImage:
     repository: "10.10.0.101:30500/data-platform/vault"
-    tag: "1.15.0"
+    tag: "1.15.2"
   securityContext:
     pod: {}
     container: {}
   metrics:
     enabled: false
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 3
+    successThreshold: 1
+    timeoutSeconds: 5
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 3
+    successThreshold: 1
+    timeoutSeconds: 5
+  startupProbe:
+    failureThreshold: 12
+    initialDelaySeconds: 5
+    periodSeconds: 3
+    successThreshold: 1
+    timeoutSeconds: 5
 
 server:
   # Dev Mode (pour POC/développement)
@@ -57,8 +83,12 @@ server:
   # Image
   image:
     repository: 10.10.0.101:30500/data-platform/vault
-    tag: "1.15.0"
+    tag: "1.15.2"
     pullPolicy: IfNotPresent
+  
+  # ImagePullSecrets
+  imagePullSecrets:
+    - name: harbor-registry
   
   # Resources
   resources:

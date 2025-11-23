@@ -11,6 +11,10 @@ image:
   tag: v0.24.1
   pullPolicy: IfNotPresent
 
+# ImagePullSecrets
+imagePullSecrets:
+  - harbor-registry
+
 # Service
 service:
   type: NodePort
