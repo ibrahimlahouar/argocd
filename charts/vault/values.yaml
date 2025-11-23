@@ -10,7 +10,7 @@ global:
     enable: false
 
 injector:
-  enabled: true
+  enabled: false
   replicas: 1
   image:
     repository: 10.10.0.101:30500/data-platform/vault-k8s
