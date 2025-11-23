@@ -17,6 +17,10 @@ server:
   
   workerExtraConfig: ""
   
+  exchangeManager:
+    name: "filesystem"
+    baseDir: "/tmp/trino-local-file-system-exchange-manager"
+
   log:
     trino:
       level: INFO
