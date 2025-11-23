@@ -1,283 +1,115 @@
-# 🔍 Trino - Distributed SQL Query Engine
 
-Trino (anciennement PrestoSQL) est un moteur de requêtes SQL distribué pour interroger des données à grande échelle.
+Trino
+===========
+
+Fast distributed SQL query engine for big data analytics that helps you explore your data universe
+
+
+## Configuration
+
+The following table lists the configurable parameters of the Trino chart and their default values.
+
+| Parameter                | Description             | Default        |
+| ------------------------ | ----------------------- | -------------- |
+| `image.registry` | Image registry, defaults to empty, which results in DockerHub usage | `""` |
+| `image.repository` | Repository location of the Trino image, typically `organization/imagename` | `"trinodb/trino"` |
+| `image.tag` | Image tag, defaults to the Trino release version specified as `appVersion` from Chart.yaml | `""` |
+| `image.digest` | Optional digest value of the image specified as `sha256:abcd...`. A specified value overrides `tag`. | `""` |
+| `image.useRepositoryAsSoleImageReference` | When true, only the content in `repository` is used as image reference | `false` |
+| `image.pullPolicy` |  | `"IfNotPresent"` |
+| `imagePullSecrets` |  | `[{"name": "registry-credentials"}]` |
+| `server.workers` |  | `2` |
+| `server.node.environment` |  | `"production"` |
+| `server.node.dataDir` |  | `"/data/trino"` |
+| `server.node.pluginDir` |  | `"/usr/lib/trino/plugin"` |
+| `server.log.trino.level` |  | `"INFO"` |
+| `server.config.path` |  | `"/etc/trino"` |
+| `server.config.http.port` |  | `8080` |
+| `server.config.https.enabled` |  | `false` |
+| `server.config.https.port` |  | `8443` |
+| `server.config.https.keystore.path` |  | `""` |
+| `server.config.authenticationType` |  | `""` |
+| `server.config.query.maxMemory` |  | `"4GB"` |
+| `server.exchangeManager.name` |  | `"filesystem"` |
+| `server.exchangeManager.baseDir` |  | `"/tmp/trino-local-file-system-exchange-manager"` |
+| `server.workerExtraConfig` |  | `""` |
+| `server.coordinatorExtraConfig` |  | `""` |
+| `server.autoscaling.enabled` |  | `false` |
+| `server.autoscaling.maxReplicas` |  | `5` |
+| `server.autoscaling.targetCPUUtilizationPercentage` |  | `50` |
+| `server.autoscaling.behavior` |  | `{}` |
+| `accessControl` |  | `{}` |
+| `resourceGroups` |  | `{}` |
+| `additionalNodeProperties` |  | `{}` |
+| `additionalConfigProperties` |  | `{}` |
+| `additionalLogProperties` |  | `{}` |
+| `additionalExchangeManagerProperties` |  | `{}` |
+| `eventListenerProperties` |  | `{}` |
+| `additionalCatalogs` |  | `{}` |
+| `env` |  | `[]` |
+| `envFrom` |  | `[]` |
+| `initContainers` |  | `{}` |
+| `sidecarContainers` |  | `{}` |
+| `securityContext.runAsUser` |  | `1000` |
+| `securityContext.runAsGroup` |  | `1000` |
+| `shareProcessNamespace.coordinator` |  | `false` |
+| `shareProcessNamespace.worker` |  | `false` |
+| `service.type` |  | `"ClusterIP"` |
+| `service.port` |  | `8080` |
+| `auth` |  | `{}` |
+| `serviceAccount.create` |  | `false` |
+| `serviceAccount.name` |  | `""` |
+| `serviceAccount.annotations` |  | `{}` |
+| `secretMounts` |  | `[]` |
+| `coordinator.jvm.maxHeapSize` |  | `"8G"` |
+| `coordinator.jvm.gcMethod.type` |  | `"UseG1GC"` |
+| `coordinator.jvm.gcMethod.g1.heapRegionSize` |  | `"32M"` |
+| `coordinator.config.memory.heapHeadroomPerNode` |  | `""` |
+| `coordinator.config.query.maxMemoryPerNode` |  | `"1GB"` |
+| `coordinator.additionalJVMConfig` |  | `{}` |
+| `coordinator.additionalExposedPorts` |  | `{}` |
+| `coordinator.resources` |  | `{}` |
+| `coordinator.livenessProbe` |  | `{}` |
+| `coordinator.readinessProbe` |  | `{}` |
+| `coordinator.nodeSelector` |  | `{}` |
+| `coordinator.tolerations` |  | `[]` |
+| `coordinator.affinity` |  | `{}` |
+| `coordinator.additionalConfigFiles` |  | `{}` |
+| `coordinator.additionalVolumes` | One or more additional volumes to add to the coordinator. | `[]` |
+| `coordinator.additionalVolumeMounts` | One or more additional volume mounts to add to the coordinator. | `[]` |
+| `coordinator.annotations` |  | `{}` |
+| `coordinator.labels` |  | `{}` |
+| `coordinator.secretMounts` |  | `[]` |
+| `worker.jvm.maxHeapSize` |  | `"8G"` |
+| `worker.jvm.gcMethod.type` |  | `"UseG1GC"` |
+| `worker.jvm.gcMethod.g1.heapRegionSize` |  | `"32M"` |
+| `worker.config.memory.heapHeadroomPerNode` |  | `""` |
+| `worker.config.query.maxMemoryPerNode` |  | `"1GB"` |
+| `worker.additionalJVMConfig` |  | `{}` |
+| `worker.additionalExposedPorts` |  | `{}` |
+| `worker.resources` |  | `{}` |
+| `worker.livenessProbe` |  | `{}` |
+| `worker.readinessProbe` |  | `{}` |
+| `worker.nodeSelector` |  | `{}` |
+| `worker.tolerations` |  | `[]` |
+| `worker.affinity` |  | `{}` |
+| `worker.additionalConfigFiles` |  | `{}` |
+| `worker.additionalVolumes` | One or more additional volume mounts to add to all workers. | `[]` |
+| `worker.additionalVolumeMounts` | One or more additional volume mounts to add to all workers. | `[]` |
+| `worker.annotations` |  | `{}` |
+| `worker.labels` |  | `{}` |
+| `worker.secretMounts` |  | `[]` |
+| `kafka.mountPath` |  | `"/etc/trino/schemas"` |
+| `kafka.tableDescriptions` |  | `{}` |
+| `commonLabels` | Labels that get applied to every resource's metadata | `{}` |
+| `ingress.enabled` |  | `false` |
+| `ingress.className` |  | `""` |
+| `ingress.annotations` |  | `{}` |
+| `ingress.hosts` |  | `[]` |
+| `ingress.tls` |  | `[]` |
 
-## 📋 Informations
 
-- **Namespace**: `trino`
-- **Chart Source**: `trino/trino`
-- **Version**: Latest (460+)
-- **Image**: `trinodb/trino:latest`
-- **Port**: 8080
-
-## 🎯 Architecture
-
-```
-┌─────────────────────────────────────┐
-│         Trino Coordinator           │
-│  • Query planning                   │
-│  • Query execution orchestration    │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│         Trino Workers (3x)          │
-│  • Data processing                  │
-│  • Query execution                  │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│         Data Sources                │
-│  • MinIO (Iceberg tables)           │
-│  • PostgreSQL                       │
-│  • MySQL                            │
-└─────────────────────────────────────┘
-```
-
-## 🚀 Installation
-
-### Via Helm Chart Official
-
-```bash
-# Ajouter le repository Trino
-helm repo add trino https://trinodb.github.io/charts
-helm repo update
-
-# Installer Trino
-helm install trino trino/trino \
-  --namespace trino \
-  --create-namespace \
-  --values values.yaml
-
-# Vérifier le déploiement
-kubectl get pods -n trino
-```
-
-### Installation Rapide (version par défaut)
-
-```bash
-kubectl create namespace trino
-helm install trino trino/trino -n trino
-```
-
-## ⚙️ Configuration
-
-### Coordinator Config
-
-```properties
-# config.properties
-coordinator=true
-node-scheduler.include-coordinator=false
-http-server.http.port=8080
-discovery.uri=http://localhost:8080
-```
-
-### Worker Config
-
-```properties
-# config.properties
-coordinator=false
-http-server.http.port=8080
-discovery.uri=http://trino:8080
-```
-
-### JVM Config
-
-```
-# jvm.config
--server
--Xmx8G
--XX:+UseG1GC
--XX:G1HeapRegionSize=32M
--XX:+UseGCOverheadLimit
--XX:+ExplicitGCInvokesConcurrent
-```
-
-### Catalogs
-
-#### MinIO / Iceberg
-
-```properties
-# catalog/iceberg.properties
-connector.name=iceberg
-iceberg.catalog.type=hadoop
-hive.metastore.uri=thrift://hive-metastore:9083
-iceberg.file-format=PARQUET
-hive.s3.endpoint=http://minio.minio.svc:9000
-hive.s3.path-style-access=true
-hive.s3.aws-access-key=minioadmin
-hive.s3.aws-secret-key=minioadmin123
-```
-
-#### PostgreSQL
-
-```properties
-# catalog/postgresql.properties
-connector.name=postgresql
-connection-url=jdbc:postgresql://postgres:5432/mydb
-connection-user=admin
-connection-password=password
-```
-
-## 🔧 Utilisation
-
-### Via CLI
-
-```bash
-# Installer Trino CLI
-curl -o trino https://repo1.maven.org/maven2/io/trino/trino-cli/469/trino-cli-469-executable.jar
-chmod +x trino
-
-# Se connecter
-./trino --server http://10.10.0.101:8080 --user admin
-
-# Ou depuis le cluster
-kubectl exec -it -n trino trino-coordinator-0 -- trino
-```
-
-### Requêtes Exemple
-
-```sql
--- Voir les catalogs
-SHOW CATALOGS;
-
--- Voir les schemas
-SHOW SCHEMAS FROM iceberg;
-
--- Créer une table
-CREATE TABLE iceberg.mydb.users (
-  id INTEGER,
-  name VARCHAR,
-  email VARCHAR,
-  created_at TIMESTAMP
-)
-WITH (
-  format = 'PARQUET',
-  partitioning = ARRAY['day(created_at)']
-);
-
--- Insérer des données
-INSERT INTO iceberg.mydb.users VALUES
-  (1, 'Alice', 'alice@example.com', CURRENT_TIMESTAMP),
-  (2, 'Bob', 'bob@example.com', CURRENT_TIMESTAMP);
-
--- Query
-SELECT * FROM iceberg.mydb.users;
-
--- Join entre sources différentes
-SELECT 
-  u.name,
-  o.total_amount
-FROM iceberg.mydb.users u
-JOIN postgresql.public.orders o ON u.id = o.user_id;
-```
-
-## 🎯 Intégration Python
-
-### Avec trino-python-client
-
-```python
-from trino.dbapi import connect
-
-conn = connect(
-    host='10.10.0.101',
-    port=8080,
-    user='admin',
-    catalog='iceberg',
-    schema='mydb'
-)
-
-cursor = conn.cursor()
-cursor.execute('SELECT * FROM users')
-rows = cursor.fetchall()
-
-for row in rows:
-    print(row)
-```
-
-### Avec SQLAlchemy
-
-```python
-from sqlalchemy import create_engine
-
-engine = create_engine('trino://admin@10.10.0.101:8080/iceberg/mydb')
-
-import pandas as pd
-df = pd.read_sql('SELECT * FROM users', engine)
-print(df)
-```
-
-## 📊 Web UI
-
-Trino expose une UI web sur le port 8080 :
-
-```bash
-# Tunnel SSH
-ssh -L 8081:10.10.0.101:8080 -i ~/.ssh/id_ed25519 root@135.181.211.227
-
-# Ouvrir http://localhost:8081
-```
-
-Fonctionnalités UI :
-- Vue des queries en cours
-- Historique des queries
-- Statistiques de performance
-- Vue des workers
-
-## 🐛 Troubleshooting
-
-### Query échoue avec "No nodes available"
-
-```bash
-# Vérifier que les workers sont up
-kubectl get pods -n trino
-
-# Vérifier les logs coordinator
-kubectl logs -n trino trino-coordinator-0
-
-# Vérifier les logs workers
-kubectl logs -n trino trino-worker-0
-```
-
-### Problème de connexion à MinIO
-
-```bash
-# Tester depuis un pod Trino
-kubectl exec -it -n trino trino-coordinator-0 -- bash
-curl http://minio.minio.svc:9000/minio/health/live
-```
-
-### OOM (Out of Memory)
-
-Augmenter la mémoire JVM dans `jvm.config` :
-
-```
--Xmx16G  # Au lieu de 8G
-```
-
-## 📊 Performance Tuning
-
-### Pour gros volumes
-
-```properties
-# config.properties
-query.max-memory=50GB
-query.max-memory-per-node=10GB
-query.max-total-memory-per-node=12GB
-
-# Parallelisme
-task.concurrency=16
-task.max-worker-threads=64
-```
-
-## 📝 CHANGELOG
-
-### 2025-11-21
-- ✅ Migration vers Helm chart officiel (version latest)
-- ✅ Intégration MinIO/Iceberg
-- ✅ 1 Coordinator + 3 Workers
-- ✅ Suppression de l'image custom
 
 ---
+_Documentation generated by [Frigate](https://frigate.readthedocs.io)._
 
-**Maintainer**: Data Platform Team  
-**Last Updated**: 2025-11-21

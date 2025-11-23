@@ -1,18 +1,14 @@
 apiVersion: v2
-name: trino
-description: Trino - Distributed SQL Query Engine
-type: application
-version: 1.0.0
-appVersion: "latest"
-keywords:
-  - trino
-  - sql
-  - query-engine
-  - big-data
-  - distributed
-home: https://trino.io
-sources:
-  - https://github.com/trinodb/trino
+appVersion: "432"
+description: Fast distributed SQL query engine for big data analytics that helps you
+  explore your data universe
+home: https://trino.io/
+icon: https://trino.io/assets/trino.png
 maintainers:
-  - name: Data Platform Team
-    email: team@example.com
+- name: Trino community
+name: trino
+sources:
+- https://github.com/trinodb/charts
+- https://github.com/trinodb/trino/tree/master/core/docker
+type: application
+version: 0.19.0

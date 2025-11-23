@@ -1,178 +1,82 @@
-# 🖥️ Headlamp - Kubernetes UI
+# headlamp
 
-Headlamp est une interface web moderne pour gérer votre cluster Kubernetes.
+Headlamp is an easy-to-use and extensible Kubernetes web UI.
 
-## 📋 Informations
+**Homepage:** <https://github.com/headlamp-k8s/headlamp/tree/main/charts/headlamp>
 
-- **Namespace**: `headlamp`
-- **Chart Source**: `headlamp/headlamp`
-- **Version**: Latest
-- **Port**: 30098 (NodePort)
+## TL;DR
 
-## 🎯 Configuration
-
-### Accès
-
-- **URL Directe**: `http://10.10.0.101:30098`
-- **Via Tunnel**: `http://localhost:8080`
-- **Token**: Stocké dans `/Users/ilahouar/Documents/proxmox/headlamp-token.txt`
-
-## 🚀 Installation
-
-```bash
-helm repo add headlamp https://headlamp-k8s.github.io/headlamp/
-helm repo update
-
-helm install headlamp headlamp/headlamp \
-  --namespace headlamp \
-  --create-namespace \
-  --values values.yaml
+```console
+$ helm repo add headlamp https://headlamp-k8s.github.io/headlamp/
+$ helm install my-headlamp headlamp/headlamp --namespace kube-system
 ```
 
-## ⚙️ Configuration values.yaml
 
-```yaml
-service:
-  type: NodePort
-  port: 80
-  nodePort: 30098
+## Maintainers
 
-replicaCount: 1
+See [MAINTAINERS.md](https://github.com/headlamp-k8s/headlamp/blob/main/MAINTAINERS.md) in the headlamp github repo.
 
-resources:
-  limits:
-    cpu: 200m
-    memory: 256Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
+## Source Code
 
-# Activer le mode cluster
-config:
-  baseURL: ""
-  pluginsDir: ""
-  
-# Service Account avec permissions admin
-serviceAccount:
-  create: true
-  name: headlamp-admin
-```
+* <https://github.com/headlamp-k8s/headlamp>
+* <https://headlamp.dev/>
 
-## 🔐 Créer le Token d'Accès
+### Headlamp parameters
 
-```bash
-# Créer ServiceAccount
-kubectl create serviceaccount headlamp-admin -n headlamp
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` | Affinity settings for pod assignment |
+| clusterRoleBinding.annotations | object | `{}` | Annotations to add to the cluster role binding |
+| clusterRoleBinding.create | bool | `true` | Specified whether a cluster role binding should be created |
+| env | list | `[]` | An optional list of environment variables |
+| fullnameOverride | string | `""` | Overrides the full name of the chart |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy. One of Always, Never, IfNotPresent |
+| image.registry | string | `"ghcr.io"` | Container image registry |
+| image.repository | string | `"headlamp-k8s/headlamp"` | Container image name |
+| image.tag | string | `""` | Container image tag, If "" uses appVersion in Chart.yaml |
+| imagePullSecrets | list | `[]` | An optional list of references to secrets in the same namespace to use for pulling any of the images used |
+| ingress.annotations | object | `{}` | Annotations for Ingress resource |
+| ingress.enabled | bool | `false` | Enable ingress controller resource |
+| ingress.ingressClassName | string | `""` | The ingress class name. Replacement for the deprecated "kubernetes.io/ingress.class" annotation |
+| ingress.hosts | list | `[]` | Hostname(s) for the Ingress resource |
+| ingress.tls | list | `[]` | Ingress TLS configuration |
+| initContainers | list | `[]` | An optional list of init containers to be run before the main containers. |
+| nameOverride | string | `""` | Overrides the name of the chart |
+| nodeSelector | object | `{}` | Node labels for pod assignment |
+| persistentVolumeClaim.accessModes | list | `[]` | accessModes for the persistent volume claim, eg: ReadWriteOnce, ReadOnlyMany, ReadWriteMany etc. |
+| persistentVolumeClaim.annotations | object | `{}` | Annotations to add to the persistent volume claim (if enabled) |
+| persistentVolumeClaim.enabled | bool | `false` | Enable Persistent Volume Claim |
+| persistentVolumeClaim.selector | object | `{}` | selector for the persistent volume claim. |
+| persistentVolumeClaim.size | string | `""` | size of the persistent volume claim, eg: 10Gi. Required if enabled is true. |
+| persistentVolumeClaim.storageClassName | string | `""` | storageClassName for the persistent volume claim. |
+| persistentVolumeClaim.volumeMode | string | `""` | volumeMode for the persistent volume claim, eg: Filesystem, Block. |
+| podAnnotations | object | `{}` | Annotations to add to the pod |
+| podSecurityContext | object | `{}` | Headlamp pod's Security Context |
+| replicaCount | int | `1` | Number of desired pods |
+| resources | object | `{}` | CPU/Memory resource requests/limits |
+| securityContext | object | `{}` | Headlamp containers Security Context |
+| service.port | int | `80` | Kubernetes Service port |
+| service.type | string | `"ClusterIP"` | Kubernetes Service type |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use.(If not set and create is true, a name is generated using the fullname template) |
+| tolerations | list | `[]` | Toleration labels for pod assignment |
+| volumeMounts | list | `[]` | Headlamp containers volume mounts |
+| volumes | list | `[]` | Headlamp pod's volumes |
 
-# Créer ClusterRoleBinding
-kubectl create clusterrolebinding headlamp-admin \
-  --clusterrole=cluster-admin \
-  --serviceaccount=headlamp:headlamp-admin
 
-# Créer le token secret
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Secret
-metadata:
-  name: headlamp-admin-token
-  namespace: headlamp
-  annotations:
-    kubernetes.io/service-account.name: headlamp-admin
-type: kubernetes.io/service-account-token
-EOF
+### Headlamp Configuration
 
-# Récupérer le token
-kubectl get secret headlamp-admin-token -n headlamp \
-  -o jsonpath='{.data.token}' | base64 -d
-```
-
-## 🔧 Utilisation
-
-### Se connecter
-
-1. Ouvrir `http://localhost:8080`
-2. Choisir "Token"
-3. Coller le token depuis `headlamp-token.txt`
-4. Cliquer sur "Authenticate"
-
-### Fonctionnalités
-
-- ✅ **Vue d'ensemble du cluster**: Nodes, pods, services
-- ✅ **Gestion des ressources**: Create, edit, delete
-- ✅ **Logs en temps réel**: Voir les logs des pods
-- ✅ **Shell interactif**: Exec dans les containers
-- ✅ **Métriques**: CPU, RAM, réseau
-- ✅ **Events**: Voir les événements K8s
-
-## 🎯 Actions Courantes
-
-### Voir les Pods
-
-1. Sidebar → Workloads → Pods
-2. Sélectionner le namespace
-3. Cliquer sur un pod pour voir les détails
-
-### Voir les Logs
-
-1. Ouvrir un Pod
-2. Cliquer sur l'onglet "Logs"
-3. Sélectionner le container
-4. Les logs s'affichent en temps réel
-
-### Shell dans un Pod
-
-1. Ouvrir un Pod
-2. Cliquer sur "Terminal"
-3. Shell interactif dans le container
-
-### Éditer une ressource
-
-1. Ouvrir la ressource
-2. Cliquer sur le bouton "Edit"
-3. Modifier le YAML
-4. "Save" pour appliquer
-
-## 🐛 Troubleshooting
-
-### Token ne fonctionne pas
-
-```bash
-# Vérifier que le secret existe
-kubectl get secret headlamp-admin-token -n headlamp
-
-# Régénérer le token
-kubectl delete secret headlamp-admin-token -n headlamp
-# Puis recréer (voir section création token)
-```
-
-### Headlamp ne charge pas
-
-```bash
-# Vérifier le pod
-kubectl get pods -n headlamp
-
-# Voir les logs
-kubectl logs -n headlamp -l app.kubernetes.io/name=headlamp
-
-# Redémarrer
-kubectl rollout restart deployment/headlamp -n headlamp
-```
-
-## 📊 Alternatives
-
-- **Kubernetes Dashboard**: UI officielle K8s
-- **Lens**: Desktop app (nécessite licence pour certaines features)
-- **k9s**: CLI interactif
-- **Octant**: UI locale par VMware
-
-## 📝 CHANGELOG
-
-### 2025-11-21
-- ✅ Déploiement initial
-- ✅ Token admin créé
-- ✅ NodePort 30098 configuré
-
----
-
-**Maintainer**: Data Platform Team  
-**Last Updated**: 2025-11-21
+| Key                                | Type   | Default               | Description                                                                                           |
+|------------------------------------|--------|-----------------------|-------------------------------------------------------------------------------------------------------|
+| config.baseURL                     | string | `""`                  | base url path at which headlamp should run                                                            |
+| config.oidc.clientID               | string | `""`                  | OIDC client ID                                                                                        |
+| config.oidc.clientSecret           | string | `""`                  | OIDC client secret                                                                                    |
+| config.oidc.issuerURL              | string | `""`                  | OIDC issuer URL                                                                                       |
+| config.oidc.scopes                 | string | `""`                  | OIDC scopes to be used                                                                                |
+| config.oidc.secret.create          | bool   | `true`                | Enable this option to have the chart automatically create the OIDC secret using the specified values. |
+| config.oidc.secret.name            | string | `oidc`                | Name of the OIDC secret used by headlamp                                                              |
+| config.oidc.externalSecret.enabled | bool   | `false`               | Enable this option if you want to use an external secret for OIDC configuration.                      |
+| config.oidc.externalSecret.name    | string | `""`                  | Name of the external OIDC secret to be used by headlamp.                                              |
+| config.pluginsDir                  | string | `"/headlamp/plugins"` | directory to look for plugins                                                                         |
+| config.extraArgs                   | array  | `[]`                  | Extra arguments that can be given to the container                                                    |
