@@ -31,31 +31,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://helm.releases.hashicorp.com
-    chart: vault
-    targetRevision: 0.27.0
-    helm:
-      values: |
-        server:
-          dev:
-            enabled: true
-          service:
-            type: NodePort
-            nodePort: 30820
-          image:
-            repository: 10.10.0.101:30500/data-platform/vault
-            tag: "1.15.2"
-        injector:
-          image:
-            repository: 10.10.0.101:30500/data-platform/vault-k8s
-            tag: "1.3.1"
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/vault
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: vault
@@ -82,34 +60,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://trinodb.github.io/charts
-    chart: trino
-    targetRevision: 0.19.0
-    helm:
-      values: |
-        service:
-          type: NodePort
-          nodePort: 30808
-        image:
-          repository: 10.10.0.101:30500/data-platform/trino
-          tag: "432"
-        coordinator:
-          resources:
-            requests:
-              memory: "2Gi"
-              cpu: "1000m"
-            limits:
-              memory: "4Gi"
-              cpu: "2000m"
-        worker:
-          replicas: 2
-          resources:
-            requests:
-              memory: "2Gi"
-              cpu: "1000m"
-            limits:
-              memory: "4Gi"
-              cpu: "2000m"
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/trino
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: trino
@@ -130,25 +83,9 @@ metadata:
 spec:
   project: data-platform
   source:
-    repoURL: https://kubernetes-sigs.github.io/headlamp
-    chart: headlamp
-    targetRevision: 0.23.0
-    helm:
-      values: |
-        service:
-          type: NodePort
-          nodePort: 30880
-        image:
-          registry: 10.10.0.101:30500
-          repository: data-platform/headlamp
-          tag: v0.24.1
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/headlamp
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp
