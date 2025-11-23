@@ -14,6 +14,10 @@ server:
     environment: production
     dataDir: /data/trino
     pluginDir: /usr/lib/trino/plugin
+  
+  shareProcessNamespace:
+    coordinator: false
+    worker: false
   log:
     trino:
       level: INFO

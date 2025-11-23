@@ -4,6 +4,8 @@
 global:
   enabled: true
   tlsDisable: true  # Dev mode
+  serverTelemetry:
+    prometheusOperator: false
 
 injector:
   enabled: true
