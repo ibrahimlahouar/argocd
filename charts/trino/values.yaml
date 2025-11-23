@@ -46,7 +46,7 @@ server:
 # Coordinator Configuration
 coordinator:
   jvm:
-    maxHeapSize: "8G"
+    maxHeapSize: "4G"
     gcMethod:
       type: "UseG1GC"
       g1:
@@ -55,14 +55,14 @@ coordinator:
     memory:
       heapHeadroomPerNode: ""
     query:
-      maxMemoryPerNode: "10GB"
+      maxMemoryPerNode: "4GB"
   resources:
     requests:
-      memory: "10Gi"
-      cpu: "2000m"
+      memory: "6Gi"
+      cpu: "1000m"
     limits:
-      memory: "16Gi"
-      cpu: "4000m"
+      memory: "8Gi"
+      cpu: "2000m"
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -79,7 +79,7 @@ coordinator:
 # Worker Configuration
 worker:
   jvm:
-    maxHeapSize: "8G"
+    maxHeapSize: "4G"
     gcMethod:
       type: "UseG1GC"
       g1:
@@ -88,14 +88,14 @@ worker:
     memory:
       heapHeadroomPerNode: ""
     query:
-      maxMemoryPerNode: "10GB"
+      maxMemoryPerNode: "4GB"
   resources:
     requests:
-      memory: "10Gi"
-      cpu: "2000m"
+      memory: "6Gi"
+      cpu: "1000m"
     limits:
-      memory: "16Gi"
-      cpu: "4000m"
+      memory: "8Gi"
+      cpu: "2000m"
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 10
