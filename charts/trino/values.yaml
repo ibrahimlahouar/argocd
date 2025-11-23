@@ -15,9 +15,6 @@ server:
     dataDir: /data/trino
     pluginDir: /usr/lib/trino/plugin
   
-  shareProcessNamespace:
-    coordinator: false
-    worker: false
   log:
     trino:
       level: INFO
@@ -131,3 +128,11 @@ additionalLogProperties: {}
 
 # Additional JVM Config
 additionalJVMConfig: {}
+
+shareProcessNamespace:
+  coordinator: false
+  worker: false
+
+initContainers:
+  coordinator: []
+  worker: []

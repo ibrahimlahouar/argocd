@@ -21,6 +21,10 @@ injector:
     limits:
       memory: 512Mi
       cpu: 500m
+  serviceAccount:
+    create: true
+    name: "vault-agent-injector"
+    annotations: {}
 
 server:
   # Dev Mode (pour POC/développement)
@@ -107,3 +111,6 @@ csi:
 serverTelemetry:
   serviceMonitor:
     enabled: false
+  prometheusRules:
+    enabled: false
+    rules: []
