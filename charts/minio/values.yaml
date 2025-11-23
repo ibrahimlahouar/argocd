@@ -14,8 +14,8 @@ clusterDomain: cluster.local
 ##
 image:
   repository: 10.10.0.101:30500/data-platform/minio
-  tag: RELEASE.2024-12-18T13-15-44Z
-  pullPolicy: IfNotPresent
+  tag: latest
+  pullPolicy: Always
 
 imagePullSecrets:
   - name: harbor-registry
@@ -175,10 +175,10 @@ persistence:
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
 service:
-  type: ClusterIP
+  type: NodePort
   clusterIP: ~
   port: "9000"
-  nodePort: 32000
+  nodePort: 30900
   loadBalancerIP: ~
   externalIPs: []
   annotations: {}
@@ -220,10 +220,10 @@ ingress:
   #      - chart-example.local
 
 consoleService:
-  type: ClusterIP
+  type: NodePort
   clusterIP: ~
   port: "9001"
-  nodePort: 32001
+  nodePort: 30901
   loadBalancerIP: ~
   externalIPs: []
   annotations: {}

@@ -27,7 +27,6 @@
 >
 > Ils nous ont réservé un namespace dédié pour Trino, afin qu’on puisse déployer trino sur leur infra.
 >
->
 > * Apache Spark: Traitement
 > * Jupyter Notebooks: Exploration
 > * Kubernetes: Orchestration
