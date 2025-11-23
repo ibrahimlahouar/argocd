@@ -103,3 +103,7 @@ server:
 # CSI Provider
 csi:
   enabled: false
+
+serverTelemetry:
+  serviceMonitor:
+    enabled: false
