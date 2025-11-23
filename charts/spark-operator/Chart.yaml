@@ -1,17 +1,11 @@
 apiVersion: v2
-name: spark-operator
-description: Kubernetes Operator for Apache Spark
-type: application
-version: 1.0.0
-appVersion: "v1beta2-1.3.8-3.1.1"
+appVersion: v1beta2-1.3.8-3.1.1
+description: A Helm chart for Spark on Kubernetes operator
+home: https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
 keywords:
-  - spark
-  - big-data
-  - analytics
-  - operator
-home: https://github.com/kubeflow/spark-operator
-sources:
-  - https://github.com/kubeflow/spark-operator
+- spark
 maintainers:
-  - name: Data Platform Team
-    email: team@example.com
+- email: yuchaoran2011@gmail.com
+  name: yuchaoran2011
+name: spark-operator
+version: 1.1.27
