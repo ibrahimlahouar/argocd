@@ -6,21 +6,21 @@ replicaCount: 1
 
 # Image
 image:
-  registry: 10.10.0.101:30500
-  repository: data-platform/headlamp
+  registry: ghcr.io
+  repository: headlamp-k8s/headlamp
   tag: v0.24.1
   pullPolicy: IfNotPresent
 
 # ImagePullSecrets
 imagePullSecrets:
-  - harbor-registry
+  - name: harbor-registry
 
 # Service
 service:
   type: NodePort
   port: 80
   targetPort: 4466
-  nodePort: 30098
+  nodePort: 31162
 
 # Resources
 resources:
