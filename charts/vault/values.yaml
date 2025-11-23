@@ -45,6 +45,8 @@ injector:
   securityContext:
     pod: {}
     container: {}
+  metrics:
+    enabled: false
 
 server:
   # Dev Mode (pour POC/développement)
