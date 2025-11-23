@@ -6,8 +6,8 @@ replicaCount: 1
 
 # Image
 image:
-  registry: ghcr.io
-  repository: headlamp-k8s/headlamp
+  registry: 10.10.0.101:30500
+  repository: data-platform/headlamp
   tag: v0.21.0
   pullPolicy: IfNotPresent
 

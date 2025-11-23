@@ -3,8 +3,8 @@
 
 # Image
 image:
-  repository: trinodb/trino
-  tag: "latest"
+  repository: 10.10.0.101:30500/data-platform/trino
+  tag: "435"
   pullPolicy: IfNotPresent
 
 # Server Configuration

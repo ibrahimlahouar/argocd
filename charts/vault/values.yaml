@@ -24,7 +24,7 @@ server:
   
   # Image
   image:
-    repository: hashicorp/vault
+    repository: 10.10.0.101:30500/data-platform/vault
     tag: "1.15.0"
     pullPolicy: IfNotPresent
   
