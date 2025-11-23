@@ -238,6 +238,9 @@ spec:
     helm:
       values: |
         sparkJobNamespace: spark
+        image:
+          repository: 10.10.0.101:30500/data-platform/spark-operator
+          tag: v1beta2-1.3.8-3.1.1
         webhook:
           enable: false
         resources:
