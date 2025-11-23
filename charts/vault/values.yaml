@@ -49,6 +49,10 @@ server:
   # Network Policy
   networkPolicy:
     enabled: false
+
+  # Auth Delegator
+  authDelegator:
+    enabled: false
   
   # Service
   service:

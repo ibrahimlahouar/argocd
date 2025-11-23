@@ -25,8 +25,8 @@ server:
       maxMemory: "50GB"
       maxMemoryPerNode: "10GB"
       maxTotalMemoryPerNode: "12GB"
-    autoscaling:
-      enabled: false
+  autoscaling:
+    enabled: false
 
 # Coordinator Configuration
 coordinator:
