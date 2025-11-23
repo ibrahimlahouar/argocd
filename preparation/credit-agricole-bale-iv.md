@@ -10,20 +10,12 @@
 > Le projet Bâle IV est composé de trois sous‑projets : Acquisition, Calcul et Distribution.
 > Moi, je travaille principalement sur la partie Calcul et Distribution.
 >
-> Au début, j’ai rejoint l’équipe Calcul, puis j’ai travaillé principalement sur l’implémentation et la création de nouveaux jobs Spark.
-> Mon rôle, c’était à la fois de développer les traitements et de les optimiser, avec tout ce qui touche au tuning et à la configuration côté applicatif.
-> J’ai aussi eu une casquette plus DevOps, où j’ai adapté les configurations de déploiement dans ArgoCD pour nos applications Spark, aussi bien côté drivers que workers sur Kubernetes.
+> Au début, j’ai rejoint l’équipe Calcul et j’ai surtout travaillé sur l’implémentation de nouveaux jobs Spark.
+>
+> Mon rôle, c’était de développer ces traitements et de les optimiser, toute la partie code (tuning, cache..) + adaptation  des configurations de déploiement dans ArgoCD pour nos applications Spark (workers + master).
+>
+> Ensuite, on a lancé le troisième sous‑projet, Distribution, que l’on a démarré from scratch avec une petite équipe de trois personnes.
+>
+> L’objectif de ce projet, c’était de distribuer les données vers un stockage S3 et vers une base de données, pour que les différentes entités de CACIB puissent consommer ces données facilement.
+> Sur cette partie, je me suis occupé de la configuration et de la création des charts Helm, ainsi que de l’intégration dans ArgoCD pour automatiser le déploiement de cette nouvelle application.
 
----
-
-### 2. Points clés si on pose des questions
-
-- **Contexte**: projet réglementaire Bâle IV, calcul de risques de marché, gros volumes de données financières, système critique.
-- **Rôle**: DataOps / Big Data Engineer sur Calcul / Distribution.
-- **Ce que tu mets en avant**:
-  - Spark sur Kubernetes (tuning, performance)
-  - Orchestration avec Argo Workflows
-  - GitOps et CI/CD (ArgoCD, GitLab)
-  - Support prod N2/N3 (Dynatrace, Grafana, Kibana)
-  - Jupyter pour investigation / POC
-  - Expérience transférable sur Trino / Starburst, Helm charts (Bitnami), TLS, Vault, GitLab CI dans un contexte bancaire.
