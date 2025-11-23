@@ -25,6 +25,8 @@ injector:
     create: true
     name: "vault-agent-injector"
     annotations: {}
+  service:
+    annotations: {}
 
 server:
   # Dev Mode (pour POC/développement)

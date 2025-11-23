@@ -136,3 +136,6 @@ shareProcessNamespace:
 initContainers:
   coordinator: []
   worker: []
+
+kafka:
+  mountPath: "/etc/trino/schemas"

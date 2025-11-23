@@ -8,7 +8,7 @@ replicaCount: 1
 image:
   registry: 10.10.0.101:30500
   repository: data-platform/headlamp
-  tag: v0.21.0
+  tag: v0.24.1
   pullPolicy: IfNotPresent
 
 # Service
