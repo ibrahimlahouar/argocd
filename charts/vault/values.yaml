@@ -41,6 +41,11 @@ server:
       memory: 512Mi
       cpu: 500m
   
+  # ServiceAccount
+  serviceAccount:
+    create: true
+    name: "vault"
+  
   # Service
   service:
     enabled: true
