@@ -45,6 +45,10 @@ server:
   serviceAccount:
     create: true
     name: "vault"
+
+  # Network Policy
+  networkPolicy:
+    enabled: false
   
   # Service
   service:
