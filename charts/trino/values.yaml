@@ -151,3 +151,7 @@ initContainers:
 
 kafka:
   mountPath: "/etc/trino/schemas"
+
+sidecarContainers:
+  coordinator: []
+  worker: []

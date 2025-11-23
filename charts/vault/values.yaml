@@ -6,6 +6,8 @@ global:
   tlsDisable: true  # Dev mode
   serverTelemetry:
     prometheusOperator: false
+  psp:
+    enable: false
 
 injector:
   enabled: true
