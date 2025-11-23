@@ -70,8 +70,9 @@ worker:
 
 # Service
 service:
-  type: ClusterIP
+  type: NodePort
   port: 8080
+  nodePort: 30808
 
 # Additional Catalogs
 additionalCatalogs:
