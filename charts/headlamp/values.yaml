@@ -33,6 +33,13 @@ config:
   pluginsDir: "/headlamp/plugins"
   oidc:
     enabled: false
+    secret:
+      create: false
+      name: ""
+    clientID: ""
+    clientSecret: ""
+    issuerURL: ""
+    scopes: ""
 
 # ServiceAccount
 serviceAccount:
