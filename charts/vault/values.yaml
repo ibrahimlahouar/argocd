@@ -159,11 +159,11 @@ server:
         path = "/vault/data"
       }
 
-  # UI
-  ui:
-    enabled: true
-    serviceType: NodePort
-    serviceNodePort: 30820
+# UI
+ui:
+  enabled: true
+  serviceType: NodePort
+  serviceNodePort: 30820
 
 # CSI Provider
 csi:
