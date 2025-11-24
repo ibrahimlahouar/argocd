@@ -159,6 +159,9 @@ server:
         path = "/vault/data"
       }
 
+  # StatefulSet
+  statefulSet: {}
+
 # UI
 ui:
   enabled: true
