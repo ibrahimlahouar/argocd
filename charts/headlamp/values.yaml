@@ -13,7 +13,7 @@ image:
 
 # ImagePullSecrets
 imagePullSecrets:
-  - name: harbor-registry
+  - harbor-registry
 
 # Service
 service:
