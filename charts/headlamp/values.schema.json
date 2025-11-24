@@ -23,7 +23,11 @@
         "pullPolicy": {
           "type": "string",
           "description": "Pull policy of the image",
-          "enum": ["Always", "IfNotPresent", "Never"]
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
         },
         "tag": {
           "type": "string",
@@ -35,7 +39,7 @@
       "type": "array",
       "description": "Image pull secrets",
       "items": {
-        "type": "string"
+        "type": "object"
       }
     },
     "nameOverride": {
@@ -63,7 +67,11 @@
           "imagePullPolicy": {
             "type": "string",
             "description": "Pull policy of the init container",
-            "enum": ["Always", "IfNotPresent", "Never"]
+            "enum": [
+              "Always",
+              "IfNotPresent",
+              "Never"
+            ]
           },
           "command": {
             "type": "array",
@@ -133,24 +141,23 @@
           "volumeMounts": {
             "type": "array",
             "description": "Volume mounts of the init container",
-            "items":
-              {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the volume mount"
-                  },
-                  "mountPath": {
-                    "type": "string",
-                    "description": "Mount path of the volume mount"
-                  },
-                  "readOnly": {
-                    "type": "boolean",
-                    "description": "Read only of the volume mount"
-                  }
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the volume mount"
+                },
+                "mountPath": {
+                  "type": "string",
+                  "description": "Mount path of the volume mount"
+                },
+                "readOnly": {
+                  "type": "boolean",
+                  "description": "Read only of the volume mount"
                 }
               }
+            }
           }
         }
       }
@@ -241,7 +248,10 @@
             "description": "Value of the environment variable"
           }
         },
-        "required": ["name", "value"],
+        "required": [
+          "name",
+          "value"
+        ],
         "additionalProperties": false
       }
     },
@@ -281,7 +291,12 @@
         "type": {
           "type": "string",
           "description": "Kubernetes Service type",
-          "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"]
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer",
+            "ExternalName"
+          ]
         },
         "port": {
           "type": "integer",
