@@ -160,7 +160,10 @@ server:
       }
 
   # StatefulSet
-  statefulSet: {}
+  statefulSet:
+    securityContext:
+      pod: {}
+      container: {}
 
 # UI
 ui:
