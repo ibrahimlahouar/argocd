@@ -75,7 +75,8 @@ airflow:
       pullPolicy: "IfNotPresent"
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.11.2"
-      - "openmetadata-managed-apis==1.11.2"
+      - "openmetadata-managed-apis==1.11.2 --no-deps"
+      - "Flask-Admin==1.6.0"
     executor: "KubernetesExecutor"
     config:
       # This is required for OpenMetadata UI to fetch status of DAGs
@@ -138,7 +139,8 @@ airflow:
   scheduler:
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.11.2"
-      - "openmetadata-managed-apis==1.11.2"
+      - "openmetadata-managed-apis==1.11.2 --no-deps"
+      - "Flask-Admin==1.6.0"
     logCleanup:
       enabled: false
   dags:
