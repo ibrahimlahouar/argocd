@@ -131,6 +131,12 @@ airflow:
       periodSeconds: 30
       timeoutSeconds: 10
       failureThreshold: 10
+    service:
+      type: NodePort
+      ports:
+        - name: airflow-ui
+          port: 8080
+          nodePort: 32080
   postgresql:
     enabled: false
   workers:
