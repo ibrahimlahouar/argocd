@@ -84,7 +84,7 @@ airflow:
     extraInitContainers:
       - name: install-managed-apis
         image: apache/airflow:2.7.3-python3.10
-        command: ["bash", "-c", "pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.11.2 --no-deps Flask-Admin==1.6.0"]
+        command: ["bash", "-c", "PIP_USER=false pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.11.2 --no-deps Flask-Admin==1.6.0"]
         volumeMounts:
           - name: openmetadata-libs
             mountPath: /opt/openmetadata-libs
