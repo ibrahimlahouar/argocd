@@ -193,8 +193,7 @@ server:
 # UI
 ui:
   enabled: true
-  serviceType: NodePort
-  serviceNodePort: 30820
+  serviceType: ClusterIP
 
 # CSI Provider
 csi:
