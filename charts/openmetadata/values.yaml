@@ -429,7 +429,6 @@ service:
   type: NodePort
   port: 8585
   adminPort: 8586
-  nodePort: 32585
   annotations: {}
 
 # Service monitor for Prometheus metrics
