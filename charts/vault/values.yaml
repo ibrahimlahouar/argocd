@@ -113,12 +113,27 @@ server:
     create: true
     name: "vault"
 
+  # Probes
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+  startupProbe:
+    enabled: true
+
   # Network Policy
   networkPolicy:
     enabled: false
 
   # Auth Delegator
   authDelegator:
+    enabled: false
+
+  # Ingress
+  ingress:
     enabled: false
   
   # Service
@@ -128,6 +143,8 @@ server:
     port: 8200
     targetPort: 8200
     nodePort: 30820
+    instanceSelector:
+      enabled: false
   
   # Data Storage (pour mode non-dev)
   dataStorage:
@@ -136,12 +153,20 @@ server:
     storageClass: longhorn
     accessMode: ReadWriteOnce
   
+  # Audit Storage
+  auditStorage:
+    enabled: false
+  
   # HA Configuration (pour production)
   ha:
     enabled: false
     replicas: 3
     raft:
       enabled: false
+
+  # Enterprise License
+  enterpriseLicense:
+    secretName: ""
   
   # Standalone config (pour mode non-dev)
   standalone:
