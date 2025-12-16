@@ -194,6 +194,8 @@ server:
 ui:
   enabled: true
   serviceType: ClusterIP
+  servicePort: 8200
+  targetPort: 8200
 
 # CSI Provider
 csi:
