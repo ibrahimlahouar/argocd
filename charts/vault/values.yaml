@@ -117,12 +117,15 @@ server:
   readinessProbe:
     enabled: true
     path: "/v1/sys/health?standbyok=true"
+    port: 8200
   livenessProbe:
     enabled: true
     path: "/v1/sys/health?standbyok=true"
+    port: 8200
     initialDelaySeconds: 60
   startupProbe:
     enabled: true
+    port: 8200
 
   # Network Policy
   networkPolicy:
