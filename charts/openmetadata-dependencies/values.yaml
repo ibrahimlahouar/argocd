@@ -70,9 +70,11 @@ airflow:
   enabled: true
   airflow:
     image:
-      repository: docker.getcollate.io/openmetadata/ingestion
-      tag: 1.11.2
+      repository: apache/airflow
+      tag: 2.7.3-python3.10
       pullPolicy: "IfNotPresent"
+    extraPipPackages:
+      - "openmetadata-ingestion[airflow-container]==1.11.2"
     executor: "KubernetesExecutor"
     config:
       # This is required for OpenMetadata UI to fetch status of DAGs
