@@ -75,8 +75,22 @@ airflow:
       pullPolicy: "IfNotPresent"
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.11.2"
-      - "openmetadata-managed-apis==1.11.2 --no-deps"
-      - "Flask-Admin==1.6.0"
+    extraVolumes:
+      - name: openmetadata-libs
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: openmetadata-libs
+        mountPath: /opt/openmetadata-libs
+    extraInitContainers:
+      - name: install-managed-apis
+        image: apache/airflow:2.7.3-python3.10
+        command: ["bash", "-c", "pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.11.2 --no-deps Flask-Admin==1.6.0"]
+        volumeMounts:
+          - name: openmetadata-libs
+            mountPath: /opt/openmetadata-libs
+    extraEnv:
+      - name: PYTHONPATH
+        value: "/opt/openmetadata-libs"
     executor: "KubernetesExecutor"
     config:
       # This is required for OpenMetadata UI to fetch status of DAGs
@@ -137,10 +151,10 @@ airflow:
     create: true
     name: "airflow"
   scheduler:
+    # Explicitly empty extraPipPackages here if we want to rely on global, or keep it sync.
+    # Since we moved managed-apis to global extraInit, we revert this too.
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.11.2"
-      - "openmetadata-managed-apis==1.11.2 --no-deps"
-      - "Flask-Admin==1.6.0"
     logCleanup:
       enabled: false
   dags:
