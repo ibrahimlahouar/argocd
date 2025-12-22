@@ -287,6 +287,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- Vault Integration Instructions -->
+        <div class="mt-12 p-8 card rounded-2xl border-t-4 border-t-yellow-500">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-yellow-400">
+                <i class="fas fa-shield-halved"></i> Migration des Secrets vers Vault
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                <div>
+                    <p class="text-slate-300 mb-4">L'injecteur Vault est activé. Pour migrer un secret :</p>
+                    <ol class="list-decimal list-inside space-y-3 text-slate-400">
+                        <li>Créez le secret dans Vault : <code class="text-yellow-500">vault kv put secret/minio rootUser="admin" ...</code></li>
+                        <li>Ajoutez les annotations au déploiement :
+                            <pre class="bg-black/30 p-2 mt-2 rounded text-[10px] text-sky-300">
+vault.hashicorp.com/agent-inject: "true"
+vault.hashicorp.com/role: "app-role"
+vault.hashicorp.com/agent-inject-secret-config: "secret/data/app"</pre>
+                        </li>
+                    </ol>
+                </div>
+                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+                    <h5 class="text-xs font-bold text-slate-500 uppercase mb-2">Statut du Registre Harbor</h5>
+                    <p class="text-slate-400 text-xs mb-3">Toutes les images sont désormais configurées pour être tirées depuis :</p>
+                    <div class="font-mono text-sky-400 text-[11px] bg-black/20 p-2 rounded">
+                        10.10.0.101:30500/data-platform/*
+                    </div>
+                    <p class="text-slate-500 text-[10px] mt-3 italic">Note: Assurez-vous que les images sont bien poussées dans le projet 'data-platform' de Harbor.</p>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="mt-20 text-center text-slate-500 text-sm">
