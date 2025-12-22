@@ -17,8 +17,8 @@ mysql:
   image:
     registry: docker.io
     repository: bitnami/mysql
-    tag: "latest"
-    pullPolicy: "Always"
+    tag: "8.0.36-debian-12-r0"
+    pullPolicy: "IfNotPresent"
   auth:
     rootPassword: password    # to be provided by CI/CD
   primary:
@@ -48,7 +48,7 @@ opensearch:
   nodeGroup: ""
   image:
     repository: opensearchproject/opensearch
-    tag: "2.19.0"
+    tag: "2.19.3"
   imagePullPolicy: IfNotPresent
   opensearchJavaOpts: "-Xmx1g -Xms1g"
   persistence:
