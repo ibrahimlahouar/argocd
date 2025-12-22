@@ -13,6 +13,7 @@
         .card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.2); }
         .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
         .gradient-text { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .token-scroll { scrollbar-width: thin; scrollbar-color: #334155 #0f172a; }
     </style>
 </head>
 <body class="min-h-screen pb-12">
@@ -182,6 +183,28 @@
                     Vault UI <i class="fas fa-external-link-alt text-xs"></i>
                 </a>
             </div>
+
+            <!-- Headlamp -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full lg:col-span-3">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-th text-3xl text-emerald-500"></i>
+                        <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-1 rounded">K8s UI</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Headlamp (Kubernetes Console)</h3>
+                    <p class="text-slate-400 text-sm mb-4">Interface graphique pour la gestion globale des ressources Kubernetes (Pods, Nodes, Services).</p>
+                    <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-500 uppercase">Admin Access Token</span>
+                            <button onclick="navigator.clipboard.writeText(document.getElementById('headlamp-token').innerText)" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded text-slate-300 transition">Copier</button>
+                        </div>
+                        <div id="headlamp-token" class="text-[9px] font-mono text-slate-400 break-all bg-black/30 p-3 rounded max-h-24 overflow-y-auto token-scroll">eyJhbGciOiJSUzI1NiIsImtpZCI6IjlQYmhreElNb3ptVDBFVEV1N1dING9pWVlaNkFxdzg0UFlZVkQ3LW5fV0UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJoZWFkbGFtcCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJoZWFkbGFtcC1hZG1pbi10b2tlbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJoZWFkbGFtcC1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjkyYTc1OTYwLWRjY2ItNDQ3Mi1hZGY0LWJiZmNkZWI2YzA2NyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpoZWFkbGFtcDpoZWFkbGFtcC1hZG1pbiJ9.ZCjt29ZCtR9gfzJriP1w2QIGvSFWh1GvoMogRetGsFFFaohJEcro2rSyICvSwa6V9enjzdj41mWLYpHxkWkVL7NwiwgR0up6t_1toZU6A4AvTmaXsxgCVPWf3CxvIoTDc3RRd9OxKAjMxCzKv-vvw9MqM_4wlB2ioPqTP-Yzko9EJBWHqOnEUF1BNuZuUM9sQlcz4H1f8NyBKFAT_GSN5CE0EbdvKaboFZtp9FDWhSpRMmkB_eiQSZ1KgwtXiw1_rht74_6qtlWYOL99ikMrb1g4lP9GWnsUV6Q8pjqsit44D8SmsmgbDwDqBIp_MC684g6y1n4BADFd_Wi-4yBA5g</div>
+                    </div>
+                </div>
+                <a href="http://10.10.0.101:31162" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 font-medium">
+                    Lancer Headlamp <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
         </div>
 
         <!-- Infrastructure & Query Services -->
@@ -222,17 +245,6 @@
                     Endpoint: 10.10.0.101:30900
                 </div>
             </div>
-
-            <!-- Headlamp -->
-            <a href="http://10.10.0.101:31162" target="_blank" class="card p-5 rounded-xl border-l-4 border-l-emerald-500 block hover:bg-emerald-500/5 transition">
-                <h4 class="font-bold text-slate-100 flex items-center gap-2">
-                    <i class="fas fa-th text-emerald-500"></i> Headlamp
-                </h4>
-                <p class="text-slate-400 text-xs mt-1 mb-3">Vue d'ensemble du Cluster K8s</p>
-                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
-                    Port: 31162
-                </div>
-            </a>
         </div>
 
         <!-- Technical Connection Specs -->
@@ -282,4 +294,3 @@
     </footer>
 </body>
 </html>
-
