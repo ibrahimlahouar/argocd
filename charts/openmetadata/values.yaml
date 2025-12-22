@@ -384,9 +384,9 @@ networkPolicy:
   #   callbackUrl: "<callback_url>"
 
 image:
-  repository: docker.getcollate.io/openmetadata/server
+  repository: 10.10.0.101:30500/data-platform/openmetadata-server
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "1.11.2"
   pullPolicy: "Always"
 
 sidecars: []
@@ -403,7 +403,8 @@ sidecars: []
 #     mountPath: /usr/share/extras
 #     readOnly: true
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: harbor-registry
 nameOverride: ""
 fullnameOverride: "openmetadata"
 

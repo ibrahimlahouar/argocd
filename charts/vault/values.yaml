@@ -10,7 +10,7 @@ global:
     enable: false
 
 injector:
-  enabled: false
+  enabled: true
   replicas: 1
   image:
     repository: 10.10.0.101:30500/data-platform/vault-k8s
@@ -133,7 +133,7 @@ server:
 
   # Auth Delegator
   authDelegator:
-    enabled: false
+    enabled: true
 
   # Ingress
   ingress:
