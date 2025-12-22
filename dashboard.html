@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Platform Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.2); }
+        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .gradient-text { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+    <!-- Header -->
+    <header class="py-8 px-6 mb-8 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-4xl font-bold gradient-text">Data Platform</h1>
+                <p class="text-slate-400 mt-2">Centre de contrôle GitOps & Infrastructure</p>
+            </div>
+            <div class="flex items-center gap-6 text-sm">
+                <div class="flex items-center gap-2">
+                    <span class="status-dot"></span>
+                    <span class="text-slate-300">Cluster Status: Healthy</span>
+                </div>
+                <div class="text-slate-300">
+                    <i class="fas fa-microchip mr-2 text-sky-400"></i>10 Nodes
+                </div>
+                <div class="text-slate-300">
+                    <i class="fas fa-server mr-2 text-indigo-400"></i>135.181.211.227
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6">
+        <!-- Main UI Services -->
+        <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+            <i class="fas fa-desktop text-sky-400"></i> Interfaces Utilisateurs
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- ArgoCD -->
+            <a href="http://10.10.0.101:30080" target="_blank" class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-infinity text-3xl text-orange-500"></i>
+                        <span class="bg-orange-500/10 text-orange-400 text-xs px-2 py-1 rounded">GitOps</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Argo CD</h3>
+                    <p class="text-slate-400 text-sm mb-4">Gestion des déploiements GitOps et cycle de vie des apps.</p>
+                </div>
+                <div class="text-xs text-slate-500 font-mono">Port: 30080</div>
+            </a>
+
+            <!-- Harbor -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-anchor text-3xl text-sky-500"></i>
+                        <span class="bg-sky-500/10 text-sky-400 text-xs px-2 py-1 rounded">Registry</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Harbor</h3>
+                    <p class="text-slate-400 text-sm mb-2">Registre Docker privé et sécurité des images.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">User:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Pass:</span>
+                            <span class="text-slate-300">Harbor123!</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="http://10.10.0.101:30500" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1 font-medium">
+                    Accéder au portail <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+            <!-- Airflow -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-wind text-3xl text-blue-400"></i>
+                        <span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-1 rounded">Orchestration</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Airflow</h3>
+                    <p class="text-slate-400 text-sm mb-2">Orchestration des pipelines de données (DAGs).</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">User:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Pass:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="http://10.10.0.101:30926" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
+                    Ouvrir l'interface <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+            <!-- MinIO Console -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-box-open text-3xl text-orange-400"></i>
+                        <span class="bg-orange-500/10 text-orange-400 text-xs px-2 py-1 rounded">Storage</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">MinIO Console</h3>
+                    <p class="text-slate-400 text-sm mb-2">Gestion du stockage objet S3.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">User:</span>
+                            <span class="text-slate-300">minioadmin</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Pass:</span>
+                            <span class="text-slate-300">minioadmin123</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="http://10.10.0.101:30901" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                    Console Admin <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+            <!-- OpenMetadata -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-tags text-3xl text-indigo-400"></i>
+                        <span class="bg-indigo-500/10 text-indigo-400 text-xs px-2 py-1 rounded">Governance</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">OpenMetadata</h3>
+                    <p class="text-slate-400 text-sm mb-2">Gouvernance, lignage et catalogue de données.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">User:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Pass:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="http://10.10.0.101:30894" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 font-medium">
+                    Catalogue Data <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+            <!-- Vault -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-vault text-3xl text-yellow-400"></i>
+                        <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2 py-1 rounded">Security</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">HashiCorp Vault</h3>
+                    <p class="text-slate-400 text-sm mb-2">Gestion des secrets et certificats.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">Method:</span>
+                            <span class="text-slate-300">Token</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Token:</span>
+                            <span class="text-slate-300 font-mono">root</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="http://10.10.0.101:30820" target="_blank" class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
+                    Vault UI <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Infrastructure & Query Services -->
+        <h2 class="text-xl font-semibold mb-6 mt-12 flex items-center gap-2 text-slate-200">
+            <i class="fas fa-database text-sky-400"></i> Moteurs & Infrastructure
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Trino -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-red-500">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-bolt text-red-500"></i> Trino SQL
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Moteur SQL distribué (Fast Query)</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
+                    Host: 10.10.0.101:32562
+                </div>
+            </div>
+
+            <!-- Spark -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-orange-500">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-fire text-orange-500"></i> Spark Operator
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Jobs processing de données K8s</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
+                    Namespace: spark-operator
+                </div>
+            </div>
+
+            <!-- MinIO API -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-yellow-600">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-cloud text-yellow-600"></i> MinIO API (S3)
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Point d'accès API pour le stockage</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
+                    Endpoint: 10.10.0.101:30900
+                </div>
+            </div>
+
+            <!-- Headlamp -->
+            <a href="http://10.10.0.101:31162" target="_blank" class="card p-5 rounded-xl border-l-4 border-l-emerald-500 block hover:bg-emerald-500/5 transition">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-th text-emerald-500"></i> Headlamp
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Vue d'ensemble du Cluster K8s</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
+                    Port: 31162
+                </div>
+            </a>
+        </div>
+
+        <!-- Technical Connection Specs -->
+        <div class="mt-12 p-8 card rounded-2xl">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-code text-slate-400"></i> Détails Connexion Technique (Inter-Services)
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div>
+                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Base de Données</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex flex-col">
+                            <span class="text-slate-400">MySQL (Standalone)</span>
+                            <span class="font-mono text-sky-400">mysql.openmetadata.svc:3306</span>
+                        </li>
+                        <li class="flex flex-col">
+                            <span class="text-slate-400">OpenSearch API</span>
+                            <span class="font-mono text-sky-400">opensearch.openmetadata.svc:9200</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">S3 Storage (Interne)</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex flex-col">
+                            <span class="text-slate-400">MinIO S3 Endpoint</span>
+                            <span class="font-mono text-sky-400">minio.minio.svc:9000</span>
+                        </li>
+                        <li class="flex flex-col">
+                            <span class="text-slate-400">Access Key / Secret</span>
+                            <span class="font-mono text-slate-300 text-xs">minioadmin / minioadmin123</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Accès SSH (Tunnels)</h5>
+                    <div class="bg-black/40 p-3 rounded font-mono text-[11px] text-green-400">
+                        ssh -L 8080:10.10.0.101:31162 root@135.181.211.227
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-20 text-center text-slate-500 text-sm">
+        <p>Géré par ArgoCD &copy; 2025 Data Operations Platform</p>
+    </footer>
+</body>
+</html>
+
