@@ -52,7 +52,7 @@ opensearch:
   image:
     repository: 10.10.0.101:30500/data-platform/opensearch
     tag: "2.19.3"
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   imagePullSecrets:
     - name: harbor-registry
   opensearchJavaOpts: "-Xmx1g -Xms1g"
