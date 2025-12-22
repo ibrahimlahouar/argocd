@@ -15,8 +15,8 @@ mysql:
   fullnameOverride: "mysql"
   architecture: standalone
   image:
-    registry: docker.io
-    repository: mysql
+    registry: public.ecr.aws
+    repository: bitnami/mysql
     tag: "8.0"
     pullPolicy: "IfNotPresent"
   auth:
