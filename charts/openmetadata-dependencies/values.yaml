@@ -46,8 +46,9 @@ opensearch:
   clusterName: opensearch
   fullnameOverride: opensearch
   nodeGroup: ""
-  image: opensearchproject/opensearch
-  imageTag: "2.19.3"
+  image:
+    repository: opensearchproject/opensearch
+    tag: "2.19.3"
   imagePullPolicy: IfNotPresent
   opensearchJavaOpts: "-Xmx1g -Xms1g"
   persistence:
