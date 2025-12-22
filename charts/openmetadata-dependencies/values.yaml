@@ -51,7 +51,7 @@ opensearch:
   nodeGroup: ""
   image:
     repository: 10.10.0.101:30500/data-platform/opensearch
-    tag: "2.19.3"
+    tag: "2.19.3-amd64"
   imagePullPolicy: Always
   imagePullSecrets:
     - name: harbor-registry
