@@ -17,7 +17,7 @@ mysql:
   image:
     registry: docker.io
     repository: bitnami/mysql
-    tag: "8.4"
+    tag: "8.4.3"
     pullPolicy: "IfNotPresent"
   auth:
     rootPassword: password    # to be provided by CI/CD
