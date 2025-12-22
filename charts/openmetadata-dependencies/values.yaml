@@ -48,8 +48,9 @@ opensearch:
   clusterName: opensearch
   fullnameOverride: opensearch
   nodeGroup: ""
-  image: 10.10.0.101:30500/data-platform/opensearch
-  imageTag: 2.19.3
+  image:
+    repository: 10.10.0.101:30500/data-platform/opensearch
+    tag: 2.19.3
   imagePullPolicy: Always
   imagePullSecrets:
     - name: harbor-registry
