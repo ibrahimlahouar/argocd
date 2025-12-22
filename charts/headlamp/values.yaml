@@ -6,13 +6,14 @@ replicaCount: 1
 
 # Image
 image:
-  registry: ghcr.io
-  repository: headlamp-k8s/headlamp
+  registry: 10.10.0.101:30500
+  repository: data-platform/headlamp
   tag: v0.24.1
   pullPolicy: IfNotPresent
 
 # ImagePullSecrets
-imagePullSecrets: []
+imagePullSecrets:
+  - name: harbor-registry
 
 # Service
 service:

@@ -20,11 +20,14 @@ server:
     enabled: true
     devRootToken: "root"
   
-  # Image (utiliser image publique)
+  # Image (Harbor registry)
   image:
-    repository: hashicorp/vault
+    repository: 10.10.0.101:30500/data-platform/vault
     tag: "1.15.2"
     pullPolicy: IfNotPresent
+  
+  imagePullSecrets:
+    - name: harbor-registry
   
   # Resources
   resources:

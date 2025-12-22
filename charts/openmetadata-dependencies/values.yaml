@@ -15,10 +15,13 @@ mysql:
   fullnameOverride: "mysql"
   architecture: standalone
   image:
-    registry: public.ecr.aws
-    repository: bitnami/mysql
+    registry: 10.10.0.101:30500
+    repository: data-platform/mysql
     tag: "8.0.32"
     pullPolicy: "IfNotPresent"
+  global:
+    imagePullSecrets:
+      - harbor-registry
   auth:
     rootPassword: password    # to be provided by CI/CD
   primary:
@@ -47,9 +50,11 @@ opensearch:
   fullnameOverride: opensearch
   nodeGroup: ""
   image:
-    repository: opensearchproject/opensearch
+    repository: 10.10.0.101:30500/data-platform/opensearch
     tag: "2.19.3"
   imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: harbor-registry
   opensearchJavaOpts: "-Xmx1g -Xms1g"
   persistence:
     size: 30Gi
@@ -73,9 +78,11 @@ airflow:
   enabled: true
   airflow:
     image:
-      repository: apache/airflow
+      repository: 10.10.0.101:30500/data-platform/airflow
       tag: 2.7.3-python3.10
       pullPolicy: "IfNotPresent"
+    imagePullSecrets:
+      - name: harbor-registry
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.11.2"
     extraVolumes:
@@ -86,7 +93,7 @@ airflow:
         mountPath: /opt/openmetadata-libs
     extraInitContainers:
       - name: install-managed-apis
-        image: apache/airflow:2.7.3-python3.10
+        image: 10.10.0.101:30500/data-platform/airflow:2.7.3-python3.10
         command: ["bash", "-c", "PIP_USER=false pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.11.2 --no-deps Flask-Admin==1.6.0"]
         volumeMounts:
           - name: openmetadata-libs
