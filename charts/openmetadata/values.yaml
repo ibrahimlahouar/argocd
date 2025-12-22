@@ -386,8 +386,8 @@ networkPolicy:
 image:
   repository: 10.10.0.101:30500/data-platform/openmetadata-server
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.11.2"
-  pullPolicy: "IfNotPresent"
+  tag: "1.11.2-amd64"
+  pullPolicy: "Always"
 
 sidecars: []
 # - name: "busybox"
