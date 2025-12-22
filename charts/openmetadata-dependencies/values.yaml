@@ -16,8 +16,8 @@ mysql:
   architecture: standalone
   image:
     registry: docker.io
-    repository: bitnami/mysql
-    tag: "8.0.36-debian-12-r0"
+    repository: mysql
+    tag: "8.0"
     pullPolicy: "IfNotPresent"
   auth:
     rootPassword: password    # to be provided by CI/CD
