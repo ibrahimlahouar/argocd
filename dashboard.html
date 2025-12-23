@@ -14,6 +14,7 @@
         .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
         .gradient-text { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .token-scroll { scrollbar-width: thin; scrollbar-color: #334155 #0f172a; }
+        .ingress-badge { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
     </style>
 </head>
 <body class="min-h-screen pb-12">
@@ -33,16 +34,33 @@
                     <i class="fas fa-microchip mr-2 text-sky-400"></i>10 Nodes
                 </div>
                 <div class="text-slate-300">
-                    <i class="fas fa-server mr-2 text-indigo-400"></i>10.10.0.101
+                    <i class="fas fa-network-wired mr-2 text-green-400"></i>Ingress: 10.10.0.200
                 </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6">
+        <!-- DNS Configuration Alert -->
+        <div class="mb-8 p-4 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl border border-green-500/30">
+            <div class="flex items-start gap-4">
+                <i class="fas fa-info-circle text-green-400 text-xl mt-1"></i>
+                <div>
+                    <h3 class="font-bold text-green-400 mb-2">Configuration DNS requise</h3>
+                    <p class="text-slate-300 text-sm mb-3">Ajoutez ces entrées à votre fichier <code class="bg-black/30 px-2 py-1 rounded">/etc/hosts</code> ou DNS local :</p>
+                    <div class="bg-black/50 p-3 rounded font-mono text-xs text-green-300 overflow-x-auto">
+                        10.10.0.200  argocd.data-platform.local harbor.data-platform.local airflow.data-platform.local<br>
+                        10.10.0.200  minio.data-platform.local s3.data-platform.local openmetadata.data-platform.local<br>
+                        10.10.0.200  vault.data-platform.local headlamp.data-platform.local trino.data-platform.local
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main UI Services -->
         <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
             <i class="fas fa-desktop text-sky-400"></i> Interfaces Utilisateurs
+            <span class="ingress-badge text-xs px-2 py-1 rounded-full ml-2 text-white">HTTPS via Ingress</span>
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -66,9 +84,14 @@
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:30080" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
-                    Accéder au portail <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://argocd.data-platform.local" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> argocd.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:30080" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:30080
+                    </a>
+                </div>
             </div>
 
             <!-- Harbor -->
@@ -91,9 +114,14 @@
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:30500" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1 font-medium">
-                    Accéder au portail <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://harbor.data-platform.local" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> harbor.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:30500" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:30500
+                    </a>
+                </div>
             </div>
 
             <!-- Airflow -->
@@ -116,9 +144,14 @@
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:32080" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
-                    Ouvrir l'interface <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://airflow.data-platform.local" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> airflow.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:32080" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:32080
+                    </a>
+                </div>
             </div>
 
             <!-- MinIO Console -->
@@ -141,9 +174,14 @@
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:30901" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
-                    Console Admin <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://minio.data-platform.local" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> minio.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:30901" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:30901
+                    </a>
+                </div>
             </div>
 
             <!-- OpenMetadata -->
@@ -166,9 +204,14 @@
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:30894" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 font-medium">
-                    Catalogue Data <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://openmetadata.data-platform.local" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> openmetadata.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:30894" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:30894
+                    </a>
+                </div>
             </div>
 
             <!-- Vault -->
@@ -191,9 +234,14 @@
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:30820" target="_blank" class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
-                    Vault UI <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://vault.data-platform.local" target="_blank" class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> vault.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:30820" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:30820
+                    </a>
+                </div>
             </div>
 
             <!-- Headlamp -->
@@ -213,9 +261,14 @@
                         <div id="headlamp-token" class="text-[9px] font-mono text-slate-400 break-all bg-black/30 p-3 rounded max-h-24 overflow-y-auto token-scroll">eyJhbGciOiJSUzI1NiIsImtpZCI6IjlQYmhreElNb3ptVDBFVEV1N1dING9pWVlaNkFxdzg0UFlZVkQ3LW5fV0UifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk4MDY2ODk0LCJpYXQiOjE3NjY1MzA4OTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJoZWFkbGFtcCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJoZWFkbGFtcC1hZG1pbiIsInVpZCI6IjkyYTc1OTYwLWRjY2ItNDQ3Mi1hZGY0LWJiZmNkZWI2YzA2NyJ9fSwibmJmIjoxNzY2NTMwODk0LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6aGVhZGxhbXA6aGVhZGxhbXAtYWRtaW4ifQ.ag2Bk8InF4bDjgezFavZ3rVJAVz8jr1GPOs_APIfRLnJsPKO8q5qO1xC3-rJN3oMfcUxID_01gEXpBiPtBplRyF9dQwCxAEoqYvkVI6lAryp_Vzm4TGKM0CTCvZY7oArydBee92wp-OSzIRbq-5p2YpPsqoh17DvvlLTvvjGQDAVFdY3Q87z3AmzcHcfJZ-IqU29fnIKk98gZxmkcs7jJ7-GB1Ihs6jc5EA0w9cWx19PA9PIUFO50MyQqbLvqZU8OnbvD-Gc5jaZQONkNMzhJ8Bjzng9N1rgAhDsyd2LwGjan850huHk-Kce7FtLvOklzbUaSC1gAdLLMxkfQWyC3A</div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:31162" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 font-medium">
-                    Lancer Headlamp <i class="fas fa-external-link-alt text-xs"></i>
-                </a>
+                <div class="space-y-2">
+                    <a href="https://headlamp.data-platform.local" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> headlamp.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                    <a href="http://10.10.0.101:31162" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                        NodePort: 10.10.0.101:31162
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -231,8 +284,11 @@
                     <i class="fas fa-bolt text-red-500"></i> Trino SQL
                 </h4>
                 <p class="text-slate-400 text-xs mt-1 mb-3">Moteur SQL distribué (Fast Query)</p>
-                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
-                    Host: 10.10.0.101:32562
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300 mb-2">
+                    <i class="fas fa-lock text-green-400"></i> trino.data-platform.local
+                </div>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-500">
+                    NodePort: 10.10.0.101:32562
                 </div>
             </div>
 
@@ -253,8 +309,11 @@
                     <i class="fas fa-cloud text-yellow-600"></i> MinIO API (S3)
                 </h4>
                 <p class="text-slate-400 text-xs mt-1 mb-3">Point d'accès API pour le stockage</p>
-                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
-                    Endpoint: 10.10.0.101:30900
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300 mb-2">
+                    <i class="fas fa-lock text-green-400"></i> s3.data-platform.local
+                </div>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-500">
+                    NodePort: 10.10.0.101:30900
                 </div>
             </div>
 
@@ -264,8 +323,51 @@
                     <i class="fas fa-docker text-sky-500"></i> Harbor Registry
                 </h4>
                 <p class="text-slate-400 text-xs mt-1 mb-3">Docker Pull/Push endpoint</p>
-                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
-                    10.10.0.101:30500
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300 mb-2">
+                    <i class="fas fa-lock text-green-400"></i> harbor.data-platform.local
+                </div>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-500">
+                    NodePort: 10.10.0.101:30500
+                </div>
+            </div>
+        </div>
+
+        <!-- Infrastructure Components -->
+        <h2 class="text-xl font-semibold mb-6 mt-12 flex items-center gap-2 text-slate-200">
+            <i class="fas fa-network-wired text-green-400"></i> Infrastructure Réseau
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- MetalLB -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-green-500">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-balance-scale text-green-500"></i> MetalLB
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Load Balancer pour bare-metal</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-green-300">
+                    IP Pool: 10.10.0.200 - 10.10.0.210
+                </div>
+            </div>
+
+            <!-- NGINX Ingress -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-blue-500">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-route text-blue-500"></i> NGINX Ingress
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Ingress Controller avec TLS</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-blue-300">
+                    External IP: 10.10.0.200 (80/443)
+                </div>
+            </div>
+
+            <!-- Cert-Manager -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-purple-500">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-certificate text-purple-500"></i> Cert-Manager
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Certificats TLS automatiques</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-purple-300">
+                    Issuer: data-platform-ca-issuer
                 </div>
             </div>
         </div>
@@ -306,7 +408,7 @@
                 <div>
                     <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Docker Login</h5>
                     <div class="bg-black/40 p-3 rounded font-mono text-[11px] text-green-400 space-y-2">
-                        <div>docker login 10.10.0.101:30500</div>
+                        <div>docker login harbor.data-platform.local</div>
                         <div class="text-slate-500"># User: admin / Pass: Harbor123!</div>
                     </div>
                 </div>
