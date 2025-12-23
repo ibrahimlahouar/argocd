@@ -1,0 +1,83 @@
+# Platform Ingress Configuration
+domain: data-platform.local
+ingressClassName: nginx
+
+# TLS Configuration
+tls:
+  enabled: true
+  secretName: wildcard-tls
+  clusterIssuer: data-platform-ca-issuer
+
+# Services configuration
+services:
+  argocd:
+    enabled: true
+    host: argocd
+    namespace: argocd
+    serviceName: argocd-server
+    servicePort: 80
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  
+  harbor:
+    enabled: true
+    host: harbor
+    namespace: harbor
+    serviceName: harbor
+    servicePort: 80
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
+  
+  airflow:
+    enabled: true
+    host: airflow
+    namespace: openmetadata
+    serviceName: openmetadata-dependencies-web
+    servicePort: 8080
+  
+  minio:
+    enabled: true
+    host: minio
+    namespace: minio
+    serviceName: minio-console
+    servicePort: 9001
+  
+  minio-api:
+    enabled: true
+    host: s3
+    namespace: minio
+    serviceName: minio
+    servicePort: 9000
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  
+  openmetadata:
+    enabled: true
+    host: openmetadata
+    namespace: openmetadata
+    serviceName: openmetadata
+    servicePort: 8585
+  
+  vault:
+    enabled: true
+    host: vault
+    namespace: vault
+    serviceName: vault
+    servicePort: 8200
+  
+  headlamp:
+    enabled: true
+    host: headlamp
+    namespace: headlamp
+    serviceName: headlamp
+    servicePort: 80
+  
+  trino:
+    enabled: true
+    host: trino
+    namespace: trino
+    serviceName: trino
+    servicePort: 8080
+

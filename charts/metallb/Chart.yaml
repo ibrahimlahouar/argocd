@@ -1,0 +1,12 @@
+apiVersion: v2
+name: metallb
+description: MetalLB Load Balancer for bare-metal Kubernetes
+type: application
+version: 0.14.9
+appVersion: "0.14.9"
+
+dependencies:
+  - name: metallb
+    version: 0.14.9
+    repository: https://metallb.github.io/metallb
+

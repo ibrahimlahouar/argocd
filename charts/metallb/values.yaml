@@ -1,0 +1,17 @@
+# MetalLB Configuration
+metallb:
+  # Controller configuration
+  controller:
+    enabled: true
+    logLevel: info
+  
+  # Speaker configuration (Layer 2 mode)
+  speaker:
+    enabled: true
+    logLevel: info
+    frr:
+      enabled: false
+
+# IP Address Pool - Will be applied after MetalLB is installed
+# These are separate resources that need to be created
+

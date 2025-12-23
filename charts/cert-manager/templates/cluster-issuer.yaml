@@ -1,0 +1,63 @@
+# Self-signed ClusterIssuer for internal certificates
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+# CA Certificate for the platform
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: data-platform-ca
+  namespace: {{ .Release.Namespace }}
+spec:
+  isCA: true
+  commonName: data-platform-ca
+  secretName: data-platform-ca-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  duration: 87600h # 10 years
+---
+# CA Issuer using our own CA
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: data-platform-ca-issuer
+spec:
+  ca:
+    secretName: data-platform-ca-secret
+---
+# Wildcard certificate for all services
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: wildcard-tls
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
+  commonName: "*.data-platform.local"
+  dnsNames:
+    - "*.data-platform.local"
+    - "data-platform.local"
+    - "argocd.data-platform.local"
+    - "harbor.data-platform.local"
+    - "airflow.data-platform.local"
+    - "minio.data-platform.local"
+    - "openmetadata.data-platform.local"
+    - "vault.data-platform.local"
+    - "headlamp.data-platform.local"
+    - "trino.data-platform.local"
+  issuerRef:
+    name: data-platform-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+

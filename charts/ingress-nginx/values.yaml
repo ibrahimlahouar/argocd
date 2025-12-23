@@ -1,0 +1,55 @@
+# NGINX Ingress Controller Configuration
+ingress-nginx:
+  controller:
+    # Use LoadBalancer to get IP from MetalLB
+    service:
+      type: LoadBalancer
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: "10.10.0.200"
+    
+    # Enable metrics for monitoring
+    metrics:
+      enabled: true
+    
+    # Default SSL certificate (will be overridden by cert-manager)
+    extraArgs:
+      default-ssl-certificate: "cert-manager/wildcard-tls"
+    
+    # Resources
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    
+    # Admission webhooks
+    admissionWebhooks:
+      enabled: true
+    
+    # Replica count
+    replicaCount: 2
+    
+    # Pod anti-affinity for HA
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+              topologyKey: kubernetes.io/hostname
+    
+    # Config for better performance
+    config:
+      use-forwarded-headers: "true"
+      proxy-body-size: "100m"
+      ssl-redirect: "true"
+      force-ssl-redirect: "true"
+
+  # Default backend
+  defaultBackend:
+    enabled: false
+

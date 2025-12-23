@@ -1,0 +1,38 @@
+# Cert-Manager Configuration
+cert-manager:
+  # Install CRDs
+  installCRDs: true
+  
+  # Resources
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  
+  # Webhook
+  webhook:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  
+  # CA Injector
+  cainjector:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  
+  # Prometheus metrics
+  prometheus:
+    enabled: true
+
