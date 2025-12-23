@@ -891,7 +891,7 @@ exporter:
   # mount the service account token
   automountServiceAccountToken: false
   image:
-    repository: 10.10.0.101:30500/data-platform/harbor-exporter
+    repository: goharbor/harbor-exporter
     tag: v2.10.0
   nodeSelector: {}
   tolerations: []

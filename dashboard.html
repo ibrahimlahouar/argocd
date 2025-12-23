@@ -33,7 +33,7 @@
                     <i class="fas fa-microchip mr-2 text-sky-400"></i>10 Nodes
                 </div>
                 <div class="text-slate-300">
-                    <i class="fas fa-server mr-2 text-indigo-400"></i>135.181.211.227
+                    <i class="fas fa-server mr-2 text-indigo-400"></i>10.10.0.101
                 </div>
             </div>
         </div>
@@ -47,17 +47,29 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <!-- ArgoCD -->
-            <a href="http://10.10.0.101:30080" target="_blank" class="card p-6 rounded-2xl flex flex-col justify-between h-full">
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
                 <div>
                     <div class="flex justify-between items-start mb-4">
                         <i class="fas fa-infinity text-3xl text-orange-500"></i>
                         <span class="bg-orange-500/10 text-orange-400 text-xs px-2 py-1 rounded">GitOps</span>
                     </div>
                     <h3 class="text-lg font-bold mb-1">Argo CD</h3>
-                    <p class="text-slate-400 text-sm mb-4">Gestion des déploiements GitOps et cycle de vie des apps.</p>
+                    <p class="text-slate-400 text-sm mb-2">Gestion des déploiements GitOps et cycle de vie des apps.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">User:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Pass:</span>
+                            <span class="text-slate-300 font-mono">Nw7MnrkcDmMInQ8U</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-xs text-slate-500 font-mono">Port: 30080</div>
-            </a>
+                <a href="http://10.10.0.101:30080" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                    Accéder au portail <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
 
             <!-- Harbor -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
@@ -75,7 +87,7 @@
                         </div>
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-500">Pass:</span>
-                            <span class="text-slate-300">Harbor123!</span>
+                            <span class="text-slate-300 font-mono">Harbor123!</span>
                         </div>
                     </div>
                 </div>
@@ -100,11 +112,11 @@
                         </div>
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-500">Pass:</span>
-                            <span class="text-slate-300">admin</span>
+                            <span class="text-slate-300 font-mono">admin</span>
                         </div>
                     </div>
                 </div>
-                <a href="http://10.10.0.101:30926" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
+                <a href="http://10.10.0.101:32080" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
                     Ouvrir l'interface <i class="fas fa-external-link-alt text-xs"></i>
                 </a>
             </div>
@@ -121,11 +133,11 @@
                     <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
                         <div class="flex justify-between text-xs mb-1">
                             <span class="text-slate-500">User:</span>
-                            <span class="text-slate-300">minioadmin</span>
+                            <span class="text-slate-300 font-mono">minioadmin</span>
                         </div>
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-500">Pass:</span>
-                            <span class="text-slate-300">minioadmin123</span>
+                            <span class="text-slate-300 font-mono">minioadmin123</span>
                         </div>
                     </div>
                 </div>
@@ -150,7 +162,7 @@
                         </div>
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-500">Pass:</span>
-                            <span class="text-slate-300">admin</span>
+                            <span class="text-slate-300 font-mono">admin</span>
                         </div>
                     </div>
                 </div>
@@ -195,10 +207,10 @@
                     <p class="text-slate-400 text-sm mb-4">Interface graphique pour la gestion globale des ressources Kubernetes (Pods, Nodes, Services).</p>
                     <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 mb-4">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-slate-500 uppercase">Admin Access Token</span>
+                            <span class="text-xs font-bold text-slate-500 uppercase">Admin Access Token (valide 1 an)</span>
                             <button onclick="navigator.clipboard.writeText(document.getElementById('headlamp-token').innerText)" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded text-slate-300 transition">Copier</button>
                         </div>
-                        <div id="headlamp-token" class="text-[9px] font-mono text-slate-400 break-all bg-black/30 p-3 rounded max-h-24 overflow-y-auto token-scroll">eyJhbGciOiJSUzI1NiIsImtpZCI6IjlQYmhreElNb3ptVDBFVEV1N1dING9pWVlaNkFxdzg0UFlZVkQ3LW5fV0UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJoZWFkbGFtcCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJoZWFkbGFtcC1hZG1pbi10b2tlbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJoZWFkbGFtcC1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjkyYTc1OTYwLWRjY2ItNDQ3Mi1hZGY0LWJiZmNkZWI2YzA2NyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpoZWFkbGFtcDpoZWFkbGFtcC1hZG1pbiJ9.ZCjt29ZCtR9gfzJriP1w2QIGvSFWh1GvoMogRetGsFFFaohJEcro2rSyICvSwa6V9enjzdj41mWLYpHxkWkVL7NwiwgR0up6t_1toZU6A4AvTmaXsxgCVPWf3CxvIoTDc3RRd9OxKAjMxCzKv-vvw9MqM_4wlB2ioPqTP-Yzko9EJBWHqOnEUF1BNuZuUM9sQlcz4H1f8NyBKFAT_GSN5CE0EbdvKaboFZtp9FDWhSpRMmkB_eiQSZ1KgwtXiw1_rht74_6qtlWYOL99ikMrb1g4lP9GWnsUV6Q8pjqsit44D8SmsmgbDwDqBIp_MC684g6y1n4BADFd_Wi-4yBA5g</div>
+                        <div id="headlamp-token" class="text-[9px] font-mono text-slate-400 break-all bg-black/30 p-3 rounded max-h-24 overflow-y-auto token-scroll">eyJhbGciOiJSUzI1NiIsImtpZCI6IjlQYmhreElNb3ptVDBFVEV1N1dING9pWVlaNkFxdzg0UFlZVkQ3LW5fV0UifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk4MDY2ODk0LCJpYXQiOjE3NjY1MzA4OTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJoZWFkbGFtcCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJoZWFkbGFtcC1hZG1pbiIsInVpZCI6IjkyYTc1OTYwLWRjY2ItNDQ3Mi1hZGY0LWJiZmNkZWI2YzA2NyJ9fSwibmJmIjoxNzY2NTMwODk0LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6aGVhZGxhbXA6aGVhZGxhbXAtYWRtaW4ifQ.ag2Bk8InF4bDjgezFavZ3rVJAVz8jr1GPOs_APIfRLnJsPKO8q5qO1xC3-rJN3oMfcUxID_01gEXpBiPtBplRyF9dQwCxAEoqYvkVI6lAryp_Vzm4TGKM0CTCvZY7oArydBee92wp-OSzIRbq-5p2YpPsqoh17DvvlLTvvjGQDAVFdY3Q87z3AmzcHcfJZ-IqU29fnIKk98gZxmkcs7jJ7-GB1Ihs6jc5EA0w9cWx19PA9PIUFO50MyQqbLvqZU8OnbvD-Gc5jaZQONkNMzhJ8Bjzng9N1rgAhDsyd2LwGjan850huHk-Kce7FtLvOklzbUaSC1gAdLLMxkfQWyC3A</div>
                     </div>
                 </div>
                 <a href="http://10.10.0.101:31162" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 font-medium">
@@ -245,6 +257,17 @@
                     Endpoint: 10.10.0.101:30900
                 </div>
             </div>
+
+            <!-- Harbor Registry -->
+            <div class="card p-5 rounded-xl border-l-4 border-l-sky-500">
+                <h4 class="font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fas fa-docker text-sky-500"></i> Harbor Registry
+                </h4>
+                <p class="text-slate-400 text-xs mt-1 mb-3">Docker Pull/Push endpoint</p>
+                <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-slate-300">
+                    10.10.0.101:30500
+                </div>
+            </div>
         </div>
 
         <!-- Technical Connection Specs -->
@@ -255,10 +278,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div>
                     <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Base de Données</h5>
-                    <ul class="space-y-2 text-sm">
+                    <ul class="space-y-3 text-sm">
                         <li class="flex flex-col">
-                            <span class="text-slate-400">MySQL (Standalone)</span>
+                            <span class="text-slate-400">MySQL (OpenMetadata/Airflow)</span>
                             <span class="font-mono text-sky-400">mysql.openmetadata.svc:3306</span>
+                            <span class="text-[10px] text-slate-500 mt-1">root / <span class="font-mono">password</span></span>
                         </li>
                         <li class="flex flex-col">
                             <span class="text-slate-400">OpenSearch API</span>
@@ -268,7 +292,7 @@
                 </div>
                 <div>
                     <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">S3 Storage (Interne)</h5>
-                    <ul class="space-y-2 text-sm">
+                    <ul class="space-y-3 text-sm">
                         <li class="flex flex-col">
                             <span class="text-slate-400">MinIO S3 Endpoint</span>
                             <span class="font-mono text-sky-400">minio.minio.svc:9000</span>
@@ -280,40 +304,33 @@
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Accès SSH (Tunnels)</h5>
-                    <div class="bg-black/40 p-3 rounded font-mono text-[11px] text-green-400">
-                        ssh -L 8080:10.10.0.101:31162 root@135.181.211.227
+                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Docker Login</h5>
+                    <div class="bg-black/40 p-3 rounded font-mono text-[11px] text-green-400 space-y-2">
+                        <div>docker login 10.10.0.101:30500</div>
+                        <div class="text-slate-500"># User: admin / Pass: Harbor123!</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Vault Integration Instructions -->
-        <div class="mt-12 p-8 card rounded-2xl border-t-4 border-t-yellow-500">
-            <h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-yellow-400">
-                <i class="fas fa-shield-halved"></i> Migration des Secrets vers Vault
+        <!-- Images in Harbor -->
+        <div class="mt-12 p-8 card rounded-2xl border-t-4 border-t-sky-500">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-sky-400">
+                <i class="fas fa-cubes"></i> Images Harbor (data-platform)
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
-                <div>
-                    <p class="text-slate-300 mb-4">L'injecteur Vault est activé. Pour migrer un secret :</p>
-                    <ol class="list-decimal list-inside space-y-3 text-slate-400">
-                        <li>Créez le secret dans Vault : <code class="text-yellow-500">vault kv put secret/minio rootUser="admin" ...</code></li>
-                        <li>Ajoutez les annotations au déploiement :
-                            <pre class="bg-black/30 p-2 mt-2 rounded text-[10px] text-sky-300">
-vault.hashicorp.com/agent-inject: "true"
-vault.hashicorp.com/role: "app-role"
-vault.hashicorp.com/agent-inject-secret-config: "secret/data/app"</pre>
-                        </li>
-                    </ol>
-                </div>
-                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
-                    <h5 class="text-xs font-bold text-slate-500 uppercase mb-2">Statut du Registre Harbor</h5>
-                    <p class="text-slate-400 text-xs mb-3">Toutes les images sont désormais configurées pour être tirées depuis :</p>
-                    <div class="font-mono text-sky-400 text-[11px] bg-black/20 p-2 rounded">
-                        10.10.0.101:30500/data-platform/*
-                    </div>
-                    <p class="text-slate-500 text-[10px] mt-3 italic">Note: Assurez-vous que les images sont bien poussées dans le projet 'data-platform' de Harbor.</p>
-                </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 text-xs">
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">airflow:2.7.3-python3.10</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">openmetadata-server:1.11.2-amd64</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">opensearch:2.19.3-amd64</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">mysql:8.0.32</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">vault:1.15.2</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">headlamp:v0.24.1</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">minio:latest</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">trino:432</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">spark-operator</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">redis:7.0.11-alpine</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">busybox:latest</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-slate-400">curl:latest</div>
             </div>
         </div>
     </main>
