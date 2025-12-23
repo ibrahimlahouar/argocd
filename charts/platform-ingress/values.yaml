@@ -6,7 +6,7 @@ ingressClassName: nginx
 tls:
   enabled: true
   secretName: wildcard-tls
-  clusterIssuer: data-platform-ca-issuer
+  clusterIssuer: vault-issuer
 
 # Services configuration
 services:

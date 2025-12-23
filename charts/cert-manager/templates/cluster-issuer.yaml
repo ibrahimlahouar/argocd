@@ -1,4 +1,24 @@
-# Self-signed ClusterIssuer for internal certificates
+# ===========================================
+# Vault PKI ClusterIssuer (Production)
+# ===========================================
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: vault-issuer
+spec:
+  vault:
+    path: pki_int/sign/data-platform
+    server: http://vault.vault.svc:8200
+    auth:
+      kubernetes:
+        role: cert-manager
+        mountPath: /v1/auth/kubernetes
+        serviceAccountRef:
+          name: cert-manager
+---
+# ===========================================
+# Fallback: Self-signed ClusterIssuer
+# ===========================================
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -6,7 +26,7 @@ metadata:
 spec:
   selfSigned: {}
 ---
-# CA Certificate for the platform
+# Fallback CA Certificate
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -25,7 +45,7 @@ spec:
     group: cert-manager.io
   duration: 87600h # 10 years
 ---
-# CA Issuer using our own CA
+# Fallback CA Issuer
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -34,7 +54,9 @@ spec:
   ca:
     secretName: data-platform-ca-secret
 ---
-# Wildcard certificate for all services
+# ===========================================
+# Wildcard certificate (using Vault PKI)
+# ===========================================
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -42,8 +64,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   secretName: wildcard-tls
-  duration: 8760h # 1 year
-  renewBefore: 720h # 30 days
+  duration: 720h # 30 days (shorter for auto-rotation)
+  renewBefore: 168h # 7 days before expiry
   commonName: "*.data-platform.local"
   dnsNames:
     - "*.data-platform.local"
@@ -52,12 +74,12 @@ spec:
     - "harbor.data-platform.local"
     - "airflow.data-platform.local"
     - "minio.data-platform.local"
+    - "s3.data-platform.local"
     - "openmetadata.data-platform.local"
     - "vault.data-platform.local"
     - "headlamp.data-platform.local"
     - "trino.data-platform.local"
   issuerRef:
-    name: data-platform-ca-issuer
+    name: vault-issuer
     kind: ClusterIssuer
     group: cert-manager.io
-
