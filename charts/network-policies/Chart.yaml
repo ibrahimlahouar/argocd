@@ -1,0 +1,15 @@
+apiVersion: v2
+name: network-policies
+description: Network Policies for Data Platform - Zero Trust Security
+version: 1.0.0
+appVersion: "1.0.0"
+type: application
+
+keywords:
+  - security
+  - network-policies
+  - zero-trust
+
+maintainers:
+  - name: Data Platform Team
+

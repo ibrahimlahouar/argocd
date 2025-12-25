@@ -51,7 +51,8 @@
                     <div class="bg-black/50 p-3 rounded font-mono text-xs text-green-300 overflow-x-auto">
                         10.10.0.200  argocd.data-platform.local harbor.data-platform.local airflow.data-platform.local<br>
                         10.10.0.200  minio.data-platform.local s3.data-platform.local openmetadata.data-platform.local<br>
-                        10.10.0.200  vault.data-platform.local headlamp.data-platform.local trino.data-platform.local
+                        10.10.0.200  vault.data-platform.local headlamp.data-platform.local trino.data-platform.local<br>
+                        10.10.0.200  grafana.data-platform.local prometheus.data-platform.local alertmanager.data-platform.local
                     </div>
                 </div>
             </div>
@@ -369,6 +370,75 @@
                 <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-purple-300">
                     Issuer: data-platform-ca-issuer
                 </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Section -->
+        <h2 class="text-xl font-semibold mb-6 mt-12 flex items-center gap-2 text-slate-200">
+            <i class="fas fa-chart-line text-orange-400"></i> Observabilité & Monitoring
+            <span class="bg-orange-500/20 text-orange-400 text-xs px-2 py-1 rounded-full ml-2">NEW</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <!-- Grafana -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-orange-500">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-chart-bar text-3xl text-orange-500"></i>
+                        <span class="bg-orange-500/10 text-orange-400 text-xs px-2 py-1 rounded">Dashboards</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Grafana</h3>
+                    <p class="text-slate-400 text-sm mb-2">Dashboards et visualisation des métriques.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">User:</span>
+                            <span class="text-slate-300">admin</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Pass:</span>
+                            <span class="text-slate-300 font-mono">DataPlatform2024!</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://grafana.data-platform.local" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                    <i class="fas fa-lock text-green-400 text-xs"></i> grafana.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                </a>
+            </div>
+
+            <!-- Prometheus -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-red-500">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-fire text-3xl text-red-500"></i>
+                        <span class="bg-red-500/10 text-red-400 text-xs px-2 py-1 rounded">Metrics</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Prometheus</h3>
+                    <p class="text-slate-400 text-sm mb-4">Collecte et stockage des métriques du cluster.</p>
+                    <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-red-300">
+                        Retention: 15 jours | 10GB max
+                    </div>
+                </div>
+                <a href="https://prometheus.data-platform.local" target="_blank" class="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 font-medium">
+                    <i class="fas fa-lock text-green-400 text-xs"></i> prometheus.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                </a>
+            </div>
+
+            <!-- AlertManager -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-yellow-500">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-bell text-3xl text-yellow-500"></i>
+                        <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2 py-1 rounded">Alerting</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">AlertManager</h3>
+                    <p class="text-slate-400 text-sm mb-4">Gestion et routage des alertes.</p>
+                    <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-yellow-300">
+                        Notifications configurables (Slack, PagerDuty, etc.)
+                    </div>
+                </div>
+                <a href="https://alertmanager.data-platform.local" target="_blank" class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
+                    <i class="fas fa-lock text-green-400 text-xs"></i> alertmanager.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                </a>
             </div>
         </div>
 

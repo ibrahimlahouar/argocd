@@ -1,0 +1,220 @@
+# =============================================================================
+# SERVICE-TO-SERVICE NETWORK POLICIES
+# =============================================================================
+# Ces policies autorisent les flux spécifiques entre services.
+# Ex: Trino → MinIO, OpenMetadata → Trino, etc.
+# =============================================================================
+
+{{- range .Values.protectedNamespaces }}
+
+{{- if .needsVault }}
+---
+# =============================================================================
+# {{ .name | upper }} → VAULT
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-vault
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à Vault pour les secrets"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.vault.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.vault.port }}
+{{- end }}
+
+{{- if .needsMinio }}
+---
+# =============================================================================
+# {{ .name | upper }} → MINIO
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-minio
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à MinIO pour les données"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.minio.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.minio.port }}
+{{- end }}
+
+{{- if .needsTrino }}
+---
+# =============================================================================
+# {{ .name | upper }} → TRINO
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-trino
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à Trino pour les requêtes SQL"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.trino.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.trino.port }}
+{{- end }}
+
+{{- end }}
+
+# =============================================================================
+# VAULT - Accepter les connexions des services
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-services
+  namespace: {{ .Values.services.vault.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers Vault depuis les services"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- range .Values.protectedNamespaces }}
+        {{- if .needsVault }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.vault.port }}
+
+# =============================================================================
+# MINIO - Accepter les connexions des services data
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-data-services
+  namespace: {{ .Values.services.minio.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers MinIO depuis les services data"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- range .Values.protectedNamespaces }}
+        {{- if .needsMinio }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.minio.port }}
+
+# =============================================================================
+# TRINO - Accepter les connexions depuis OpenMetadata
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openmetadata
+  namespace: {{ .Values.services.trino.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers Trino depuis OpenMetadata"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openmetadata
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.trino.port }}
+
+# =============================================================================
+# HARBOR - Registry accessible pour les pulls d'images
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-image-pulls
+  namespace: {{ .Values.services.harbor.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les pulls d'images depuis Harbor"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    # Les kubelets sur tous les nodes doivent pouvoir pull les images
+    - ports:
+        {{- range .Values.services.harbor.ports }}
+        - protocol: TCP
+          port: {{ . }}
+        {{- end }}
+

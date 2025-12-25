@@ -1,0 +1,91 @@
+# =============================================================================
+# MONITORING NETWORK POLICIES
+# =============================================================================
+# Policies spéciales pour le stack de monitoring (Prometheus, Grafana, etc.)
+# Prometheus doit pouvoir scraper les métriques de TOUS les namespaces.
+# =============================================================================
+
+---
+# =============================================================================
+# MONITORING - Prometheus peut scraper tous les namespaces
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-prometheus-scrape
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: monitoring
+  annotations:
+    description: "Autorise Prometheus à scraper les métriques de tous les namespaces"
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+  policyTypes:
+    - Egress
+  egress:
+    # Autoriser vers tout le réseau des pods pour le scraping
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.cluster.podCIDR }}
+    # Autoriser vers tout le réseau des services
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.cluster.serviceCIDR }}
+
+---
+# =============================================================================
+# TOUS LES NAMESPACES - Autoriser les scrapes depuis Prometheus
+# =============================================================================
+{{- range .Values.protectedNamespaces }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-prometheus-scrape
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: monitoring
+  annotations:
+    description: "Autorise Prometheus à scraper les métriques de ce namespace"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        # Ports standards de métriques
+        - protocol: TCP
+          port: 9090   # Prometheus
+        - protocol: TCP
+          port: 9100   # Node Exporter
+        - protocol: TCP
+          port: 8080   # Applications
+        - protocol: TCP
+          port: 8443   # HTTPS metrics
+        - protocol: TCP
+          port: 9093   # AlertManager
+        - protocol: TCP
+          port: 9094   # AlertManager cluster
+        - protocol: TCP
+          port: 10250  # Kubelet metrics
+        - protocol: TCP
+          port: 10255  # Kubelet read-only
+{{- end }}
+
+# =============================================================================
+# NOTE: Pas de NetworkPolicy pour kube-system !
+# =============================================================================
+# Ajouter une NetworkPolicy à kube-system bloquerait le DNS pour tout le cluster.
+# Kubernetes n'applique pas de default-deny à kube-system, donc Prometheus
+# peut déjà accéder aux métriques sans policy explicite.
+# =============================================================================

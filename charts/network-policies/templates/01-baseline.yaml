@@ -1,0 +1,191 @@
+# =============================================================================
+# BASELINE NETWORK POLICIES
+# =============================================================================
+# Ces policies sont appliquées à TOUS les namespaces protégés.
+# Elles fournissent les accès de base nécessaires au fonctionnement:
+# 1. DNS (résolution de noms)
+# 2. Kubernetes API (pour les controllers et operators)
+# 3. Communication interne au namespace
+# =============================================================================
+
+{{- range .Values.protectedNamespaces }}
+---
+# =============================================================================
+# {{ .name | upper }} - Default Deny
+# =============================================================================
+# Bloque TOUT le trafic par défaut. Les autres policies autorisent 
+# explicitement ce qui est nécessaire.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: default-deny
+  annotations:
+    description: "Bloque tout trafic entrant et sortant par défaut"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# =============================================================================
+# {{ .name | upper }} - Allow DNS
+# =============================================================================
+# CRITIQUE: Sans DNS, rien ne fonctionne. Les pods ne peuvent pas résoudre
+# les noms de services (ex: vault.vault.svc.cluster.local)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: baseline
+  annotations:
+    description: "Autorise la résolution DNS via NodeLocalDNS et CoreDNS"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    # NodeLocalDNS (169.254.25.10) - Utilisé par Kubespray
+    - to:
+        - ipBlock:
+            cidr: {{ $.Values.cluster.dns.nodeLocalIP }}/32
+      ports:
+        - protocol: UDP
+          port: {{ $.Values.cluster.dns.port }}
+        - protocol: TCP
+          port: {{ $.Values.cluster.dns.port }}
+    # CoreDNS Service IP (fallback)
+    - to:
+        - ipBlock:
+            cidr: {{ $.Values.cluster.dns.coreDNSIP }}/32
+      ports:
+        - protocol: UDP
+          port: {{ $.Values.cluster.dns.port }}
+        - protocol: TCP
+          port: {{ $.Values.cluster.dns.port }}
+    # CoreDNS pods dans kube-system
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.cluster.dns.namespace }}
+      ports:
+        - protocol: UDP
+          port: {{ $.Values.cluster.dns.port }}
+        - protocol: TCP
+          port: {{ $.Values.cluster.dns.port }}
+
+---
+# =============================================================================
+# {{ .name | upper }} - Allow Internal Communication
+# =============================================================================
+# Autorise la communication entre les pods du même namespace.
+# Nécessaire pour: Redis ↔ App, Coordinator ↔ Workers, etc.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: baseline
+  annotations:
+    description: "Autorise la communication entre pods du même namespace"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}  # Tous les pods du namespace
+  egress:
+    - to:
+        - podSelector: {}  # Tous les pods du namespace
+
+{{- if .needsKubeAPI }}
+---
+# =============================================================================
+# {{ .name | upper }} - Allow Kubernetes API
+# =============================================================================
+# Nécessaire pour les controllers, operators, et dashboards qui doivent
+# communiquer avec l'API Kubernetes.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-kube-api
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: baseline
+  annotations:
+    description: "Autorise l'accès à l'API Kubernetes"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    # API Server via Service IP
+    - to:
+        - ipBlock:
+            cidr: {{ $.Values.cluster.kubeAPI.serviceIP }}/32
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.cluster.kubeAPI.port }}
+    # API Server via IP des masters (pour certains CNI)
+    - to:
+        - ipBlock:
+            cidr: {{ $.Values.cluster.kubeAPI.mastersCIDR }}
+      ports:
+        - protocol: TCP
+          port: 6443
+{{- end }}
+
+{{- if .needsExternal }}
+---
+# =============================================================================
+# {{ .name | upper }} - Allow External (Internet)
+# =============================================================================
+# Autorise l'accès à Internet (ex: télécharger des DBs de vulnérabilités)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-external
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: baseline
+  annotations:
+    description: "Autorise l'accès à Internet"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8       # Pas le réseau interne
+              - 172.16.0.0/12    # Pas le réseau Docker
+              - 192.168.0.0/16   # Pas le réseau privé
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80
+{{- end }}
+
+{{- end }}
+

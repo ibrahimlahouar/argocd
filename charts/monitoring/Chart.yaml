@@ -1,0 +1,23 @@
+apiVersion: v2
+name: monitoring
+description: Prometheus + Grafana Stack for Data Platform Observability
+version: 1.0.0
+appVersion: "1.0.0"
+type: application
+
+# Dépendance sur kube-prometheus-stack (inclut Prometheus, Grafana, AlertManager)
+dependencies:
+  - name: kube-prometheus-stack
+    version: "65.1.0"
+    repository: https://prometheus-community.github.io/helm-charts
+
+keywords:
+  - monitoring
+  - prometheus
+  - grafana
+  - alerting
+  - observability
+
+maintainers:
+  - name: Data Platform Team
+

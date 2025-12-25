@@ -1,0 +1,108 @@
+# =============================================================================
+# INGRESS NETWORK POLICIES
+# =============================================================================
+# Ces policies gèrent le trafic depuis/vers l'Ingress Controller.
+# L'Ingress Controller est la "porte d'entrée" du cluster.
+# =============================================================================
+
+# =============================================================================
+# INGRESS-NGINX - Accès externe
+# =============================================================================
+# L'Ingress Controller doit pouvoir recevoir du trafic de l'extérieur
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-external-traffic
+  namespace: {{ .Values.ingress.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: ingress-controller
+  annotations:
+    description: "Autorise le trafic externe vers l'Ingress Controller"
+spec:
+  podSelector:
+    matchLabels:
+      {{- toYaml .Values.ingress.podLabels | nindent 6 }}
+  policyTypes:
+    - Ingress
+  ingress:
+    # Accepter tout le trafic entrant (LoadBalancer, NodePort)
+    - {}
+
+# =============================================================================
+# INGRESS-NGINX - Egress vers les services
+# =============================================================================
+# L'Ingress Controller doit pouvoir envoyer du trafic vers tous les services
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-services
+  namespace: {{ .Values.ingress.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: ingress-controller
+  annotations:
+    description: "Autorise l'Ingress Controller à atteindre les services"
+spec:
+  podSelector:
+    matchLabels:
+      {{- toYaml .Values.ingress.podLabels | nindent 6 }}
+  policyTypes:
+    - Egress
+  egress:
+    # Autoriser vers tout le réseau des services (simplification)
+    # En production, on pourrait lister chaque service explicitement
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.cluster.serviceCIDR }}
+    # Autoriser vers tout le réseau des pods
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.cluster.podCIDR }}
+
+# =============================================================================
+# SERVICES - Accepter le trafic depuis l'Ingress Controller
+# =============================================================================
+{{- range .Values.protectedNamespaces }}
+{{- if .hasIngress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-ingress
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: ingress-access
+  annotations:
+    description: "Autorise le trafic depuis l'Ingress Controller"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.ingress.namespace }}
+          podSelector:
+            matchLabels:
+              {{- toYaml $.Values.ingress.podLabels | nindent 14 }}
+      ports:
+        {{- if .ingressPorts }}
+        {{- range .ingressPorts }}
+        - protocol: TCP
+          port: {{ . }}
+        {{- end }}
+        {{- else if .ingressPort }}
+        - protocol: TCP
+          port: {{ .ingressPort }}
+        {{- end }}
+{{- end }}
+{{- end }}
+

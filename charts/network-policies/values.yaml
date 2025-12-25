@@ -1,0 +1,138 @@
+# =============================================================================
+# NETWORK POLICIES - Configuration Production
+# =============================================================================
+# Stratégie Zero Trust:
+# 1. Default Deny: Bloquer tout trafic par défaut
+# 2. Allow DNS: Autoriser la résolution DNS (critique)
+# 3. Allow K8s API: Autoriser l'accès à l'API Kubernetes (pour les controllers)
+# 4. Allow Ingress: Autoriser le trafic depuis l'Ingress Controller
+# 5. Allow Internal: Autoriser la communication interne au namespace
+# 6. Allow Specific: Autoriser les flux spécifiques entre services
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# CONFIGURATION CLUSTER (adapter à votre environnement)
+# -----------------------------------------------------------------------------
+cluster:
+  # DNS Configuration - Kubespray utilise NodeLocalDNS
+  dns:
+    # NodeLocalDNS IP (utilisé par Kubespray)
+    nodeLocalIP: "169.254.25.10"
+    # CoreDNS Service IP (fallback)
+    coreDNSIP: "10.233.0.3"
+    # Namespace CoreDNS
+    namespace: kube-system
+    # Port DNS
+    port: 53
+
+  # Kubernetes API Configuration
+  kubeAPI:
+    # Service IP de l'API Kubernetes
+    serviceIP: "10.233.0.1"
+    # Port HTTPS
+    port: 443
+    # CIDR pour les masters (si besoin d'accès direct)
+    mastersCIDR: "10.10.0.0/24"
+
+  # Pod Network CIDR (pour communication interne)
+  podCIDR: "10.233.64.0/18"
+  
+  # Service Network CIDR
+  serviceCIDR: "10.233.0.0/18"
+
+# -----------------------------------------------------------------------------
+# NAMESPACES À PROTÉGER
+# -----------------------------------------------------------------------------
+# Ces namespaces auront des Network Policies appliquées
+protectedNamespaces:
+  # Infrastructure
+  - name: ingress-nginx
+    hasIngress: false  # C'est lui l'ingress
+    needsKubeAPI: true
+    
+  - name: cert-manager
+    hasIngress: false
+    needsKubeAPI: true
+    needsVault: true
+    
+  - name: metallb-system
+    hasIngress: false
+    needsKubeAPI: true
+
+  # Services Core
+  - name: harbor
+    hasIngress: true
+    ingressPort: 80
+    needsExternal: true  # Trivy télécharge des DBs
+    
+  - name: vault
+    hasIngress: true
+    ingressPort: 8200
+    
+  - name: minio
+    hasIngress: true
+    ingressPorts: [9000, 9001]
+    
+  - name: headlamp
+    hasIngress: true
+    ingressPort: 4466
+    needsKubeAPI: true
+
+  # Data Platform
+  - name: trino
+    hasIngress: true
+    ingressPort: 8080
+    needsMinio: true
+    needsVault: true
+    
+  - name: openmetadata
+    hasIngress: true
+    ingressPorts: [8585, 8080]
+    needsMinio: true
+    needsVault: true
+    needsTrino: true
+    
+  - name: spark
+    hasIngress: false
+    needsMinio: true
+    needsVault: true
+    needsKubeAPI: true
+    
+  - name: spark-operator
+    hasIngress: false
+    needsKubeAPI: true
+
+  # Monitoring Stack
+  - name: monitoring
+    hasIngress: true
+    ingressPorts: [3000, 9090, 9093]  # Grafana, Prometheus, AlertManager
+    needsKubeAPI: true  # Pour scraper les métriques K8s
+    needsExternal: true  # Grafana télécharge des plugins
+
+# -----------------------------------------------------------------------------
+# CONFIGURATION INGRESS CONTROLLER
+# -----------------------------------------------------------------------------
+ingress:
+  namespace: ingress-nginx
+  podLabels:
+    app.kubernetes.io/name: ingress-nginx
+
+# -----------------------------------------------------------------------------
+# SERVICES ENDPOINTS (pour les flux inter-services)
+# -----------------------------------------------------------------------------
+services:
+  vault:
+    namespace: vault
+    port: 8200
+    
+  minio:
+    namespace: minio
+    port: 9000
+    
+  trino:
+    namespace: trino
+    port: 8080
+    
+  harbor:
+    namespace: harbor
+    ports: [80, 443, 5000]
