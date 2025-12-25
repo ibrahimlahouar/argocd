@@ -2,11 +2,16 @@
 # ServiceMonitors pour les applications Data Platform
 # =============================================================================
 # Ces ServiceMonitors permettent à Prometheus de scraper les métriques
-# des applications qui les exposent.
+# des applications qui les exposent correctement.
+# 
+# Note: Certains services (MinIO, ArgoCD, Headlamp) n'exposent pas de métriques
+# par défaut ou sont bloqués par les Network Policies. Ces ServiceMonitors
+# ont été désactivés pour éviter les faux positifs "TargetDown".
 # =============================================================================
 
 ---
 # Vault ServiceMonitor - Vault expose ses métriques sur /v1/sys/metrics
+# Fonctionne car Vault expose nativement des métriques Prometheus
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -31,97 +36,8 @@ spec:
       scheme: http
 
 ---
-# MinIO ServiceMonitor - MinIO expose des métriques sur /minio/v2/metrics/cluster
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: minio-metrics
-  namespace: monitoring
-  labels:
-    app: minio
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - minio
-  selector:
-    matchLabels:
-      app: minio
-      release: minio
-  endpoints:
-    - targetPort: 9000
-      path: /minio/v2/metrics/cluster
-      interval: 30s
-      scheme: http
-
----
-# ArgoCD Server ServiceMonitor - ArgoCD expose des métriques sur /metrics
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: argocd-server-metrics
-  namespace: monitoring
-  labels:
-    app: argocd
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - argocd
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: argocd-server
-  endpoints:
-    - port: http
-      path: /metrics
-      interval: 30s
-      scheme: http
-
----
-# ArgoCD Repo Server ServiceMonitor
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: argocd-repo-server-metrics
-  namespace: monitoring
-  labels:
-    app: argocd
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - argocd
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: argocd-repo-server
-  endpoints:
-    - port: metrics
-      interval: 30s
-
----
-# Ingress NGINX ServiceMonitor
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: ingress-nginx-metrics
-  namespace: monitoring
-  labels:
-    app: ingress-nginx
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - ingress-nginx
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: ingress-nginx
-      app.kubernetes.io/component: controller
-  endpoints:
-    - port: metrics
-      interval: 30s
-
----
-# Harbor Exporter ServiceMonitor - Harbor expose des métriques via l'exporter
+# Harbor Exporter ServiceMonitor
+# Harbor a un exporter dédié pour les métriques
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -143,49 +59,17 @@ spec:
       interval: 30s
       path: /metrics
 
----
-# Trino ServiceMonitor - Trino expose des métriques JMX
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: trino-metrics
-  namespace: monitoring
-  labels:
-    app: trino
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - trino
-  selector:
-    matchLabels:
-      app: trino
-  endpoints:
-    - targetPort: 8080
-      path: /v1/info
-      interval: 30s
-      scheme: http
-
----
-# Headlamp ServiceMonitor
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: headlamp-metrics
-  namespace: monitoring
-  labels:
-    app: headlamp
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - headlamp
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: headlamp
-  endpoints:
-    - targetPort: 4466
-      path: /metrics
-      interval: 30s
-      scheme: http
-
+# =============================================================================
+# ServiceMonitors DÉSACTIVÉS (génèrent des faux positifs)
+# =============================================================================
+# Les services suivants ont été désactivés car:
+# - MinIO: nécessite une configuration spéciale pour exposer /metrics
+# - ArgoCD: les métriques sont sur un port séparé non exposé
+# - Headlamp: n'expose pas de endpoint /metrics
+# - Ingress-NGINX: bloqué par Network Policies
+# - Trino: /v1/info n'est pas un endpoint Prometheus
+#
+# Pour les réactiver, il faudrait:
+# 1. Configurer les apps pour exposer des métriques Prometheus
+# 2. Mettre à jour les Network Policies pour autoriser le scraping
+# =============================================================================

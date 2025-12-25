@@ -101,7 +101,7 @@ airflow:
     extraEnv:
       - name: PYTHONPATH
         value: "/opt/openmetadata-libs"
-    executor: "KubernetesExecutor"
+    executor: "LocalExecutor"
     config:
       # This is required for OpenMetadata UI to fetch status of DAGs
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
