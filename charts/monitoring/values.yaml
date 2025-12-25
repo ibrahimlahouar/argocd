@@ -218,16 +218,23 @@ kube-prometheus-stack:
   # ---------------------------------------------------------------------------
   # DÉSACTIVER ALERTES FAUX POSITIFS
   # ---------------------------------------------------------------------------
-  # KubeProxy n'expose pas de métriques dans Kubespray par défaut
+  # Ces composants fonctionnent mais n'exposent pas de métriques dans Kubespray
   kubeProxy:
     enabled: false  # Désactive le ServiceMonitor pour kube-proxy
   
-  # Désactiver certaines règles par défaut qui génèrent des faux positifs
+  kubeScheduler:
+    enabled: false  # Désactive le ServiceMonitor pour kube-scheduler
+  
+  kubeControllerManager:
+    enabled: false  # Désactive le ServiceMonitor pour kube-controller-manager
+  
+  # Désactiver les règles d'alerte pour ces composants
   defaultRules:
-    disabled:
-      KubeProxyDown: true           # kube-proxy fonctionne mais métriques non exposées
-      KubeSchedulerDown: true       # scheduler fonctionne mais métriques non exposées
-      KubeControllerManagerDown: true  # controller-manager fonctionne mais métriques non exposées
+    rules:
+      kubeProxy: false              # Pas de règles pour kube-proxy
+      kubeSchedulerAlerting: false  # Pas d'alertes pour scheduler
+      kubeSchedulerRecording: false # Pas de recording rules pour scheduler
+      kubeControllerManager: false  # Pas de règles pour controller-manager
 
   # ---------------------------------------------------------------------------
   # PROMETHEUS OPERATOR
