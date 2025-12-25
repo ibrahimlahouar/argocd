@@ -1,0 +1,61 @@
+# =============================================================================
+# CLUSTER ROLE BINDINGS - Liaison des rôles aux groupes
+# =============================================================================
+
+---
+# Binding pour les Platform Admins
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: data-platform-admins
+  labels:
+    app.kubernetes.io/part-of: data-platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: data-platform-admin
+subjects:
+{{- range .Values.groups.platformAdmins }}
+  - kind: Group
+    name: {{ . }}
+    apiGroup: rbac.authorization.k8s.io
+{{- end }}
+
+---
+# Binding pour les Developers
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: data-platform-developers
+  labels:
+    app.kubernetes.io/part-of: data-platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: data-platform-developer
+subjects:
+{{- range .Values.groups.developers }}
+  - kind: Group
+    name: {{ . }}
+    apiGroup: rbac.authorization.k8s.io
+{{- end }}
+
+---
+# Binding pour les Viewers
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: data-platform-viewers
+  labels:
+    app.kubernetes.io/part-of: data-platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: data-platform-viewer
+subjects:
+{{- range .Values.groups.viewers }}
+  - kind: Group
+    name: {{ . }}
+    apiGroup: rbac.authorization.k8s.io
+{{- end }}
+

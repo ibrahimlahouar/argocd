@@ -1,0 +1,56 @@
+# =============================================================================
+# RBAC - Role-Based Access Control
+# =============================================================================
+# Ce chart définit les rôles et permissions pour la Data Platform.
+# Trois niveaux d'accès sont définis:
+# 1. Platform Admin - Accès complet
+# 2. Developer - Accès lecture + certaines actions
+# 3. Viewer - Accès lecture seule
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# NAMESPACES GÉRÉS
+# -----------------------------------------------------------------------------
+namespaces:
+  - vault
+  - minio
+  - harbor
+  - trino
+  - openmetadata
+  - spark
+  - spark-operator
+  - monitoring
+  - velero
+
+# -----------------------------------------------------------------------------
+# GROUPES D'UTILISATEURS
+# -----------------------------------------------------------------------------
+groups:
+  # Administrateurs de la plateforme - accès complet
+  platformAdmins:
+    - platform-admins
+    
+  # Développeurs - accès lecture + déploiement
+  developers:
+    - developers
+    - data-engineers
+    
+  # Viewers - accès lecture seule
+  viewers:
+    - viewers
+    - auditors
+
+# -----------------------------------------------------------------------------
+# SERVICE ACCOUNTS POUR LES APPLICATIONS
+# -----------------------------------------------------------------------------
+serviceAccounts:
+  # Service account pour les jobs Spark
+  spark:
+    namespace: spark
+    name: spark-executor
+    
+  # Service account pour les backups
+  backup:
+    namespace: velero
+    name: backup-operator
+

@@ -1,0 +1,102 @@
+# =============================================================================
+# SPARK RBAC - Rôles spécifiques pour Spark
+# =============================================================================
+# Ces rôles permettent aux executors Spark de fonctionner correctement
+
+---
+# Service Account pour les executors Spark
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: spark-executor
+  namespace: spark
+  labels:
+    app.kubernetes.io/part-of: data-platform
+    app: spark
+
+---
+# Role pour les executors Spark
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: spark-executor-role
+  namespace: spark
+  labels:
+    app.kubernetes.io/part-of: data-platform
+rules:
+  # Gestion des pods (créer des executors)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  
+  # Accès aux services
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  
+  # Accès aux configmaps (pour la config Spark)
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  
+  # Accès aux secrets (pour les credentials)
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  
+  # Accès aux PVCs (pour les checkpoints)
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+
+---
+# RoleBinding pour les executors Spark
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: spark-executor-binding
+  namespace: spark
+  labels:
+    app.kubernetes.io/part-of: data-platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: spark-executor-role
+subjects:
+  - kind: ServiceAccount
+    name: spark-executor
+    namespace: spark
+
+---
+# ClusterRole pour permettre à Spark de créer des pods dans son namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: spark-operator-executor
+  labels:
+    app.kubernetes.io/part-of: data-platform
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+
+---
+# ClusterRoleBinding pour Spark operator
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: spark-operator-executor-binding
+  labels:
+    app.kubernetes.io/part-of: data-platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: spark-operator-executor
+subjects:
+  - kind: ServiceAccount
+    name: spark-executor
+    namespace: spark
+
