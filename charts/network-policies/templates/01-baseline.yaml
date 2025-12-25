@@ -185,6 +185,10 @@ spec:
           port: 443
         - protocol: TCP
           port: 80
+        - protocol: TCP
+          port: 587   # SMTP (Gmail, Office365)
+        - protocol: TCP
+          port: 465   # SMTPS
 {{- end }}
 
 {{- end }}
