@@ -91,6 +91,8 @@ protectedNamespaces:
     needsMinio: true
     needsVault: true
     needsTrino: true
+    needsKubeAPI: true  # Pour KubernetesExecutor Airflow
+    needsExternal: true  # Pour télécharger packages PyPI
     
   - name: spark
     hasIngress: false
