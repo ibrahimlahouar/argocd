@@ -327,7 +327,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 7},
           "id": 20,
           "options": {},
-          "targets": [{"expr": "sum(container_memory_usage_bytes{namespace=~\"vault|minio|harbor|trino|openmetadata|argocd\"}) by (namespace)", "legendFormat": "{{namespace}}", "refId": "A"}],
+          "targets": [{"expr": "sum(container_memory_usage_bytes{namespace=~\"vault|minio|harbor|trino|openmetadata|argocd\"}) by (namespace)", "legendFormat": "{{ "{{" }}namespace{{ "}}" }}", "refId": "A"}],
           "title": "Memory par Namespace",
           "type": "timeseries"
         },
@@ -337,7 +337,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 7},
           "id": 21,
           "options": {},
-          "targets": [{"expr": "sum(rate(container_cpu_usage_seconds_total{namespace=~\"vault|minio|harbor|trino|openmetadata|argocd\"}[5m])) by (namespace)", "legendFormat": "{{namespace}}", "refId": "A"}],
+          "targets": [{"expr": "sum(rate(container_cpu_usage_seconds_total{namespace=~\"vault|minio|harbor|trino|openmetadata|argocd\"}[5m])) by (namespace)", "legendFormat": "{{ "{{" }}namespace{{ "}}" }}", "refId": "A"}],
           "title": "CPU par Namespace",
           "type": "timeseries"
         }
