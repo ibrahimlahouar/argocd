@@ -44,53 +44,9 @@ falco:
     outputs_queue:
       capacity: 2048
   
-  # Règles personnalisées pour Data Platform
-  customRules:
-    data-platform-rules.yaml: |-
-      # =============================================================
-      # Règles personnalisées pour Data Platform
-      # =============================================================
-      
-      # Alerte si quelqu'un exec dans un pod de production
-      - rule: Shell in Data Platform Container
-        desc: Detect shell execution in data platform containers
-        condition: >
-          spawned_process and 
-          container and 
-          (proc.name in (bash, sh, zsh, ash)) and
-          k8s.ns.name in (vault, harbor, minio, openmetadata, trino, argocd)
-        output: >
-          Shell executed in production container 
-          (user=%user.name command=%proc.cmdline container=%container.name 
-          namespace=%k8s.ns.name pod=%k8s.pod.name)
-        priority: WARNING
-        tags: [container, shell, data-platform]
-      
-      # Alerte si accès aux secrets Kubernetes
-      - rule: K8s Secrets Access
-        desc: Detect access to Kubernetes secrets
-        condition: >
-          open_read and 
-          fd.name startswith "/var/run/secrets/kubernetes.io"
-        output: >
-          Kubernetes secrets accessed 
-          (user=%user.name file=%fd.name container=%container.name)
-        priority: NOTICE
-        tags: [secrets, kubernetes]
-      
-      # Alerte si connexion sortante suspecte depuis Vault
-      - rule: Suspicious Outbound from Vault
-        desc: Detect outbound connections from vault to unexpected destinations
-        condition: >
-          outbound and 
-          container and 
-          k8s.ns.name = "vault" and
-          not (fd.sip in (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16))
-        output: >
-          Vault container making external connection 
-          (connection=%fd.name container=%container.name)
-        priority: WARNING
-        tags: [network, vault]
+  # Règles personnalisées désactivées pour l'instant
+  # Les règles par défaut de Falco sont suffisantes
+  customRules: {}
   
   # Falcosidekick pour les alertes
   falcosidekick:

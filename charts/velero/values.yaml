@@ -8,6 +8,12 @@
 # =============================================================================
 
 velero:
+  # Image kubectl pour les hooks
+  kubectl:
+    image:
+      repository: bitnami/kubectl
+      tag: "1.28"  # Version stable
+  
   # Configuration générale
   configuration:
     # Provider pour les snapshots de volumes
