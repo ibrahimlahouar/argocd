@@ -1,0 +1,16 @@
+apiVersion: v2
+name: gatekeeper-policies
+description: Custom OPA Gatekeeper policies for Data Platform
+version: 1.0.0
+appVersion: "1.0.0"
+type: application
+
+keywords:
+  - policy
+  - opa
+  - gatekeeper
+  - constraints
+
+maintainers:
+  - name: Data Platform Team
+

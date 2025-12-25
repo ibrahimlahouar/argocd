@@ -1,6 +1,9 @@
 # =============================================================================
 # CONSTRAINT TEMPLATES - Définition des règles
 # =============================================================================
+# Note: Ces templates doivent être appliqués AVANT les constraints.
+# ArgoCD sync-wave est utilisé pour garantir l'ordre.
+# =============================================================================
 
 ---
 # Template: Interdire les containers root

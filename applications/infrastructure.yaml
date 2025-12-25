@@ -204,7 +204,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
-# OPA Gatekeeper - Policy as Code
+# OPA Gatekeeper - Policy as Code (installe les CRDs)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -229,6 +229,31 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
+    - ServerSideApply=true
+---
+# Gatekeeper Policies (après que Gatekeeper soit installé)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gatekeeper-policies
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"  # Après Gatekeeper
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/gatekeeper-policies
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gatekeeper-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ---
 # Platform Reliability - PDBs
 apiVersion: argoproj.io/v1alpha1
