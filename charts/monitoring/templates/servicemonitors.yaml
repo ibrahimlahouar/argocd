@@ -6,11 +6,11 @@
 # =============================================================================
 
 ---
-# Vault ServiceMonitor
+# Vault ServiceMonitor - Vault expose ses métriques sur /v1/sys/metrics
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: vault
+  name: vault-metrics
   namespace: monitoring
   labels:
     app: vault
@@ -31,11 +31,11 @@ spec:
       scheme: http
 
 ---
-# MinIO ServiceMonitor
+# MinIO ServiceMonitor - MinIO expose des métriques sur /minio/v2/metrics/cluster
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: minio
+  name: minio-metrics
   namespace: monitoring
   labels:
     app: minio
@@ -47,18 +47,19 @@ spec:
   selector:
     matchLabels:
       app: minio
+      release: minio
   endpoints:
-    - port: http
+    - targetPort: 9000
       path: /minio/v2/metrics/cluster
       interval: 30s
       scheme: http
 
 ---
-# ArgoCD ServiceMonitor
+# ArgoCD Server ServiceMonitor - ArgoCD expose des métriques sur /metrics
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: argocd
+  name: argocd-server-metrics
   namespace: monitoring
   labels:
     app: argocd
@@ -71,6 +72,29 @@ spec:
     matchLabels:
       app.kubernetes.io/name: argocd-server
   endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scheme: http
+
+---
+# ArgoCD Repo Server ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: argocd-repo-server-metrics
+  namespace: monitoring
+  labels:
+    app: argocd
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - argocd
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-repo-server
+  endpoints:
     - port: metrics
       interval: 30s
 
@@ -79,7 +103,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: ingress-nginx
+  name: ingress-nginx-metrics
   namespace: monitoring
   labels:
     app: ingress-nginx
@@ -91,38 +115,17 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/component: controller
   endpoints:
     - port: metrics
       interval: 30s
 
 ---
-# Cert-Manager ServiceMonitor
+# Harbor Exporter ServiceMonitor - Harbor expose des métriques via l'exporter
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: cert-manager
-  namespace: monitoring
-  labels:
-    app: cert-manager
-    release: monitoring
-spec:
-  namespaceSelector:
-    matchNames:
-      - cert-manager
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: cert-manager
-  endpoints:
-    - port: tcp-prometheus-servicemonitor
-      interval: 30s
-      path: /metrics
-
----
-# Harbor ServiceMonitor (Core + Exporter)
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: harbor
+  name: harbor-exporter-metrics
   namespace: monitoring
   labels:
     app: harbor
@@ -134,30 +137,55 @@ spec:
   selector:
     matchLabels:
       app: harbor
+      component: exporter
   endpoints:
     - port: http-metrics
       interval: 30s
       path: /metrics
 
 ---
-# OpenMetadata ServiceMonitor
+# Trino ServiceMonitor - Trino expose des métriques JMX
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: openmetadata
+  name: trino-metrics
   namespace: monitoring
   labels:
-    app: openmetadata
+    app: trino
     release: monitoring
 spec:
   namespaceSelector:
     matchNames:
-      - openmetadata
+      - trino
   selector:
     matchLabels:
-      app.kubernetes.io/name: openmetadata
+      app: trino
   endpoints:
-    - port: http
+    - targetPort: 8080
+      path: /v1/info
       interval: 30s
-      path: /prometheus/metrics
+      scheme: http
+
+---
+# Headlamp ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: headlamp-metrics
+  namespace: monitoring
+  labels:
+    app: headlamp
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - headlamp
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: headlamp
+  endpoints:
+    - targetPort: 4466
+      path: /metrics
+      interval: 30s
+      scheme: http
 
