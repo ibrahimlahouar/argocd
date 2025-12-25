@@ -1,0 +1,137 @@
+{{- if .Values.postgresql.enabled }}
+# =============================================================================
+# POSTGRESQL BACKUP CRONJOB
+# =============================================================================
+# Sauvegarde automatique des bases PostgreSQL (Harbor)
+# Les backups sont compressés et envoyés vers MinIO
+# =============================================================================
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgresql-backup
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: db-backup
+    database: postgresql
+spec:
+  schedule: {{ .Values.postgresql.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 86400
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app: db-backup
+            database: postgresql
+        spec:
+          restartPolicy: OnFailure
+          initContainers:
+            # Step 1: Create PostgreSQL dump
+            - name: pgdump
+              image: {{ .Values.images.postgresql.repository }}:{{ .Values.images.postgresql.tag }}
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "=== PostgreSQL Backup Started at $(date) ==="
+                  
+                  TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+                  
+                  export PGPASSWORD="$PGPASSWORD"
+                  
+                  {{- range .Values.postgresql.databases }}
+                  echo "Backing up database: {{ . }}"
+                  pg_dump -h $PGHOST -p $PGPORT -U $PGUSER -d {{ . }} \
+                    --format=custom --compress=9 \
+                    -f /backups/{{ . }}_${TIMESTAMP}.dump
+                  
+                  echo "Created: /backups/{{ . }}_${TIMESTAMP}.dump"
+                  {{- end }}
+                  
+                  echo "=== Backup files created ==="
+                  ls -la /backups/
+              env:
+                - name: PGHOST
+                  value: {{ .Values.postgresql.host | quote }}
+                - name: PGPORT
+                  value: {{ .Values.postgresql.port | quote }}
+                - name: PGUSER
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.postgresql.credentials.secretName }}
+                      key: {{ .Values.postgresql.credentials.usernameKey }}
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.postgresql.credentials.secretName }}
+                      key: {{ .Values.postgresql.credentials.passwordKey }}
+              volumeMounts:
+                - name: backup-data
+                  mountPath: /backups
+              resources:
+                {{- toYaml .Values.postgresql.resources | nindent 16 }}
+          
+          containers:
+            # Step 2: Upload to MinIO
+            - name: upload-to-minio
+              image: {{ .Values.images.minio.repository }}:{{ .Values.images.minio.tag }}
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  echo "=== Uploading to MinIO ==="
+                  
+                  # Configure MinIO client
+                  mc alias set backup http://{{ .Values.global.minio.endpoint }} "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+                  
+                  # Create bucket if not exists
+                  mc mb --ignore-existing backup/{{ .Values.global.minio.bucket }}
+                  mc mb --ignore-existing backup/{{ .Values.global.minio.bucket }}/postgresql
+                  
+                  # Upload all backup files
+                  for file in /backups/*.dump; do
+                    if [ -f "$file" ]; then
+                      filename=$(basename "$file")
+                      echo "Uploading: $filename"
+                      mc cp "$file" backup/{{ .Values.global.minio.bucket }}/postgresql/
+                    fi
+                  done
+                  
+                  # Cleanup old backups (keep last N)
+                  echo "=== Cleanup old backups (keeping {{ .Values.postgresql.retention.copies }}) ==="
+                  mc ls backup/{{ .Values.global.minio.bucket }}/postgresql/ | sort -r | tail -n +{{ add .Values.postgresql.retention.copies 1 }} | awk '{print $NF}' | while read f; do
+                    mc rm "backup/{{ .Values.global.minio.bucket }}/postgresql/$f" 2>/dev/null || true
+                  done
+                  
+                  echo "=== Current backups ==="
+                  mc ls backup/{{ .Values.global.minio.bucket }}/postgresql/
+                  
+                  echo "=== Backup complete! ==="
+              env:
+                - name: MINIO_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-backup-credentials
+                      key: access-key
+                - name: MINIO_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-backup-credentials
+                      key: secret-key
+              volumeMounts:
+                - name: backup-data
+                  mountPath: /backups
+          
+          volumes:
+            - name: backup-data
+              emptyDir:
+                sizeLimit: 5Gi
+{{- end }}
+

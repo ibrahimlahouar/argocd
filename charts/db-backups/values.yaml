@@ -1,0 +1,104 @@
+# =============================================================================
+# DATABASE BACKUPS - Configuration
+# =============================================================================
+# Ce chart crée des CronJobs pour sauvegarder automatiquement les bases de données
+# de la Data Platform. Les backups sont stockés sur MinIO.
+# =============================================================================
+
+# Configuration globale
+global:
+  # Namespace où déployer les jobs de backup
+  namespace: velero
+  
+  # Configuration MinIO pour le stockage des backups
+  minio:
+    endpoint: "minio.minio.svc:9000"
+    bucket: "db-backups"
+    accessKey: "minio"
+    secretKey: "minio123"  # À mettre dans un secret en production
+
+# -----------------------------------------------------------------------------
+# MYSQL BACKUP (OpenMetadata)
+# -----------------------------------------------------------------------------
+mysql:
+  enabled: true
+  # Cron schedule: tous les jours à 2h du matin
+  schedule: "0 2 * * *"
+  
+  # Configuration de connexion
+  host: "mysql.openmetadata.svc"
+  port: 3306
+  databases:
+    - openmetadata_db
+    - airflow_db
+  
+  # Credentials (référence au secret existant)
+  credentials:
+    secretName: "mysql-backup-credentials"
+    usernameKey: "username"
+    passwordKey: "password"
+  
+  # Rétention: nombre de backups à conserver
+  retention:
+    days: 30
+    copies: 30
+  
+  # Ressources pour le job
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+# -----------------------------------------------------------------------------
+# POSTGRESQL BACKUP (Harbor)
+# -----------------------------------------------------------------------------
+postgresql:
+  enabled: true
+  # Cron schedule: tous les jours à 3h du matin
+  schedule: "0 3 * * *"
+  
+  # Configuration de connexion
+  host: "harbor-database.harbor.svc"
+  port: 5432
+  databases:
+    - registry
+    - notary_signer
+    - notary_server
+  
+  # Credentials
+  credentials:
+    secretName: "postgresql-backup-credentials"
+    usernameKey: "username"
+    passwordKey: "password"
+  
+  # Rétention
+  retention:
+    days: 30
+    copies: 30
+  
+  # Ressources
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+# -----------------------------------------------------------------------------
+# IMAGE CONFIGURATION
+# -----------------------------------------------------------------------------
+images:
+  mysql:
+    repository: bitnami/mysql
+    tag: "8.0"
+  postgresql:
+    repository: bitnami/postgresql
+    tag: "15"
+  minio:
+    repository: minio/mc
+    tag: "latest"
+

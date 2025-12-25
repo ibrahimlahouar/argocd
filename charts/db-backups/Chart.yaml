@@ -1,0 +1,7 @@
+apiVersion: v2
+name: db-backups
+description: Automated database backups for Data Platform (MySQL, PostgreSQL)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
