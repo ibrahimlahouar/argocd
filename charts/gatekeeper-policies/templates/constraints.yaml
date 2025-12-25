@@ -3,6 +3,7 @@
 # =============================================================================
 # Mode: dryrun = audit uniquement, warn = warning, deny = bloquant
 # Commencer par dryrun puis passer en deny progressivement
+# sync-wave: "1" pour s'assurer que les ConstraintTemplates sont créés d'abord
 # =============================================================================
 
 ---
@@ -11,6 +12,9 @@ apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPPrivilegedContainer
 metadata:
   name: deny-privileged-containers
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   enforcementAction: warn  # warn pour commencer, puis deny
   match:
@@ -29,6 +33,9 @@ apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sRequiredResources
 metadata:
   name: require-resource-limits
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   enforcementAction: dryrun  # Audit seulement pour commencer
   match:
@@ -52,6 +59,9 @@ apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sRequiredLabels
 metadata:
   name: require-app-label-deployments
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   enforcementAction: warn
   match:
@@ -72,6 +82,9 @@ apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sAllowedRepos
 metadata:
   name: allowed-repos
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   enforcementAction: dryrun  # Audit seulement - beaucoup d'images publiques
   match:
@@ -109,6 +122,9 @@ apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPHostFilesystem
 metadata:
   name: restrict-hostpath
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   enforcementAction: warn
   match:

@@ -8,11 +8,9 @@
 # =============================================================================
 
 velero:
-  # Image kubectl pour les hooks
-  kubectl:
-    image:
-      repository: bitnami/kubectl
-      tag: "1.28"  # Version stable
+  # Désactiver le hook de mise à jour des CRDs (cause des problèmes d'image)
+  upgradeCRDs: false
+  cleanUpCRDs: false
   
   # Configuration générale
   configuration:

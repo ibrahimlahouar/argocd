@@ -12,6 +12,7 @@ kind: ConstraintTemplate
 metadata:
   name: k8spspprivilegedcontainer
   annotations:
+    argocd.argoproj.io/sync-wave: "-1"
     description: Controls the ability of pods to run privileged containers
 spec:
   crd:
