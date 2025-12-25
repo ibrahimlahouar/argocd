@@ -1,0 +1,68 @@
+# =============================================================================
+# TEMPO - Distributed Tracing
+# =============================================================================
+# Tempo: Backend de stockage de traces (compatible Jaeger, Zipkin, OTLP)
+# Plus léger et moins coûteux que Jaeger, intégré avec Grafana
+# =============================================================================
+
+tempo:
+  # Configuration Tempo
+  tempo:
+    # Réception des traces
+    receivers:
+      jaeger:
+        protocols:
+          thrift_http:
+            endpoint: "0.0.0.0:14268"
+          grpc:
+            endpoint: "0.0.0.0:14250"
+          thrift_binary:
+            endpoint: "0.0.0.0:6832"
+          thrift_compact:
+            endpoint: "0.0.0.0:6831"
+      zipkin:
+        endpoint: "0.0.0.0:9411"
+      otlp:
+        protocols:
+          http:
+            endpoint: "0.0.0.0:4318"
+          grpc:
+            endpoint: "0.0.0.0:4317"
+    
+    # Retention
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+        wal:
+          path: /var/tempo/wal
+    
+    # Query
+    querier:
+      max_concurrent_queries: 20
+    
+    # Compactor
+    compactor:
+      compaction:
+        block_retention: 168h  # 7 jours
+  
+  # Persistence
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: local-path
+  
+  # Resources
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  # ServiceMonitor
+  serviceMonitor:
+    enabled: true
+

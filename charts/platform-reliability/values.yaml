@@ -1,0 +1,92 @@
+# =============================================================================
+# PLATFORM RELIABILITY - PDBs & Anti-affinity
+# =============================================================================
+# PodDisruptionBudget: Garantit un minimum de pods disponibles pendant les
+# opérations de maintenance (rolling updates, node drain, etc.)
+# =============================================================================
+
+# Services critiques qui nécessitent un PDB
+services:
+  # ArgoCD
+  - name: argocd-server
+    namespace: argocd
+    selector:
+      app.kubernetes.io/name: argocd-server
+    minAvailable: 1
+  
+  - name: argocd-repo-server
+    namespace: argocd
+    selector:
+      app.kubernetes.io/name: argocd-repo-server
+    minAvailable: 1
+  
+  # Ingress Controller
+  - name: ingress-nginx
+    namespace: ingress-nginx
+    selector:
+      app.kubernetes.io/name: ingress-nginx
+    minAvailable: 1
+  
+  # Vault
+  - name: vault
+    namespace: vault
+    selector:
+      app.kubernetes.io/name: vault
+    minAvailable: 1
+  
+  # Harbor Core
+  - name: harbor-core
+    namespace: harbor
+    selector:
+      app: harbor
+      component: core
+    minAvailable: 1
+  
+  # MinIO
+  - name: minio
+    namespace: minio
+    selector:
+      app: minio
+    minAvailable: 1
+  
+  # Monitoring
+  - name: prometheus
+    namespace: monitoring
+    selector:
+      app.kubernetes.io/name: prometheus
+    minAvailable: 1
+  
+  - name: grafana
+    namespace: monitoring
+    selector:
+      app.kubernetes.io/name: grafana
+    minAvailable: 1
+  
+  - name: alertmanager
+    namespace: monitoring
+    selector:
+      app.kubernetes.io/name: alertmanager
+    minAvailable: 1
+  
+  # OpenMetadata
+  - name: openmetadata-server
+    namespace: openmetadata
+    selector:
+      app.kubernetes.io/name: openmetadata
+    minAvailable: 1
+  
+  # Trino
+  - name: trino-coordinator
+    namespace: trino
+    selector:
+      app: trino
+      component: coordinator
+    minAvailable: 1
+  
+  # Cert-Manager
+  - name: cert-manager
+    namespace: cert-manager
+    selector:
+      app.kubernetes.io/name: cert-manager
+    minAvailable: 1
+

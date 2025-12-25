@@ -1,0 +1,137 @@
+# =============================================================================
+# FALCO - Runtime Security
+# =============================================================================
+# Falco détecte les comportements suspects au runtime:
+# - Exécution de shell dans un container
+# - Lecture de fichiers sensibles (/etc/shadow, etc.)
+# - Connexions réseau suspectes
+# - Escalade de privilèges
+# =============================================================================
+
+falco:
+  # Driver pour capturer les syscalls
+  driver:
+    enabled: true
+    kind: modern_ebpf  # Utilise eBPF moderne (meilleure performance)
+  
+  # Collecteurs
+  collectors:
+    enabled: true
+    containerd:
+      enabled: true
+      socket: /run/containerd/containerd.sock
+    crio:
+      enabled: false
+    docker:
+      enabled: false
+  
+  # Configuration Falco
+  falco:
+    # Niveau de log
+    log_level: info
+    
+    # Output des alertes
+    json_output: true
+    json_include_output_property: true
+    
+    # Règles
+    rules_file:
+      - /etc/falco/falco_rules.yaml
+      - /etc/falco/falco_rules.local.yaml
+      - /etc/falco/rules.d
+    
+    # Rate limiting
+    outputs_queue:
+      capacity: 2048
+  
+  # Règles personnalisées pour Data Platform
+  customRules:
+    data-platform-rules.yaml: |-
+      # =============================================================
+      # Règles personnalisées pour Data Platform
+      # =============================================================
+      
+      # Alerte si quelqu'un exec dans un pod de production
+      - rule: Shell in Data Platform Container
+        desc: Detect shell execution in data platform containers
+        condition: >
+          spawned_process and 
+          container and 
+          (proc.name in (bash, sh, zsh, ash)) and
+          k8s.ns.name in (vault, harbor, minio, openmetadata, trino, argocd)
+        output: >
+          Shell executed in production container 
+          (user=%user.name command=%proc.cmdline container=%container.name 
+          namespace=%k8s.ns.name pod=%k8s.pod.name)
+        priority: WARNING
+        tags: [container, shell, data-platform]
+      
+      # Alerte si accès aux secrets Kubernetes
+      - rule: K8s Secrets Access
+        desc: Detect access to Kubernetes secrets
+        condition: >
+          open_read and 
+          fd.name startswith "/var/run/secrets/kubernetes.io"
+        output: >
+          Kubernetes secrets accessed 
+          (user=%user.name file=%fd.name container=%container.name)
+        priority: NOTICE
+        tags: [secrets, kubernetes]
+      
+      # Alerte si connexion sortante suspecte depuis Vault
+      - rule: Suspicious Outbound from Vault
+        desc: Detect outbound connections from vault to unexpected destinations
+        condition: >
+          outbound and 
+          container and 
+          k8s.ns.name = "vault" and
+          not (fd.sip in (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16))
+        output: >
+          Vault container making external connection 
+          (connection=%fd.name container=%container.name)
+        priority: WARNING
+        tags: [network, vault]
+  
+  # Falcosidekick pour les alertes
+  falcosidekick:
+    enabled: true
+    
+    config:
+      # Envoyer à AlertManager
+      alertmanager:
+        hostport: "http://monitoring-kube-prometheus-alertmanager.monitoring.svc:9093"
+        minimumpriority: "warning"
+      
+      # Webhook (optionnel)
+      # webhook:
+      #   address: "http://your-webhook"
+    
+    # Resources
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+  
+  # Resources pour Falco
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  # ServiceMonitor
+  serviceMonitor:
+    enabled: true
+  
+  # Tolérations pour tous les nodes
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
+    - effect: NoExecute
+      operator: Exists
+

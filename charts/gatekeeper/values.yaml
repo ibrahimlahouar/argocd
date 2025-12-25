@@ -1,0 +1,59 @@
+# =============================================================================
+# OPA GATEKEEPER - Policy as Code
+# =============================================================================
+# Gatekeeper valide les ressources Kubernetes AVANT leur création:
+# - Bloquer les containers root
+# - Forcer les resource limits
+# - Interdire les images non signées
+# - Valider les labels obligatoires
+# =============================================================================
+
+gatekeeper:
+  # Replicas pour HA
+  replicas: 2
+  
+  # Audit
+  auditInterval: 60
+  auditFromCache: true
+  auditChunkSize: 500
+  
+  # Contraintes
+  constraintViolationsLimit: 20
+  
+  # Webhook
+  validatingWebhookTimeoutSeconds: 5
+  mutatingWebhookTimeoutSeconds: 3
+  
+  # Resources
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  # Audit resources
+  audit:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  
+  # Exemptions - namespaces à ne pas valider
+  exemptNamespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+    - gatekeeper-system
+  
+  # Logging
+  logLevel: INFO
+  
+  # ServiceMonitor
+  psp:
+    enabled: false  # PSP deprecated
+

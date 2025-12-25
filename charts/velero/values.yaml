@@ -1,0 +1,123 @@
+# =============================================================================
+# VELERO - Backup & Disaster Recovery
+# =============================================================================
+# Velero sauvegarde:
+# - Les ressources Kubernetes (YAML)
+# - Les PersistentVolumes (snapshots)
+# Stockage: MinIO (S3-compatible) local
+# =============================================================================
+
+velero:
+  # Configuration générale
+  configuration:
+    # Provider pour les snapshots de volumes
+    backupStorageLocation:
+      - name: default
+        provider: aws  # Compatible S3
+        bucket: velero-backups
+        config:
+          region: minio
+          s3ForcePathStyle: true
+          s3Url: http://minio.minio.svc:9000
+          publicUrl: https://s3.data-platform.local
+    
+    # Configuration des snapshots de volumes
+    volumeSnapshotLocation:
+      - name: default
+        provider: aws
+        config:
+          region: minio
+  
+  # Credentials pour MinIO
+  credentials:
+    useSecret: true
+    name: velero-credentials
+    secretContents:
+      cloud: |
+        [default]
+        aws_access_key_id=minioadmin
+        aws_secret_access_key=minioadmin123
+  
+  # Initialisation des plugins
+  initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.9.0
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
+  
+  # Resources
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  # Schedules de backup automatiques
+  schedules:
+    # Backup quotidien de tous les namespaces importants
+    daily-backup:
+      disabled: false
+      schedule: "0 2 * * *"  # Tous les jours à 2h du matin
+      useOwnerReferencesInBackup: false
+      template:
+        ttl: "168h"  # Rétention 7 jours
+        includedNamespaces:
+          - argocd
+          - harbor
+          - vault
+          - minio
+          - openmetadata
+          - trino
+          - spark
+          - spark-operator
+          - monitoring
+          - cert-manager
+        excludedResources:
+          - events
+          - events.events.k8s.io
+        snapshotVolumes: true
+        storageLocation: default
+        volumeSnapshotLocations:
+          - default
+    
+    # Backup hebdomadaire complet
+    weekly-full-backup:
+      disabled: false
+      schedule: "0 3 * * 0"  # Dimanche à 3h
+      useOwnerReferencesInBackup: false
+      template:
+        ttl: "720h"  # Rétention 30 jours
+        includedNamespaces:
+          - "*"
+        excludedNamespaces:
+          - kube-system
+          - kube-public
+          - kube-node-lease
+        excludedResources:
+          - events
+          - events.events.k8s.io
+        snapshotVolumes: true
+        storageLocation: default
+  
+  # ServiceMonitor pour Prometheus
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  
+  # Déployer node-agent (pour les backups de volumes)
+  deployNodeAgent: true
+  
+  nodeAgent:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+

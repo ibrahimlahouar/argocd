@@ -1,0 +1,22 @@
+apiVersion: v2
+name: gatekeeper
+description: OPA Gatekeeper for Kubernetes Policy as Code
+version: 1.0.0
+appVersion: "3.15.0"
+type: application
+
+dependencies:
+  - name: gatekeeper
+    version: "3.15.0"
+    repository: https://open-policy-agent.github.io/gatekeeper/charts
+
+keywords:
+  - policy
+  - opa
+  - gatekeeper
+  - security
+  - admission-controller
+
+maintainers:
+  - name: Data Platform Team
+

@@ -1,0 +1,132 @@
+# =============================================================================
+# CONSTRAINTS - Application des règles
+# =============================================================================
+# Mode: dryrun = audit uniquement, warn = warning, deny = bloquant
+# Commencer par dryrun puis passer en deny progressivement
+# =============================================================================
+
+---
+# Contrainte: Pas de containers privileged
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPPrivilegedContainer
+metadata:
+  name: deny-privileged-containers
+spec:
+  enforcementAction: warn  # warn pour commencer, puis deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - kube-system
+      - kube-public
+      - gatekeeper-system
+      - falco  # Falco a besoin de privileged
+
+---
+# Contrainte: Resource limits obligatoires (dryrun pour audit)
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredResources
+metadata:
+  name: require-resource-limits
+spec:
+  enforcementAction: dryrun  # Audit seulement pour commencer
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - kube-system
+      - kube-public
+      - gatekeeper-system
+  parameters:
+    limits:
+      - memory
+    requests:
+      - cpu
+      - memory
+
+---
+# Contrainte: Labels app obligatoire sur les Deployments
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-app-label-deployments
+spec:
+  enforcementAction: warn
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    excludedNamespaces:
+      - kube-system
+      - kube-public
+      - gatekeeper-system
+  parameters:
+    labels:
+      - app
+
+---
+# Contrainte: Images uniquement depuis Harbor ou registres connus
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: allowed-repos
+spec:
+  enforcementAction: dryrun  # Audit seulement - beaucoup d'images publiques
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - kube-system
+      - kube-public
+      - gatekeeper-system
+  parameters:
+    repos:
+      # Harbor local
+      - "10.10.0.101:30500/"
+      - "harbor.data-platform.local/"
+      # Registres publics autorisés
+      - "docker.io/"
+      - "gcr.io/"
+      - "ghcr.io/"
+      - "quay.io/"
+      - "registry.k8s.io/"
+      - "public.ecr.aws/"
+      # Images officielles
+      - "hashicorp/"
+      - "grafana/"
+      - "prom/"
+      - "apache/"
+      - "bitnami/"
+      - "curlimages/"
+      - "busybox"
+
+---
+# Contrainte: hostPath limité
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPHostFilesystem
+metadata:
+  name: restrict-hostpath
+spec:
+  enforcementAction: warn
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - kube-system
+      - kube-public
+      - gatekeeper-system
+      - monitoring  # Node exporter a besoin de hostPath
+      - falco       # Falco a besoin de hostPath
+  parameters:
+    allowedHostPaths:
+      - pathPrefix: "/var/log"
+        readOnly: true
+      - pathPrefix: "/var/lib/docker/containers"
+        readOnly: true
+      - pathPrefix: "/run/containerd"
+        readOnly: true
+

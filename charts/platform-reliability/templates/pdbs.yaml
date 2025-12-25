@@ -1,0 +1,26 @@
+# =============================================================================
+# POD DISRUPTION BUDGETS
+# =============================================================================
+# Garantit qu'un minimum de pods reste disponible pendant les opérations
+# de maintenance (node drain, rolling updates, etc.)
+# =============================================================================
+
+{{- range .Values.services }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .name }}-pdb
+  namespace: {{ .namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-reliability
+spec:
+  minAvailable: {{ .minAvailable | default 1 }}
+  selector:
+    matchLabels:
+      {{- range $key, $value := .selector }}
+      {{ $key }}: {{ $value }}
+      {{- end }}
+{{- end }}
+

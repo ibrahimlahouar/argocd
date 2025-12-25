@@ -1,4 +1,4 @@
-# Infrastructure components: MetalLB, Ingress Controller, Cert-Manager, Network Policies, Monitoring
+# Infrastructure components: MetalLB, Ingress, Cert-Manager, Monitoring, Logging, Tracing, Backup, Security
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -99,6 +99,160 @@ spec:
     syncOptions:
     - CreateNamespace=true
     - ServerSideApply=true  # Nécessaire pour les CRDs volumineuses
+---
+# Loki Stack - Centralized Logging
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-stack
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/loki-stack
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# Tempo - Distributed Tracing
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tempo
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/tempo
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# Velero - Backup & Disaster Recovery
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/velero
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: velero
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# Falco - Runtime Security
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: falco
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/falco
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: falco
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# OPA Gatekeeper - Policy as Code
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gatekeeper
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/gatekeeper
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gatekeeper-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# Platform Reliability - PDBs
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-reliability
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/platform-reliability
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ---
 # Network Policies - Zero Trust Security
 # Déployé après Cert-Manager car il a besoin des namespaces créés

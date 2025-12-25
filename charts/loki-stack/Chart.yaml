@@ -1,0 +1,24 @@
+apiVersion: v2
+name: loki-stack
+description: Loki + Promtail for centralized logging
+version: 1.0.0
+appVersion: "2.9.0"
+type: application
+
+dependencies:
+  - name: loki
+    version: "6.16.0"
+    repository: https://grafana.github.io/helm-charts
+  - name: promtail
+    version: "6.16.4"
+    repository: https://grafana.github.io/helm-charts
+
+keywords:
+  - logging
+  - loki
+  - promtail
+  - observability
+
+maintainers:
+  - name: Data Platform Team
+

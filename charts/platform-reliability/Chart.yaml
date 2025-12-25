@@ -1,0 +1,16 @@
+apiVersion: v2
+name: platform-reliability
+description: PodDisruptionBudgets and reliability configurations for Data Platform
+version: 1.0.0
+appVersion: "1.0.0"
+type: application
+
+keywords:
+  - pdb
+  - reliability
+  - high-availability
+  - disruption-budget
+
+maintainers:
+  - name: Data Platform Team
+

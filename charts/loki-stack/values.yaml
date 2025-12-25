@@ -1,0 +1,146 @@
+# =============================================================================
+# LOKI STACK - Centralisation des Logs
+# =============================================================================
+# Loki: Base de données de logs (comme Prometheus mais pour les logs)
+# Promtail: Agent de collecte des logs sur chaque node
+# =============================================================================
+
+loki:
+  # Mode simple (single binary) pour environnement non-HA
+  deploymentMode: SingleBinary
+  
+  loki:
+    # Configuration Loki
+    auth_enabled: false
+    
+    commonConfig:
+      replication_factor: 1
+    
+    storage:
+      type: filesystem
+    
+    schemaConfig:
+      configs:
+        - from: "2024-01-01"
+          store: tsdb
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: loki_index_
+            period: 24h
+    
+    limits_config:
+      retention_period: 168h  # 7 jours
+      max_query_lookback: 168h
+      ingestion_rate_mb: 10
+      ingestion_burst_size_mb: 20
+      max_streams_per_user: 10000
+      max_entries_limit_per_query: 5000
+  
+  # Single Binary mode
+  singleBinary:
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: local-path
+    
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+  
+  # Désactiver les autres modes
+  backend:
+    replicas: 0
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  
+  # Gateway (nginx)
+  gateway:
+    enabled: false
+  
+  # Désactiver les composants non utilisés
+  chunksCache:
+    enabled: false
+  resultsCache:
+    enabled: false
+  
+  # Monitoring
+  monitoring:
+    serviceMonitor:
+      enabled: true
+    selfMonitoring:
+      enabled: false
+      grafanaAgent:
+        installOperator: false
+    lokiCanary:
+      enabled: false
+  
+  # Test
+  test:
+    enabled: false
+
+# =============================================================================
+# PROMTAIL - Agent de collecte des logs
+# =============================================================================
+promtail:
+  enabled: true
+  
+  config:
+    # Envoyer les logs à Loki
+    clients:
+      - url: http://loki-stack:3100/loki/api/v1/push
+    
+    # Positions pour reprendre après redémarrage
+    positions:
+      filename: /run/promtail/positions.yaml
+    
+    # Scrape configs
+    snippets:
+      # Labels supplémentaires
+      extraRelabelConfigs:
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_node_name
+          target_label: node_name
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_namespace
+          target_label: namespace
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_name
+          target_label: pod
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_container_name
+          target_label: container
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_label_app
+          target_label: app
+  
+  # Resources
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  
+  # ServiceMonitor pour Prometheus
+  serviceMonitor:
+    enabled: true
+  
+  # Tolérations pour tourner sur tous les nodes
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
+
