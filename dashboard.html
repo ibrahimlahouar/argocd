@@ -41,6 +41,50 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-6">
+        <!-- Platform Status Overview -->
+        <div class="mb-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">Monitoring</div>
+                <div class="text-[10px] text-slate-400">Prometheus+Grafana</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">Logging</div>
+                <div class="text-[10px] text-slate-400">Loki+Promtail</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">Tracing</div>
+                <div class="text-[10px] text-slate-400">Tempo</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">Alerting</div>
+                <div class="text-[10px] text-slate-400">Email</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">K8s Backup</div>
+                <div class="text-[10px] text-slate-400">Velero</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">DB Backup</div>
+                <div class="text-[10px] text-slate-400">MySQL+PostgreSQL</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">Security</div>
+                <div class="text-[10px] text-slate-400">Falco+Gatekeeper</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-3 text-center">
+                <i class="fas fa-check-circle text-green-400 text-xl mb-1"></i>
+                <div class="text-xs text-green-400 font-medium">RBAC</div>
+                <div class="text-[10px] text-slate-400">Granulaire</div>
+            </div>
+        </div>
+
         <!-- DNS Configuration Alert -->
         <div class="mb-8 p-4 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl border border-green-500/30">
             <div class="flex items-start gap-4">
@@ -473,18 +517,18 @@
             </div>
         </div>
 
-        <!-- Security & Backup Section -->
+        <!-- Security Section -->
         <h2 class="text-xl font-semibold mb-6 mt-8 flex items-center gap-2 text-slate-200">
-            <i class="fas fa-shield-alt text-green-400"></i> Sécurité & Backup
+            <i class="fas fa-shield-alt text-green-400"></i> Sécurité
         </h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Falco -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-red-600">
                 <div>
                     <div class="flex justify-between items-start mb-4">
                         <i class="fas fa-eye text-3xl text-red-600"></i>
-                        <span class="bg-red-600/10 text-red-400 text-xs px-2 py-1 rounded">Runtime Security</span>
+                        <span class="bg-red-600/10 text-red-400 text-xs px-2 py-1 rounded">Runtime</span>
                     </div>
                     <h3 class="text-lg font-bold mb-1">Falco</h3>
                     <p class="text-slate-400 text-sm mb-4">Détection des menaces runtime (syscalls).</p>
@@ -500,7 +544,7 @@
                 <div>
                     <div class="flex justify-between items-start mb-4">
                         <i class="fas fa-gavel text-3xl text-indigo-500"></i>
-                        <span class="bg-indigo-500/10 text-indigo-400 text-xs px-2 py-1 rounded">Policy as Code</span>
+                        <span class="bg-indigo-500/10 text-indigo-400 text-xs px-2 py-1 rounded">Policy</span>
                     </div>
                     <h3 class="text-lg font-bold mb-1">OPA Gatekeeper</h3>
                     <p class="text-slate-400 text-sm mb-4">Validation des ressources K8s avant création.</p>
@@ -511,12 +555,51 @@
                 <span class="text-indigo-400 text-sm">Admission Controller</span>
             </div>
 
+            <!-- Network Policies -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-blue-600">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-network-wired text-3xl text-blue-600"></i>
+                        <span class="bg-blue-600/10 text-blue-400 text-xs px-2 py-1 rounded">Network</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Network Policies</h3>
+                    <p class="text-slate-400 text-sm mb-4">Isolation réseau Zero Trust entre namespaces.</p>
+                    <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-blue-300">
+                        DNS, K8s API, Ingress, Inter-services
+                    </div>
+                </div>
+                <span class="text-blue-400 text-sm">15 namespaces protégés</span>
+            </div>
+
+            <!-- RBAC -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-purple-600">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-users-cog text-3xl text-purple-600"></i>
+                        <span class="bg-purple-600/10 text-purple-400 text-xs px-2 py-1 rounded">RBAC</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">RBAC Granulaire</h3>
+                    <p class="text-slate-400 text-sm mb-4">Contrôle d'accès basé sur les rôles.</p>
+                    <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-purple-300">
+                        Admin, Developer, Viewer, DataEngineer
+                    </div>
+                </div>
+                <span class="text-purple-400 text-sm">ClusterRoles & Bindings</span>
+            </div>
+        </div>
+
+        <!-- Backup Section -->
+        <h2 class="text-xl font-semibold mb-6 mt-8 flex items-center gap-2 text-slate-200">
+            <i class="fas fa-database text-teal-400"></i> Backup & Disaster Recovery
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <!-- Velero -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-teal-500">
                 <div>
                     <div class="flex justify-between items-start mb-4">
                         <i class="fas fa-cloud-upload-alt text-3xl text-teal-500"></i>
-                        <span class="bg-teal-500/10 text-teal-400 text-xs px-2 py-1 rounded">Backup</span>
+                        <span class="bg-teal-500/10 text-teal-400 text-xs px-2 py-1 rounded">K8s Backup</span>
                     </div>
                     <h3 class="text-lg font-bold mb-1">Velero</h3>
                     <p class="text-slate-400 text-sm mb-4">Backup & Disaster Recovery Kubernetes.</p>
@@ -526,6 +609,54 @@
                     </div>
                 </div>
                 <span class="text-teal-400 text-sm">Stockage: MinIO (velero-backups)</span>
+            </div>
+
+            <!-- MySQL Backup -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-orange-500">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-database text-3xl text-orange-500"></i>
+                        <span class="bg-orange-500/10 text-orange-400 text-xs px-2 py-1 rounded">MySQL</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">MySQL Backup</h3>
+                    <p class="text-slate-400 text-sm mb-4">Backup OpenMetadata & Airflow databases.</p>
+                    <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-orange-300 space-y-1">
+                        <div>📅 Daily: 1h → 7 jours</div>
+                        <div>📅 Weekly: Sam 2h → 30 jours</div>
+                    </div>
+                </div>
+                <span class="text-orange-400 text-sm">Stockage: MinIO (db-backups/mysql/)</span>
+            </div>
+
+            <!-- PostgreSQL Backup -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-sky-500">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-database text-3xl text-sky-500"></i>
+                        <span class="bg-sky-500/10 text-sky-400 text-xs px-2 py-1 rounded">PostgreSQL</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">PostgreSQL Backup</h3>
+                    <p class="text-slate-400 text-sm mb-4">Backup Harbor database.</p>
+                    <div class="text-[10px] font-mono bg-black/30 p-2 rounded text-sky-300 space-y-1">
+                        <div>📅 Daily: 1h30 → 7 jours</div>
+                        <div>📅 Weekly: Sam 2h30 → 30 jours</div>
+                    </div>
+                </div>
+                <span class="text-sky-400 text-sm">Stockage: MinIO (db-backups/postgresql/)</span>
+            </div>
+        </div>
+
+        <!-- etcd Backup Info -->
+        <div class="mb-8 p-4 bg-gradient-to-r from-amber-900/30 to-yellow-900/30 rounded-xl border border-amber-500/30">
+            <div class="flex items-start gap-4">
+                <i class="fas fa-exclamation-triangle text-amber-400 text-xl mt-1"></i>
+                <div>
+                    <h3 class="font-bold text-amber-400 mb-2">Backup etcd (Manuel)</h3>
+                    <p class="text-slate-300 text-sm mb-3">Le backup etcd doit être configuré sur les nodes master. Voir la documentation:</p>
+                    <div class="bg-black/50 p-3 rounded font-mono text-xs text-amber-300">
+                        /Users/ilahouar/Documents/argocd/docs/etcd-backup.md
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -592,10 +723,112 @@
                 <div class="bg-black/30 p-2 rounded font-mono text-slate-400">curl:latest</div>
             </div>
         </div>
+
+        <!-- Remaining Tasks -->
+        <div class="mt-12 p-8 card rounded-2xl border-t-4 border-t-amber-500">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-amber-400">
+                <i class="fas fa-tasks"></i> Tâches Restantes (Optionnelles)
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-clock text-amber-400"></i>
+                        <span class="font-medium text-amber-300">Pod Security Standards</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Empêcher les containers root et privilégiés.</p>
+                </div>
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-clock text-amber-400"></i>
+                        <span class="font-medium text-amber-300">Audit Logging</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Traçabilité des actions API. <span class="text-amber-400">Doc: docs/audit-logging.md</span></p>
+                </div>
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-clock text-amber-400"></i>
+                        <span class="font-medium text-amber-300">Secrets Encryption at Rest</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Chiffrement des secrets dans etcd.</p>
+                </div>
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-clock text-amber-400"></i>
+                        <span class="font-medium text-amber-300">Service Mesh (Istio/Linkerd)</span>
+                    </div>
+                    <p class="text-xs text-slate-400">mTLS automatique inter-services.</p>
+                </div>
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-clock text-amber-400"></i>
+                        <span class="font-medium text-amber-300">Image Scanning CI/CD</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Trivy dans pipeline. <span class="text-amber-400">Doc: docs/image-scanning.md</span></p>
+                </div>
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-clock text-amber-400"></i>
+                        <span class="font-medium text-amber-300">Network Policies Strictes</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Réactiver default-deny complet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Links -->
+        <div class="mt-12 p-8 card rounded-2xl">
+            <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-book text-slate-400"></i> Documentation
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <a href="#" class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
+                    <i class="fas fa-file-alt text-sky-400"></i>
+                    <div>
+                        <div class="font-medium text-slate-200">etcd Backup</div>
+                        <div class="text-xs text-slate-500">docs/etcd-backup.md</div>
+                    </div>
+                </a>
+                <a href="#" class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
+                    <i class="fas fa-file-alt text-green-400"></i>
+                    <div>
+                        <div class="font-medium text-slate-200">Audit Logging</div>
+                        <div class="text-xs text-slate-500">docs/audit-logging.md</div>
+                    </div>
+                </a>
+                <a href="#" class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
+                    <i class="fas fa-file-alt text-purple-400"></i>
+                    <div>
+                        <div class="font-medium text-slate-200">Image Scanning</div>
+                        <div class="text-xs text-slate-500">docs/image-scanning.md</div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </main>
 
-    <footer class="mt-20 text-center text-slate-500 text-sm">
-        <p>Géré par ArgoCD &copy; 2025 Data Operations Platform</p>
+    <footer class="mt-20 py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <p class="text-slate-400 text-sm">Géré par <span class="text-orange-400 font-medium">ArgoCD</span></p>
+                    <p class="text-slate-600 text-xs mt-1">&copy; 2025 Data Operations Platform</p>
+                </div>
+                <div class="flex items-center gap-6 text-xs text-slate-500">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-green-500"></i>
+                        <span>TLS via Vault PKI</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-code-branch text-sky-500"></i>
+                        <span>GitOps Workflow</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-sync text-purple-500"></i>
+                        <span>Auto-Sync Enabled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 </body>
 </html>
