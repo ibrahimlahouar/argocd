@@ -1,0 +1,19 @@
+apiVersion: v2
+name: openmetadata-ai-agent
+description: AI Agent for OpenMetadata - Natural language interface for data catalog
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+home: https://github.com/ilahouar/openmetadata-ai-agent
+maintainers:
+  - name: Ibrahim Lahouar
+    email: ibrahim@lahouar.com
+
+keywords:
+  - openmetadata
+  - ai
+  - agent
+  - data-catalog
+  - gemini
+  - chatbot

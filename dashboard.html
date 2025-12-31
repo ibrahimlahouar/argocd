@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +9,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
-        .card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.2); }
-        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
-        .gradient-text { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .token-scroll { scrollbar-width: thin; scrollbar-color: #334155 #0f172a; }
-        .ingress-badge { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.2);
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .token-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #334155 #0f172a;
+        }
+
+        .ingress-badge {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
     </style>
 </head>
+
 <body class="min-h-screen pb-12">
     <!-- Header -->
     <header class="py-8 px-6 mb-8 border-b border-slate-800">
@@ -86,17 +124,22 @@
         </div>
 
         <!-- DNS Configuration Alert -->
-        <div class="mb-8 p-4 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl border border-green-500/30">
+        <div
+            class="mb-8 p-4 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl border border-green-500/30">
             <div class="flex items-start gap-4">
                 <i class="fas fa-info-circle text-green-400 text-xl mt-1"></i>
                 <div>
                     <h3 class="font-bold text-green-400 mb-2">Configuration DNS requise</h3>
-                    <p class="text-slate-300 text-sm mb-3">Ajoutez ces entrées à votre fichier <code class="bg-black/30 px-2 py-1 rounded">/etc/hosts</code> ou DNS local :</p>
+                    <p class="text-slate-300 text-sm mb-3">Ajoutez ces entrées à votre fichier <code
+                            class="bg-black/30 px-2 py-1 rounded">/etc/hosts</code> ou DNS local :</p>
                     <div class="bg-black/50 p-3 rounded font-mono text-xs text-green-300 overflow-x-auto">
-                        10.10.0.200  argocd.data-platform.local harbor.data-platform.local airflow.data-platform.local<br>
-                        10.10.0.200  minio.data-platform.local s3.data-platform.local openmetadata.data-platform.local<br>
-                        10.10.0.200  vault.data-platform.local headlamp.data-platform.local trino.data-platform.local<br>
-                        10.10.0.200  grafana.data-platform.local prometheus.data-platform.local alertmanager.data-platform.local
+                        10.10.0.200 argocd.data-platform.local harbor.data-platform.local
+                        airflow.data-platform.local<br>
+                        10.10.0.200 minio.data-platform.local s3.data-platform.local
+                        openmetadata.data-platform.local<br>
+                        10.10.0.200 vault.data-platform.local headlamp.data-platform.local trino.data-platform.local<br>
+                        10.10.0.200 grafana.data-platform.local prometheus.data-platform.local
+                        alertmanager.data-platform.local ai-agent.data-platform.local
                     </div>
                 </div>
             </div>
@@ -107,7 +150,7 @@
             <i class="fas fa-desktop text-sky-400"></i> Interfaces Utilisateurs
             <span class="ingress-badge text-xs px-2 py-1 rounded-full ml-2 text-white">HTTPS via Ingress</span>
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <!-- ArgoCD -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full">
@@ -130,10 +173,13 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://argocd.data-platform.local" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> argocd.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://argocd.data-platform.local" target="_blank"
+                        class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> argocd.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:30080" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:30080" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:30080
                     </a>
                 </div>
@@ -160,10 +206,13 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://harbor.data-platform.local" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> harbor.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://harbor.data-platform.local" target="_blank"
+                        class="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> harbor.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:30500" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:30500" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:30500
                     </a>
                 </div>
@@ -190,10 +239,13 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://airflow.data-platform.local" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> airflow.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://airflow.data-platform.local" target="_blank"
+                        class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> airflow.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:32080" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:32080" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:32080
                     </a>
                 </div>
@@ -220,10 +272,13 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://minio.data-platform.local" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> minio.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://minio.data-platform.local" target="_blank"
+                        class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> minio.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:30901" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:30901" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:30901
                     </a>
                 </div>
@@ -250,11 +305,44 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://openmetadata.data-platform.local" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> openmetadata.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://openmetadata.data-platform.local" target="_blank"
+                        class="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> openmetadata.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:30894" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:30894" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:30894
+                    </a>
+                </div>
+            </div>
+
+            <!-- OpenMetadata AI Agent -->
+            <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-2 border-purple-500/50">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="fas fa-robot text-3xl text-purple-400"></i>
+                        <span class="bg-purple-500/10 text-purple-400 text-xs px-2 py-1 rounded">AI Assistant</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">OpenMetadata AI Agent</h3>
+                    <p class="text-slate-400 text-sm mb-2">Assistant IA pour interroger le Data Catalog en langage
+                        naturel.</p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-500">Model:</span>
+                            <span class="text-slate-300 font-mono text-[10px]">Gemini 2.5 Flash</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-500">Backend:</span>
+                            <span class="text-slate-300 font-mono">FastAPI + Python</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <a href="https://ai-agent.data-platform.local" target="_blank"
+                        class="text-purple-400 hover:text-purple-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> ai-agent.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
                 </div>
             </div>
@@ -280,10 +368,13 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://vault.data-platform.local" target="_blank" class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> vault.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://vault.data-platform.local" target="_blank"
+                        class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> vault.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:30820" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:30820" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:30820
                     </a>
                 </div>
@@ -297,20 +388,30 @@
                         <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-1 rounded">K8s UI</span>
                     </div>
                     <h3 class="text-lg font-bold mb-1">Headlamp (Kubernetes Console)</h3>
-                    <p class="text-slate-400 text-sm mb-4">Interface graphique pour la gestion globale des ressources Kubernetes (Pods, Nodes, Services).</p>
+                    <p class="text-slate-400 text-sm mb-4">Interface graphique pour la gestion globale des ressources
+                        Kubernetes (Pods, Nodes, Services).</p>
                     <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 mb-4">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-slate-500 uppercase">Admin Access Token (valide 1 an)</span>
-                            <button onclick="navigator.clipboard.writeText(document.getElementById('headlamp-token').innerText)" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded text-slate-300 transition">Copier</button>
+                            <span class="text-xs font-bold text-slate-500 uppercase">Admin Access Token (valide 1
+                                an)</span>
+                            <button
+                                onclick="navigator.clipboard.writeText(document.getElementById('headlamp-token').innerText)"
+                                class="text-[10px] bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded text-slate-300 transition">Copier</button>
                         </div>
-                        <div id="headlamp-token" class="text-[9px] font-mono text-slate-400 break-all bg-black/30 p-3 rounded max-h-24 overflow-y-auto token-scroll">eyJhbGciOiJSUzI1NiIsImtpZCI6IjlQYmhreElNb3ptVDBFVEV1N1dING9pWVlaNkFxdzg0UFlZVkQ3LW5fV0UifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk4MDY2ODk0LCJpYXQiOjE3NjY1MzA4OTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJoZWFkbGFtcCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJoZWFkbGFtcC1hZG1pbiIsInVpZCI6IjkyYTc1OTYwLWRjY2ItNDQ3Mi1hZGY0LWJiZmNkZWI2YzA2NyJ9fSwibmJmIjoxNzY2NTMwODk0LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6aGVhZGxhbXA6aGVhZGxhbXAtYWRtaW4ifQ.ag2Bk8InF4bDjgezFavZ3rVJAVz8jr1GPOs_APIfRLnJsPKO8q5qO1xC3-rJN3oMfcUxID_01gEXpBiPtBplRyF9dQwCxAEoqYvkVI6lAryp_Vzm4TGKM0CTCvZY7oArydBee92wp-OSzIRbq-5p2YpPsqoh17DvvlLTvvjGQDAVFdY3Q87z3AmzcHcfJZ-IqU29fnIKk98gZxmkcs7jJ7-GB1Ihs6jc5EA0w9cWx19PA9PIUFO50MyQqbLvqZU8OnbvD-Gc5jaZQONkNMzhJ8Bjzng9N1rgAhDsyd2LwGjan850huHk-Kce7FtLvOklzbUaSC1gAdLLMxkfQWyC3A</div>
+                        <div id="headlamp-token"
+                            class="text-[9px] font-mono text-slate-400 break-all bg-black/30 p-3 rounded max-h-24 overflow-y-auto token-scroll">
+                            eyJhbGciOiJSUzI1NiIsImtpZCI6IjlQYmhreElNb3ptVDBFVEV1N1dING9pWVlaNkFxdzg0UFlZVkQ3LW5fV0UifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk4MDY2ODk0LCJpYXQiOjE3NjY1MzA4OTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJoZWFkbGFtcCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJoZWFkbGFtcC1hZG1pbiIsInVpZCI6IjkyYTc1OTYwLWRjY2ItNDQ3Mi1hZGY0LWJiZmNkZWI2YzA2NyJ9fSwibmJmIjoxNzY2NTMwODk0LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6aGVhZGxhbXA6aGVhZGxhbXAtYWRtaW4ifQ.ag2Bk8InF4bDjgezFavZ3rVJAVz8jr1GPOs_APIfRLnJsPKO8q5qO1xC3-rJN3oMfcUxID_01gEXpBiPtBplRyF9dQwCxAEoqYvkVI6lAryp_Vzm4TGKM0CTCvZY7oArydBee92wp-OSzIRbq-5p2YpPsqoh17DvvlLTvvjGQDAVFdY3Q87z3AmzcHcfJZ-IqU29fnIKk98gZxmkcs7jJ7-GB1Ihs6jc5EA0w9cWx19PA9PIUFO50MyQqbLvqZU8OnbvD-Gc5jaZQONkNMzhJ8Bjzng9N1rgAhDsyd2LwGjan850huHk-Kce7FtLvOklzbUaSC1gAdLLMxkfQWyC3A
+                        </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <a href="https://headlamp.data-platform.local" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 font-medium">
-                        <i class="fas fa-lock text-green-400 text-xs"></i> headlamp.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    <a href="https://headlamp.data-platform.local" target="_blank"
+                        class="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1 font-medium">
+                        <i class="fas fa-lock text-green-400 text-xs"></i> headlamp.data-platform.local <i
+                            class="fas fa-external-link-alt text-xs ml-1"></i>
                     </a>
-                    <a href="http://10.10.0.101:31162" target="_blank" class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
+                    <a href="http://10.10.0.101:31162" target="_blank"
+                        class="text-slate-500 hover:text-slate-400 text-xs flex items-center gap-1">
                         NodePort: 10.10.0.101:31162
                     </a>
                 </div>
@@ -321,7 +422,7 @@
         <h2 class="text-xl font-semibold mb-6 mt-12 flex items-center gap-2 text-slate-200">
             <i class="fas fa-database text-sky-400"></i> Moteurs & Infrastructure
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Trino -->
             <div class="card p-5 rounded-xl border-l-4 border-l-red-500">
@@ -381,7 +482,7 @@
         <h2 class="text-xl font-semibold mb-6 mt-12 flex items-center gap-2 text-slate-200">
             <i class="fas fa-network-wired text-green-400"></i> Infrastructure Réseau
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- MetalLB -->
             <div class="card p-5 rounded-xl border-l-4 border-l-green-500">
@@ -421,7 +522,7 @@
         <h2 class="text-xl font-semibold mb-6 mt-12 flex items-center gap-2 text-slate-200">
             <i class="fas fa-chart-line text-orange-400"></i> Observabilité & Monitoring
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <!-- Grafana -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-orange-500">
@@ -443,8 +544,10 @@
                         </div>
                     </div>
                 </div>
-                <a href="https://grafana.data-platform.local" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
-                    <i class="fas fa-lock text-green-400 text-xs"></i> grafana.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                <a href="https://grafana.data-platform.local" target="_blank"
+                    class="text-orange-400 hover:text-orange-300 text-sm flex items-center gap-1 font-medium">
+                    <i class="fas fa-lock text-green-400 text-xs"></i> grafana.data-platform.local <i
+                        class="fas fa-external-link-alt text-xs ml-1"></i>
                 </a>
             </div>
 
@@ -461,8 +564,10 @@
                         Retention: 15 jours | 10GB max
                     </div>
                 </div>
-                <a href="https://prometheus.data-platform.local" target="_blank" class="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 font-medium">
-                    <i class="fas fa-lock text-green-400 text-xs"></i> prometheus.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                <a href="https://prometheus.data-platform.local" target="_blank"
+                    class="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 font-medium">
+                    <i class="fas fa-lock text-green-400 text-xs"></i> prometheus.data-platform.local <i
+                        class="fas fa-external-link-alt text-xs ml-1"></i>
                 </a>
             </div>
 
@@ -479,8 +584,10 @@
                         Notifications configurables (Slack, PagerDuty, etc.)
                     </div>
                 </div>
-                <a href="https://alertmanager.data-platform.local" target="_blank" class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
-                    <i class="fas fa-lock text-green-400 text-xs"></i> alertmanager.data-platform.local <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                <a href="https://alertmanager.data-platform.local" target="_blank"
+                    class="text-yellow-400 hover:text-yellow-300 text-sm flex items-center gap-1 font-medium">
+                    <i class="fas fa-lock text-green-400 text-xs"></i> alertmanager.data-platform.local <i
+                        class="fas fa-external-link-alt text-xs ml-1"></i>
                 </a>
             </div>
 
@@ -521,7 +628,7 @@
         <h2 class="text-xl font-semibold mb-6 mt-8 flex items-center gap-2 text-slate-200">
             <i class="fas fa-shield-alt text-green-400"></i> Sécurité
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Falco -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-red-600">
@@ -592,7 +699,7 @@
         <h2 class="text-xl font-semibold mb-6 mt-8 flex items-center gap-2 text-slate-200">
             <i class="fas fa-database text-teal-400"></i> Backup & Disaster Recovery
         </h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <!-- Velero -->
             <div class="card p-6 rounded-2xl flex flex-col justify-between h-full border-l-4 border-l-teal-500">
@@ -652,7 +759,8 @@
                 <i class="fas fa-exclamation-triangle text-amber-400 text-xl mt-1"></i>
                 <div>
                     <h3 class="font-bold text-amber-400 mb-2">Backup etcd (Manuel)</h3>
-                    <p class="text-slate-300 text-sm mb-3">Le backup etcd doit être configuré sur les nodes master. Voir la documentation:</p>
+                    <p class="text-slate-300 text-sm mb-3">Le backup etcd doit être configuré sur les nodes master. Voir
+                        la documentation:</p>
                     <div class="bg-black/50 p-3 rounded font-mono text-xs text-amber-300">
                         /Users/ilahouar/Documents/argocd/docs/etcd-backup.md
                     </div>
@@ -672,7 +780,8 @@
                         <li class="flex flex-col">
                             <span class="text-slate-400">MySQL (OpenMetadata/Airflow)</span>
                             <span class="font-mono text-sky-400">mysql.openmetadata.svc:3306</span>
-                            <span class="text-[10px] text-slate-500 mt-1">root / <span class="font-mono">password</span></span>
+                            <span class="text-[10px] text-slate-500 mt-1">root / <span
+                                    class="font-mono">password</span></span>
                         </li>
                         <li class="flex flex-col">
                             <span class="text-slate-400">OpenSearch API</span>
@@ -681,7 +790,8 @@
                     </ul>
                 </div>
                 <div>
-                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">S3 Storage (Interne)</h5>
+                    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">S3 Storage (Interne)
+                    </h5>
                     <ul class="space-y-3 text-sm">
                         <li class="flex flex-col">
                             <span class="text-slate-400">MinIO S3 Endpoint</span>
@@ -721,6 +831,10 @@
                 <div class="bg-black/30 p-2 rounded font-mono text-slate-400">redis:7.0.11-alpine</div>
                 <div class="bg-black/30 p-2 rounded font-mono text-slate-400">busybox:latest</div>
                 <div class="bg-black/30 p-2 rounded font-mono text-slate-400">curl:latest</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-purple-400 border border-purple-500/50">
+                    openmetadata-ai-agent-backend:1.0.0</div>
+                <div class="bg-black/30 p-2 rounded font-mono text-purple-400 border border-purple-500/50">
+                    openmetadata-ai-agent-frontend:1.0.0</div>
             </div>
         </div>
 
@@ -742,7 +856,8 @@
                         <i class="fas fa-clock text-amber-400"></i>
                         <span class="font-medium text-amber-300">Audit Logging</span>
                     </div>
-                    <p class="text-xs text-slate-400">Traçabilité des actions API. <span class="text-amber-400">Doc: docs/audit-logging.md</span></p>
+                    <p class="text-xs text-slate-400">Traçabilité des actions API. <span class="text-amber-400">Doc:
+                            docs/audit-logging.md</span></p>
                 </div>
                 <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
                     <div class="flex items-center gap-2 mb-2">
@@ -763,7 +878,8 @@
                         <i class="fas fa-clock text-amber-400"></i>
                         <span class="font-medium text-amber-300">Image Scanning CI/CD</span>
                     </div>
-                    <p class="text-xs text-slate-400">Trivy dans pipeline. <span class="text-amber-400">Doc: docs/image-scanning.md</span></p>
+                    <p class="text-xs text-slate-400">Trivy dans pipeline. <span class="text-amber-400">Doc:
+                            docs/image-scanning.md</span></p>
                 </div>
                 <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
                     <div class="flex items-center gap-2 mb-2">
@@ -781,21 +897,24 @@
                 <i class="fas fa-book text-slate-400"></i> Documentation
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <a href="#" class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
+                <a href="#"
+                    class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
                     <i class="fas fa-file-alt text-sky-400"></i>
                     <div>
                         <div class="font-medium text-slate-200">etcd Backup</div>
                         <div class="text-xs text-slate-500">docs/etcd-backup.md</div>
                     </div>
                 </a>
-                <a href="#" class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
+                <a href="#"
+                    class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
                     <i class="fas fa-file-alt text-green-400"></i>
                     <div>
                         <div class="font-medium text-slate-200">Audit Logging</div>
                         <div class="text-xs text-slate-500">docs/audit-logging.md</div>
                     </div>
                 </a>
-                <a href="#" class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
+                <a href="#"
+                    class="bg-slate-800/50 hover:bg-slate-700/50 p-4 rounded-lg flex items-center gap-3 transition">
                     <i class="fas fa-file-alt text-purple-400"></i>
                     <div>
                         <div class="font-medium text-slate-200">Image Scanning</div>
@@ -810,7 +929,8 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="text-center md:text-left">
-                    <p class="text-slate-400 text-sm">Géré par <span class="text-orange-400 font-medium">ArgoCD</span></p>
+                    <p class="text-slate-400 text-sm">Géré par <span class="text-orange-400 font-medium">ArgoCD</span>
+                    </p>
                     <p class="text-slate-600 text-xs mt-1">&copy; 2025 Data Operations Platform</p>
                 </div>
                 <div class="flex items-center gap-6 text-xs text-slate-500">
@@ -831,4 +951,5 @@
         </div>
     </footer>
 </body>
+
 </html>

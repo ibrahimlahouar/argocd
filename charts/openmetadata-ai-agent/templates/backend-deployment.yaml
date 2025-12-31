@@ -1,0 +1,92 @@
+{{- if .Values.backend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "openmetadata-ai-agent.fullname" . }}-backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "openmetadata-ai-agent.backendLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "openmetadata-ai-agent.backendSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "openmetadata-ai-agent.backendSelectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "openmetadata-ai-agent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.backend.securityContext | nindent 8 }}
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "{{ .Values.backend.service.targetPort }}"
+            - name: DEBUG
+              value: "{{ .Values.backend.config.debug }}"
+            - name: LOG_LEVEL
+              value: "{{ .Values.backend.config.logLevel }}"
+            - name: CORS_ORIGINS
+              value: "{{ .Values.backend.config.corsOrigins }}"
+            - name: OPENMETADATA_HOST
+              value: "{{ .Values.backend.openmetadata.host }}"
+            - name: OPENMETADATA_PORT
+              value: "{{ .Values.backend.openmetadata.port }}"
+            - name: OPENMETADATA_API_VERSION
+              value: "{{ .Values.backend.openmetadata.apiVersion }}"
+            - name: OPENMETADATA_JWT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.openmetadata.jwtTokenSecretName }}
+                  key: {{ .Values.backend.openmetadata.jwtTokenSecretKey }}
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.gemini.apiKeySecretName }}
+                  key: {{ .Values.backend.gemini.apiKeySecretKey }}
+            - name: GEMINI_MODEL
+              value: "{{ .Values.backend.gemini.model }}"
+            - name: GEMINI_MAX_TOKENS
+              value: "{{ .Values.backend.gemini.maxTokens }}"
+            - name: GEMINI_TEMPERATURE
+              value: "{{ .Values.backend.gemini.temperature }}"
+          livenessProbe:
+            {{- toYaml .Values.backend.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.backend.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

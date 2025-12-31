@@ -1,0 +1,166 @@
+# OpenMetadata AI Agent - Helm Values
+# Default values for the AI Agent deployment
+
+# Global settings
+nameOverride: ""
+fullnameOverride: "openmetadata-ai-agent"
+
+# Namespace
+namespace: openmetadata-ai-agent
+
+# Image pull secrets for Harbor
+imagePullSecrets:
+  - name: harbor-registry
+
+# Backend Configuration
+backend:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: harbor.data-platform.local/data-platform/openmetadata-ai-agent-backend
+    tag: "1.0.0"
+    pullPolicy: Always
+  
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  
+  # OpenMetadata connection (internal K8s DNS)
+  openmetadata:
+    host: openmetadata.openmetadata.svc.cluster.local
+    port: 8585
+    apiVersion: v1
+    # JWT token from secret
+    jwtTokenSecretName: openmetadata-ai-agent-secrets
+    jwtTokenSecretKey: openmetadata-jwt-token
+  
+  # Gemini configuration
+  gemini:
+    model: gemini-2.5-flash
+    maxTokens: 4096
+    temperature: 0.7
+    # API key from secret
+    apiKeySecretName: openmetadata-ai-agent-secrets
+    apiKeySecretKey: gemini-api-key
+  
+  # Application settings
+  config:
+    debug: false
+    logLevel: INFO
+    corsOrigins: "*"
+
+  # Probes
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+  
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+# Frontend Configuration
+frontend:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: harbor.data-platform.local/data-platform/openmetadata-ai-agent-frontend
+    tag: "1.0.0"
+    pullPolicy: Always
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+  
+  # Backend URL for nginx proxy
+  backendUrl: "http://openmetadata-ai-agent-backend:8000"
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101  # nginx user
+    runAsGroup: 101
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    cert-manager.io/cluster-issuer: "data-platform-ca-issuer"
+  hosts:
+    - host: ai-agent.data-platform.local
+      paths:
+        - path: /
+          pathType: Prefix
+          service: frontend
+        - path: /api
+          pathType: Prefix
+          service: backend
+        - path: /health
+          pathType: Prefix
+          service: backend
+  tls:
+    - secretName: openmetadata-ai-agent-tls
+      hosts:
+        - ai-agent.data-platform.local
+
+# Secrets (these should be created manually or via sealed-secrets)
+secrets:
+  create: true
+  # Base64 encoded values - replace with actual values in production
+  geminiApiKey: ""  # Will be set via --set or external secret
+  openmetadataJwtToken: ""  # Will be set via --set or external secret
+
+# Service Account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Pod settings
+podAnnotations: {}
+podLabels: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
