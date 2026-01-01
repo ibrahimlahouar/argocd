@@ -10,6 +10,7 @@ spec:
   policyTypes:
   - Ingress
   ingress:
+  # Airflow
   - from:
     - namespaceSelector:
         matchLabels:
@@ -17,10 +18,35 @@ spec:
     ports:
     - protocol: TCP
       port: 5432
+  # OpenMetadata
   - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: openmetadata
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Harbor
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: harbor
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Nessie
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: nessie
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Trino
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: trino
     ports:
     - protocol: TCP
       port: 5432
