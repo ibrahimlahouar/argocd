@@ -55,7 +55,6 @@ airflow:
     persistence:
       enabled: true
       storageClassName: local-path
-      accessMode: ReadWriteOnce
       size: 10Gi
 
   # Probes un peu plus relax
