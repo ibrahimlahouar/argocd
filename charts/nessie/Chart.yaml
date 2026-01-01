@@ -1,0 +1,10 @@
+apiVersion: v2
+name: nessie
+description: Nessie - The Iceberg Catalog
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: nessie
+    version: 0.99.0
+    repository: https://charts.projectnessie.org

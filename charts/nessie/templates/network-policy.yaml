@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nessie-access
+  namespace: nessie
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nessie
+  policyTypes:
+    - Ingress
+  ingress:
+    # Autoriser l'accès depuis le namespace spark-operator
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: spark-operator
+      ports:
+        - protocol: TCP
+          port: 19120
+    # Autoriser l'accès depuis le namespace trino
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: trino
+      ports:
+        - protocol: TCP
+          port: 19120
+    # Autoriser l'accès depuis le namespace openmetadata (pour Airflow/Ingestion)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openmetadata
+      ports:
+        - protocol: TCP
+          port: 19120
+    # Autoriser l'accès depuis le namespace argocd (monitoring/health)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: argocd
+      ports:
+        - protocol: TCP
+          port: 19120

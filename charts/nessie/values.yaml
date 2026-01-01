@@ -1,0 +1,10 @@
+nessie:
+  service:
+    type: NodePort
+    nodePort: 31081
+  catalog:
+    storage:
+      type: ROCKSDB
+  
+  # Configuration pour que Nessie puisse parler au MinIO si besoin (optionnel pour le catalogue lui-même si RocksDB local)
+  # Mais pour les clients, ils ont besoin de savoir où est S3.
