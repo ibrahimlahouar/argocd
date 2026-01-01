@@ -59,17 +59,19 @@ openmetadata:
           secretKey: openmetadata-elasticsearch-password
     database:
       enabled: true
-      host: mysql
-      port: 3306
-      driverClass: com.mysql.cj.jdbc.Driver
-      dbScheme: mysql
+      host: postgres-shared-postgresql.infra.svc.cluster.local
+      port: 5432
+      driverClass: org.postgresql.Driver
+      dbScheme: postgresql
       databaseName: openmetadata_db
       auth:
         username: openmetadata_user
         password:
-          secretRef: mysql-secrets
-          secretKey: openmetadata-mysql-password
-      dbParams: "allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
+          # Note: I should ideally use a secret, but let's follow the user's "adminpassword" or "openmetadata_password"
+          # Wait, I initialized it with 'openmetadata_password' in postgres-shared
+          secretRef: postgres-shared-secrets
+          secretKey: openmetadata-password
+      dbParams: ""
       maxSize: 50
       minSize: 10
       initialSize: 10

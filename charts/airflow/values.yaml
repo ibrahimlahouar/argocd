@@ -17,13 +17,19 @@ airflow:
   fernetKeySecretName: airflow-fernet-key
   webserverSecretKeySecretName: airflow-webserver-secret-key
 
+  # Désactivation de PostgreSQL embarqué
   postgresql:
-    enabled: true
-    image:
-      debug: false
-      registry: docker.io
-      repository: bitnami/postgresql
-      tag: "15" # Version stable et connue
+    enabled: false
+
+  # Configuration Database externe (standardisée)
+  data:
+    metadataConnection:
+      user: airflow_user
+      pass: airflow_pass
+      protocol: postgresql
+      host: postgres-shared-postgresql.infra.svc.cluster.local
+      port: 5432
+      db: airflow_db
       
   ingress:
     web:

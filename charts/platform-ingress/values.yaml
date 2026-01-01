@@ -31,10 +31,10 @@ services:
       nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
   
   airflow:
-    enabled: true
+    enabled: false
     host: airflow
-    namespace: openmetadata
-    serviceName: openmetadata-dependencies-web
+    namespace: airflow
+    serviceName: airflow-webserver
     servicePort: 8080
   
   minio:
