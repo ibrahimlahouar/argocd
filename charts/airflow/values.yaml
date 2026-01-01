@@ -20,7 +20,7 @@ airflow:
     image:
       registry: docker.io
       repository: bitnami/postgresql
-      tag: "16"
+      tag: "latest"
 
   # Ingress / Service
 
