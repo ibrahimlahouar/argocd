@@ -69,7 +69,7 @@ airflow:
       ports:
         - name: airflow-ui
           port: 8080
-          nodePort: 30080
+          nodePort: 32080
     livenessProbe:
       initialDelaySeconds: 60
       timeoutSeconds: 30
