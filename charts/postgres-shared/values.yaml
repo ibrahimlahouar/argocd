@@ -6,9 +6,9 @@ postgresql:
     username: "admin"
     password: "adminpassword"
   image:
-    registry: docker.io
+    registry: public.ecr.aws
     repository: bitnami/postgresql
-    tag: 15.8.0
+    tag: "16"
   primary:
     persistence:
       size: 20Gi
