@@ -5,6 +5,10 @@ postgresql:
     postgresPassword: "postgrespassword"
     username: "admin"
     password: "adminpassword"
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: 15.6.0-debian-11-r8 # Specific known version
   primary:
     persistence:
       size: 20Gi
