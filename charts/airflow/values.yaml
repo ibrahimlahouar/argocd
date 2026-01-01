@@ -17,6 +17,8 @@ airflow:
   # Pour simplifier l'instant, on laisse embarqué mais noté.
   postgresql:
     enabled: true
+    image:
+      tag: "16.1.0-debian-11-r10"
 
   # Ingress / Service
 
@@ -53,6 +55,7 @@ airflow:
     persistence:
       enabled: true
       storageClassName: local-path
+      accessMode: ReadWriteOnce
       size: 10Gi
 
   # Probes un peu plus relax
