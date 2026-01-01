@@ -36,10 +36,29 @@ spec:
       ports:
         - protocol: TCP
           port: 443
-    # Autoriser Kubernetes API (pour KubernetesExecutor)
-    - to:
-        - ipBlock:
-             cidr: 10.96.0.1/32 # IP Service Kube API typique, à adapter si différent
       ports:
         - protocol: TCP
           port: 443 
+    # Autoriser Kubernetes API (pour KubernetesExecutor)
+    - to:
+        - ipBlock:
+             cidr: 10.96.0.1/32 # IP Service Kube API typique
+      ports:
+        - protocol: TCP
+          port: 443
+    # Autoriser MinIO (namespace minio)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: minio
+      ports:
+        - protocol: TCP
+          port: 9000
+    # Autoriser Nessie (namespace nessie)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: nessie
+      ports:
+        - protocol: TCP
+          port: 19120
