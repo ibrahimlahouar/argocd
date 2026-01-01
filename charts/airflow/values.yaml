@@ -13,18 +13,18 @@ airflow:
       maxFailures: 0
       subPath: ""
       
-  # Désactivation de PostgreSQL embarqué car on veut être propre (idéalement)
-  # Pour simplifier l'instant, on laisse embarqué mais noté.
+  # Utilisation des secrets gérés par nous
+  fernetKeySecretName: airflow-fernet-key
+  webserverSecretKeySecretName: airflow-webserver-secret-key
+
   postgresql:
     enabled: true
     image:
+      debug: false
       registry: docker.io
       repository: bitnami/postgresql
-      tag: "latest"
-
-  # Ingress / Service
-
-    
+      tag: "15" # Version stable et connue
+      
   ingress:
     web:
       enabled: true
@@ -35,7 +35,6 @@ airflow:
         enabled: true
         secretName: airflow-tls
   
-  # Configuration logs pour OpenMetadata (optionnelle mais utile)
   config:
     core:
       dags_are_paused_at_creation: 'False'
@@ -45,21 +44,18 @@ airflow:
     api:
       auth_backends: airflow.api.auth.backend.basic_auth
   
-  # Service Account et RBAC pour Spark
   serviceAccount:
     create: true
     name: airflow-sa
   rbac:
     create: true
     
-  # Logs persistants
   logs:
     persistence:
       enabled: true
       storageClassName: local-path
       size: 10Gi
 
-  # Probes un peu plus relax
   scheduler:
     livenessProbe:
       initialDelaySeconds: 60
@@ -70,12 +66,14 @@ airflow:
   webserver:
     service:
       type: NodePort
-      ports:
-        - name: airflow-ui
-          port: 8080
-          nodePort: 32080
+      nodePort: 32080
     livenessProbe:
       initialDelaySeconds: 60
       timeoutSeconds: 30
       failureThreshold: 5
       periodSeconds: 60
+    startupProbe:
+      initialDelaySeconds: 30
+      timeoutSeconds: 30
+      failureThreshold: 10
+      periodSeconds: 15
