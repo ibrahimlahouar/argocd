@@ -18,7 +18,9 @@ airflow:
   postgresql:
     enabled: true
     image:
-      tag: "16.1.0-debian-11-r10"
+      registry: docker.io
+      repository: bitnami/postgresql
+      tag: "16"
 
   # Ingress / Service
 
