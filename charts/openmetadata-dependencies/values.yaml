@@ -46,7 +46,7 @@ opensearch:
 # Airflow configurations for helm dependency
 # you can find more details about this here https://github.com/airflow-helm/charts
 airflow:
-  enabled: false
+  enabled: true
   airflow:
     image:
       repository: 10.10.0.101:30500/data-platform/airflow
@@ -127,13 +127,13 @@ airflow:
   redis:
     enabled: false
   externalDatabase:
-    type: mysql
-    host: mysql
-    port: 3306
+    type: postgres
+    host: postgres-shared-postgresql.infra.svc.cluster.local
+    port: 5432
     database: airflow_db
     user: airflow_user
-    passwordSecret: airflow-mysql-secrets
-    passwordSecretKey: airflow-mysql-password
+    passwordSecret: postgres-shared-secrets
+    passwordSecretKey: airflow-password
   serviceAccount:
     create: true
     name: "airflow"

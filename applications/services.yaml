@@ -1,3 +1,17 @@
+# =============================================================================
+# DATA PLATFORM SERVICES
+# =============================================================================
+# Sync-wave order:
+# Wave 1: Core services (MinIO, Vault, Nessie)
+# Wave 2: Services depending on postgres-shared (Harbor, OpenMetadata-deps, Trino)
+# Wave 3: Services depending on dependencies (OpenMetadata, Airflow)
+# Wave 4: UI and auxiliary services (Headlamp, Spark Operator)
+# =============================================================================
+
+---
+# =============================================================================
+# WAVE 1: CORE SERVICES
+# =============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -5,6 +19,8 @@ metadata:
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: data-platform
   source:
@@ -28,6 +44,8 @@ metadata:
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: data-platform
   source:
@@ -47,10 +65,40 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: nessie
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/nessie
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nessie
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# =============================================================================
+# WAVE 2: SERVICES DEPENDING ON POSTGRES-SHARED
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: trino
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: data-platform
   source:
@@ -70,33 +118,12 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: headlamp
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: data-platform
-  source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/headlamp
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: headlamp
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: docker-registry
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: data-platform
   source:
@@ -121,6 +148,16 @@ spec:
           enabled: false
         notary:
           enabled: false
+        # External PostgreSQL configuration
+        database:
+          type: external
+          external:
+            host: postgres-shared-postgresql.infra.svc.cluster.local
+            port: 5432
+            username: harbor_user
+            password: "harbor_password"
+            coreDatabase: harbor_db
+            sslmode: disable
         persistence:
           enabled: true
           persistentVolumeClaim:
@@ -134,9 +171,6 @@ spec:
               scanDataExports:
                 storageClass: local-path
                 size: 20Gi
-            database:
-              storageClass: local-path
-              size: 20Gi
             redis:
               storageClass: local-path
               size: 8Gi
@@ -156,33 +190,12 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: spark-operator
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: data-platform
-  source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/spark-operator
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: spark-operator
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: openmetadata-dependencies
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: data-platform
   source:
@@ -199,6 +212,9 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
+# =============================================================================
+# WAVE 3: SERVICES DEPENDING ON DEPENDENCIES
+# =============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -206,6 +222,8 @@ metadata:
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: data-platform
   source:
@@ -225,33 +243,12 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nessie
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: data-platform
-  source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/nessie
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: nessie
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
-
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: airflow
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: data-platform
   source:
@@ -261,6 +258,59 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: airflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# =============================================================================
+# WAVE 4: UI AND AUXILIARY SERVICES
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: headlamp
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/headlamp
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: headlamp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spark-operator
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/spark-operator
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: spark-operator
   syncPolicy:
     automated:
       prune: true

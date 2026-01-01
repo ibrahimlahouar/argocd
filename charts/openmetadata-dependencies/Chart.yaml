@@ -1,10 +1,7 @@
 apiVersion: v2
 appVersion: 1.11.2
 dependencies:
-- condition: mysql.enabled
-  name: mysql
-  repository: https://charts.bitnami.com/bitnami
-  version: 14.0.2
+# MySQL removed - migrated to postgres-shared
 - condition: airflow.enabled
   name: airflow
   repository: https://airflow-helm.github.io/charts

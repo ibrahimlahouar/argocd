@@ -127,6 +127,66 @@ spec:
           port: {{ $.Values.services.openmetadata.port }}
 {{- end }}
 
+{{- if .needsPostgreSQL }}
+---
+# =============================================================================
+# {{ .name | upper }} → POSTGRESQL
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-postgresql
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à PostgreSQL pour la base de données"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.postgresql.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.postgresql.port }}
+{{- end }}
+
+{{- if .needsNessie }}
+---
+# =============================================================================
+# {{ .name | upper }} → NESSIE
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-nessie
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à Nessie pour le catalogue Iceberg"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.nessie.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.nessie.port }}
+{{- end }}
+
 {{- end }}
 
 # =============================================================================
@@ -280,3 +340,66 @@ spec:
           port: {{ . }}
         {{- end }}
 
+# =============================================================================
+# POSTGRESQL - Accepter les connexions des services
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-services
+  namespace: {{ .Values.services.postgresql.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers PostgreSQL depuis les services"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- range .Values.protectedNamespaces }}
+        {{- if .needsPostgreSQL }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.postgresql.port }}
+
+# =============================================================================
+# NESSIE - Accepter les connexions des services data
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-data-services
+  namespace: {{ .Values.services.nessie.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers Nessie depuis les services data"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- range .Values.protectedNamespaces }}
+        {{- if .needsNessie }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.nessie.port }}

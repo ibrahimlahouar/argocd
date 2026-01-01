@@ -117,6 +117,7 @@ service:
 
 # Additional Catalogs
 additionalCatalogs:
+  # Iceberg with Nessie catalog
   iceberg: |
     connector.name=iceberg
     iceberg.catalog.type=nessie
@@ -130,11 +131,37 @@ additionalCatalogs:
     s3.aws-access-key=minioadmin
     s3.aws-secret-key=minioadmin123
   
-#  postgresql: |
-#    connector.name=postgresql
-#    connection-url=jdbc:postgresql://postgres:5432/mydb
-#    connection-user=admin
-#    connection-password=password
+  # PostgreSQL - OpenMetadata database
+  postgresql_openmetadata: |
+    connector.name=postgresql
+    connection-url=jdbc:postgresql://postgres-shared-postgresql.infra.svc:5432/openmetadata_db
+    connection-user=openmetadata_user
+    connection-password=openmetadata_password
+    case-insensitive-name-matching=true
+  
+  # PostgreSQL - Airflow database
+  postgresql_airflow: |
+    connector.name=postgresql
+    connection-url=jdbc:postgresql://postgres-shared-postgresql.infra.svc:5432/airflow_db
+    connection-user=airflow_user
+    connection-password=airflow_pass
+    case-insensitive-name-matching=true
+  
+  # PostgreSQL - Harbor database
+  postgresql_harbor: |
+    connector.name=postgresql
+    connection-url=jdbc:postgresql://postgres-shared-postgresql.infra.svc:5432/harbor_db
+    connection-user=harbor_user
+    connection-password=harbor_password
+    case-insensitive-name-matching=true
+  
+  # PostgreSQL - Nessie database
+  postgresql_nessie: |
+    connector.name=postgresql
+    connection-url=jdbc:postgresql://postgres-shared-postgresql.infra.svc:5432/nessie_db
+    connection-user=nessie_user
+    connection-password=nessie_password
+    case-insensitive-name-matching=true
 
 # Security
 auth:

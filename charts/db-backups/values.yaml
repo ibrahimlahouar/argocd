@@ -18,61 +18,33 @@ global:
     secretKey: "minio123"  # À mettre dans un secret en production
 
 # -----------------------------------------------------------------------------
-# MYSQL BACKUP (OpenMetadata)
+# MYSQL BACKUP - DISABLED (Migrated to PostgreSQL)
 # -----------------------------------------------------------------------------
 mysql:
+  enabled: false  # MySQL n'est plus utilisé - tout migré vers PostgreSQL
+
+# -----------------------------------------------------------------------------
+# POSTGRESQL BACKUP (All Services: Airflow, OpenMetadata, Harbor, Nessie)
+# -----------------------------------------------------------------------------
+postgresql:
   enabled: true
   # Cron schedule: tous les jours à 2h du matin
   schedule: "0 2 * * *"
   
-  # Configuration de connexion
-  host: "mysql.openmetadata.svc"
-  port: 3306
-  databases:
-    - openmetadata_db
-    - airflow_db
-  
-  # Credentials (référence au secret existant)
-  credentials:
-    secretName: "mysql-backup-credentials"
-    usernameKey: "username"
-    passwordKey: "password"
-  
-  # Rétention: nombre de backups à conserver
-  retention:
-    days: 30
-    copies: 30
-  
-  # Ressources pour le job
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "256Mi"
-    limits:
-      cpu: "500m"
-      memory: "512Mi"
-
-# -----------------------------------------------------------------------------
-# POSTGRESQL BACKUP (Harbor)
-# -----------------------------------------------------------------------------
-postgresql:
-  enabled: true
-  # Cron schedule: tous les jours à 3h du matin
-  schedule: "0 3 * * *"
-  
-  # Configuration de connexion
-  host: "harbor-database.harbor.svc"
+  # Configuration de connexion - postgres-shared
+  host: "postgres-shared-postgresql.infra.svc"
   port: 5432
   databases:
-    - registry
-    - notary_signer
-    - notary_server
+    - airflow_db
+    - openmetadata_db
+    - harbor_db
+    - nessie_db
   
-  # Credentials
+  # Credentials (référence au secret postgres-shared)
   credentials:
-    secretName: "postgresql-backup-credentials"
-    usernameKey: "username"
-    passwordKey: "password"
+    secretName: "postgres-shared-secrets"
+    usernameKey: "admin"
+    passwordKey: "admin-password"
   
   # Rétention
   retention:
@@ -92,13 +64,9 @@ postgresql:
 # IMAGE CONFIGURATION
 # -----------------------------------------------------------------------------
 images:
-  mysql:
-    repository: bitnami/mysql
-    tag: "8.0"
   postgresql:
     repository: bitnami/postgresql
-    tag: "15"
+    tag: "16"
   minio:
     repository: minio/mc
     tag: "latest"
-

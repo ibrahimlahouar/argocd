@@ -59,11 +59,18 @@ protectedNamespaces:
     hasIngress: false
     needsKubeAPI: true
 
+  # Infrastructure - Shared Database
+  - name: infra
+    hasIngress: false
+    needsKubeAPI: false
+    # C'est le namespace de postgres-shared
+
   # Services Core
   - name: harbor
     hasIngress: true
     ingressPort: 80
     needsExternal: true  # Trivy télécharge des DBs
+    needsPostgreSQL: true  # External PostgreSQL
     
   - name: vault
     hasIngress: true
@@ -78,12 +85,20 @@ protectedNamespaces:
     ingressPort: 4466
     needsKubeAPI: true
 
+  # Nessie - Iceberg Catalog
+  - name: nessie
+    hasIngress: false
+    needsMinio: true
+    needsPostgreSQL: true  # For metadata storage
+
   # Data Platform
   - name: trino
     hasIngress: true
     ingressPort: 8080
     needsMinio: true
     needsVault: true
+    needsPostgreSQL: true  # For PostgreSQL connector
+    needsNessie: true  # For Iceberg catalog
     
   - name: openmetadata
     hasIngress: true
@@ -93,6 +108,14 @@ protectedNamespaces:
     needsTrino: true
     needsKubeAPI: true  # Pour KubernetesExecutor Airflow
     needsExternal: true  # Pour télécharger packages PyPI
+    needsPostgreSQL: true  # For database
+    needsNessie: true  # For data lineage
+    
+  - name: airflow
+    hasIngress: true
+    ingressPort: 8080
+    needsKubeAPI: true
+    needsPostgreSQL: true  # For database
     
   - name: spark
     hasIngress: false
@@ -100,6 +123,7 @@ protectedNamespaces:
     needsVault: true
     needsKubeAPI: true
     needsOpenMetadata: true
+    needsNessie: true  # For Iceberg tables
     
   - name: spark-operator
     hasIngress: false
@@ -144,3 +168,15 @@ services:
   harbor:
     namespace: harbor
     ports: [80, 443, 5000]
+
+  # PostgreSQL - Central database for all services
+  postgresql:
+    namespace: infra
+    port: 5432
+    serviceName: postgres-shared-postgresql
+
+  # Nessie - Iceberg Catalog
+  nessie:
+    namespace: nessie
+    port: 19120
+    serviceName: nessie
