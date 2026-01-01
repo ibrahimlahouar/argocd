@@ -75,7 +75,7 @@ opensearch:
 # Airflow configurations for helm dependency
 # you can find more details about this here https://github.com/airflow-helm/charts
 airflow:
-  enabled: true
+  enabled: false
   airflow:
     image:
       repository: 10.10.0.101:30500/data-platform/airflow

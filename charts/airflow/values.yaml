@@ -19,11 +19,7 @@ airflow:
     enabled: true
 
   # Ingress / Service
-  web:
-    service:
-      type: NodePort
-      ports:
-        airflow-ui: 30080
+
     
   ingress:
     web:
@@ -68,6 +64,12 @@ airflow:
       periodSeconds: 60
     
   webserver:
+    service:
+      type: NodePort
+      ports:
+        - name: airflow-ui
+          port: 8080
+          nodePort: 30080
     livenessProbe:
       initialDelaySeconds: 60
       timeoutSeconds: 30
