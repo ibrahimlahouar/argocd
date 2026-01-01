@@ -97,6 +97,36 @@ spec:
           port: {{ $.Values.services.trino.port }}
 {{- end }}
 
+{{- if .needsOpenMetadata }}
+---
+# =============================================================================
+# {{ .name | upper }} → OPENMETADATA
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-openmetadata
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à OpenMetadata pour le lignage"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.openmetadata.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.openmetadata.port }}
+{{- end }}
+
 {{- end }}
 
 # =============================================================================
@@ -190,6 +220,38 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.services.trino.port }}
+
+# =============================================================================
+# OPENMETADATA - Accepter les connexions des services
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-services
+  namespace: {{ .Values.services.openmetadata.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers OpenMetadata depuis les services"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- range .Values.protectedNamespaces }}
+        {{- if .needsOpenMetadata }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.openmetadata.port }}
 
 # =============================================================================
 # HARBOR - Registry accessible pour les pulls d'images

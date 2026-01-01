@@ -99,10 +99,12 @@ protectedNamespaces:
     needsMinio: true
     needsVault: true
     needsKubeAPI: true
+    needsOpenMetadata: true
     
   - name: spark-operator
     hasIngress: false
     needsKubeAPI: true
+    needsOpenMetadata: true
 
   # Monitoring Stack
   - name: monitoring
@@ -135,6 +137,10 @@ services:
     namespace: trino
     port: 8080
     
+  openmetadata:
+    namespace: openmetadata
+    port: 8585
+
   harbor:
     namespace: harbor
     ports: [80, 443, 5000]
