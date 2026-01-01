@@ -8,7 +8,7 @@ postgresql:
   image:
     registry: docker.io
     repository: bitnami/postgresql
-    tag: 16.4.0-debian-12-r0
+    tag: "16"
   primary:
     persistence:
       size: 20Gi
