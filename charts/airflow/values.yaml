@@ -24,6 +24,17 @@ airflow:
       type: NodePort
       ports:
         airflow-ui: 30080
+    
+  ingress:
+    web:
+      enabled: true
+      className: "nginx"
+      hosts:
+        - name: airflow.data-platform.local
+      tls:
+        - secretName: airflow-tls
+          hosts:
+            - airflow.data-platform.local
   
   # Configuration logs pour OpenMetadata (optionnelle mais utile)
   config:
