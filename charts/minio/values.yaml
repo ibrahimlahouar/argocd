@@ -444,6 +444,14 @@ buckets:
     policy: none
     purge: false
     versioning: false
+  - name: bronze
+    policy: none
+    purge: false
+    versioning: false
+  - name: scripts
+    policy: none
+    purge: false
+    versioning: false
 
 ## Additional Annotations for the Kubernetes Job makeBucketJob
 makeBucketJob:
