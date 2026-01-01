@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-airflow-web
+  namespace: airflow
+spec:
+  podSelector:
+    matchLabels:
+      component: webserver
+  policyTypes:
+    - Ingress
+  ingress:
+    # Autoriser l'accès UI (internet/interne)
+    - from: [] # Tout le monde pour l'instant (NodePort)
+      ports:
+        - protocol: TCP
+          port: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-airflow-git-sync
+  namespace: airflow
+spec:
+  podSelector:
+    matchLabels:
+      component: scheduler # et worker
+  policyTypes:
+    - Egress
+  egress:
+    # Autoriser la sortie vers GitHub
+    - to:
+        - ipBlock: # GitHub IPs (simplifié 0.0.0.0/0 port 443 pour git sync)
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+    # Autoriser Kubernetes API (pour KubernetesExecutor)
+    - to:
+        - ipBlock:
+             cidr: 10.96.0.1/32 # IP Service Kube API typique, à adapter si différent
+      ports:
+        - protocol: TCP
+          port: 443 

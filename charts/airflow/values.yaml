@@ -1,0 +1,65 @@
+airflow:
+  airflowVersion: "2.8.0"
+  executor: KubernetesExecutor
+  
+  # GitSync pour nos DAGs
+  dags:
+    gitSync:
+      enabled: true
+      repo: https://github.com/ibrahimlahouar/airflow-dags.git
+      branch: main
+      rev: HEAD
+      depth: 1
+      maxFailures: 0
+      subPath: ""
+      
+  # Désactivation de PostgreSQL embarqué car on veut être propre (idéalement)
+  # Pour simplifier l'instant, on laisse embarqué mais noté.
+  postgresql:
+    enabled: true
+
+  # Ingress / Service
+  web:
+    service:
+      type: NodePort
+      ports:
+        airflow-ui: 30080
+  
+  # Configuration logs pour OpenMetadata (optionnelle mais utile)
+  config:
+    core:
+      dags_are_paused_at_creation: 'False'
+      load_examples: 'False'
+    webserver:
+      expose_config: 'True'
+    api:
+      auth_backends: airflow.api.auth.backend.basic_auth
+  
+  # Service Account et RBAC pour Spark
+  serviceAccount:
+    create: true
+    name: airflow-sa
+  rbac:
+    create: true
+    
+  # Logs persistants
+  logs:
+    persistence:
+      enabled: true
+      storageClass: local-path
+      size: 10Gi
+
+  # Probes un peu plus relax
+  scheduler:
+    livenessProbe:
+      initialDelaySeconds: 60
+      timeoutSeconds: 30
+      failureThreshold: 5
+      periodSeconds: 60
+    
+  webserver:
+    livenessProbe:
+      initialDelaySeconds: 60
+      timeoutSeconds: 30
+      failureThreshold: 5
+      periodSeconds: 60
