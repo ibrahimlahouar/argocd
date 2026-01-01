@@ -35,9 +35,6 @@ spec:
             cidr: 0.0.0.0/0
       ports:
         - protocol: TCP
-          port: 443
-      ports:
-        - protocol: TCP
           port: 443 
     # Autoriser Kubernetes API (pour KubernetesExecutor)
     - to:
@@ -46,6 +43,18 @@ spec:
       ports:
         - protocol: TCP
           port: 443
+    # Autoriser DNS (Indispensable pour GitHub, S3, etc.)
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Autoriser PostgreSQL (Interne namespace airflow)
+    - to:
+        - podSelector: {} # Tout le namespace airflow (simplifié)
+      ports:
+        - protocol: TCP
+          port: 5432
     # Autoriser MinIO (namespace minio)
     - to:
         - namespaceSelector:
