@@ -3,7 +3,7 @@ name: postgres-shared
 description: Shared PostgreSQL for Data Platform
 type: application
 version: 0.1.0
-appVersion: "15"
+appVersion: "16"
 dependencies:
   - name: postgresql
     version: 12.1.6
