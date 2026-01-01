@@ -279,30 +279,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Network Policies - Zero Trust Security
-# Déployé après Cert-Manager car il a besoin des namespaces créés
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: network-policies
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-spec:
-  project: data-platform
-  source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/network-policies
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default  # Les policies sont créées dans leurs namespaces respectifs
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+# Network Policies disabled due to cluster lockout
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
