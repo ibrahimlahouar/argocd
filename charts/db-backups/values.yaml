@@ -19,8 +19,8 @@ global:
   minio:
     endpoint: "minio.minio.svc:9000"
     bucket: "db-backups"
-    accessKey: "minio"
-    secretKey: "minio123"  # À mettre dans un secret en production
+    accessKey: "minioadmin"
+    secretKey: "minioadmin123"  # À mettre dans un secret en production
 
 # -----------------------------------------------------------------------------
 # MYSQL BACKUP - DISABLED (Migrated to PostgreSQL)
