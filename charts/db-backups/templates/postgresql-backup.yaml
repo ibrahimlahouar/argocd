@@ -106,8 +106,11 @@ spec:
                   
                   # Cleanup old backups (keep last N)
                   echo "=== Cleanup old backups (keeping {{ .Values.postgresql.retention.copies }}) ==="
-                  mc ls backup/{{ .Values.global.minio.bucket }}/postgresql/ | sort -r | tail -n +{{ add .Values.postgresql.retention.copies 1 }} | awk '{print $NF}' | while read f; do
-                    mc rm "backup/{{ .Values.global.minio.bucket }}/postgresql/$f" 2>/dev/null || true
+                  # NOTE: minio/mc image may not include awk; use shell parsing instead.
+                  mc ls backup/{{ .Values.global.minio.bucket }}/postgresql/ | sort -r | tail -n +{{ add .Values.postgresql.retention.copies 1 }} | while read -r date time size name; do
+                    if [ -n "$name" ]; then
+                      mc rm "backup/{{ .Values.global.minio.bucket }}/postgresql/$name" 2>/dev/null || true
+                    fi
                   done
                   
                   echo "=== Current backups ==="
