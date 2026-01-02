@@ -11,7 +11,7 @@ postgresql:
     tag: "16"
   primary:
     persistence:
-      size: 50Gi  # Increased for all services
+      size: 20Gi  # local-path PVC resize not supported; keep existing size
     initdbScripts:
       init.sql: |
         -- =============================================================================
