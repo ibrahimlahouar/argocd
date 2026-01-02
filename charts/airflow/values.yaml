@@ -5,7 +5,7 @@ airflowChart:
       tag: 2.7.3-python3.10
       pullPolicy: IfNotPresent
 
-    executor: LocalExecutor
+    executor: KubernetesExecutor
     
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.5.4"
