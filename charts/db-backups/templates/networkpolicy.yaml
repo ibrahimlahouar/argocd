@@ -11,11 +11,22 @@ spec:
   policyTypes:
   - Egress
   egress:
-  # Allow DNS
+  # Allow DNS (namespace)
   - to:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow DNS (NodeLocalDNS / CoreDNS service IP fallback)
+  - to:
+    - ipBlock:
+        cidr: {{ .Values.global.dns.nodeLocalIP }}/32
+    - ipBlock:
+        cidr: {{ .Values.global.dns.coreDNSIP }}/32
     ports:
     - protocol: UDP
       port: 53

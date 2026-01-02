@@ -9,6 +9,11 @@
 global:
   # Namespace où déployer les jobs de backup
   namespace: velero
+
+  # DNS (Kubespray NodeLocalDNS + CoreDNS fallback)
+  dns:
+    nodeLocalIP: "169.254.25.10"
+    coreDNSIP: "10.233.0.3"
   
   # Configuration MinIO pour le stockage des backups
   minio:
