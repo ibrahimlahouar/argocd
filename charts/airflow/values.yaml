@@ -70,9 +70,7 @@ airflow:
   
   logs:
     persistence:
-      enabled: true
-      size: 1Gi
-      accessMode: ReadWriteOnce
+      enabled: false
 
   scheduler:
     logCleanup:
