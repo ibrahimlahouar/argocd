@@ -73,3 +73,7 @@ airflow:
       enabled: true
       size: 1Gi
       accessMode: ReadWriteOnce
+
+  scheduler:
+    logCleanup:
+      enabled: false
