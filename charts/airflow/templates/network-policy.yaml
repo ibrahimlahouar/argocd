@@ -44,6 +44,15 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
+  # Allow DNS (fallback for CNIs that evaluate pre-DNAT)
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
   # Allow Git Sync (Internet)
   - to:
     - ipBlock:
