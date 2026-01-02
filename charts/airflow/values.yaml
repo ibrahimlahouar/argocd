@@ -4,6 +4,8 @@ airflowChart:
       repository: apache/airflow
       tag: 2.7.3-python3.10
       pullPolicy: IfNotPresent
+
+    executor: LocalExecutor
     
     extraPipPackages:
       - "openmetadata-ingestion[airflow-container]==1.5.4"
@@ -76,6 +78,7 @@ airflowChart:
       enabled: false
 
   workers:
+    enabled: false
     logCleanup:
       enabled: false
 
@@ -85,3 +88,12 @@ airflowChart:
     jobAnnotations:
       "argocd.argoproj.io/hook": "PreSync"
       "argocd.argoproj.io/hook-delete-policy": "BeforeHookCreation"
+
+  redis:
+    enabled: false
+
+  flower:
+    enabled: false
+
+  pgbouncer:
+    enabled: false

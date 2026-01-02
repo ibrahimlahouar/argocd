@@ -2,5 +2,5 @@ dependencies:
 - name: airflow
   repository: https://airflow-helm.github.io/charts
   version: 8.9.0
-digest: sha256:ad86c9d2c8c308ea9f9a2c21b581593247ad24cb344b4a0017ec6b96ea6d5b0f
-generated: "2026-01-02T03:25:37.103693+01:00"
+digest: sha256:91cd25eb6cd05159d1d4fe32f660b1f3fc6873bf8337330d00010b039beb3e6c
+generated: "2026-01-02T03:53:47.304453+01:00"
