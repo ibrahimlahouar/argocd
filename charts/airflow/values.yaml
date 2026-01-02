@@ -77,3 +77,7 @@ airflow:
   scheduler:
     logCleanup:
       enabled: false
+
+  workers:
+    logCleanup:
+      enabled: false
