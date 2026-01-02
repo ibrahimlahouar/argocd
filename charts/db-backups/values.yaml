@@ -42,9 +42,11 @@ postgresql:
   
   # Credentials (référence au secret postgres-shared)
   credentials:
-    secretName: "postgres-shared-secrets"
-    usernameKey: "admin"
-    passwordKey: "admin-password"
+    # This chart creates `postgresql-backup-credentials` in the velero namespace.
+    # Use it directly to avoid cross-namespace secrets.
+    secretName: "postgresql-backup-credentials"
+    usernameKey: "username"
+    passwordKey: "password"
   
   # Rétention
   retention:
