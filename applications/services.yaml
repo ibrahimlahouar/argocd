@@ -2,9 +2,9 @@
 # DATA PLATFORM SERVICES
 # =============================================================================
 # Sync-wave order:
-# Wave 1: Core services (MinIO, Vault, Nessie)
-# Wave 2: Services depending on postgres-shared (Harbor, OpenMetadata-deps, Trino)
-# Wave 3: Services depending on dependencies (OpenMetadata, Airflow)
+# Wave 1: Core services (MinIO, Vault, Nessie, OpenSearch, Airflow)
+# Wave 2: Services depending on postgres-shared (Harbor, Trino)
+# Wave 3: Services depending on dependencies (OpenMetadata)
 # Wave 4: UI and auxiliary services (Headlamp, Spark Operator)
 # =============================================================================
 
@@ -80,6 +80,56 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: nessie
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/opensearch
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opensearch
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: airflow
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/airflow
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: airflow
   syncPolicy:
     automated:
       prune: true
@@ -187,31 +237,6 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: openmetadata-dependencies
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  project: data-platform
-  source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/openmetadata-dependencies
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openmetadata
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
 # =============================================================================
 # WAVE 3: SERVICES DEPENDING ON DEPENDENCIES
 # =============================================================================
@@ -233,31 +258,6 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openmetadata
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: airflow
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-spec:
-  project: data-platform
-  source:
-    repoURL: https://github.com/ibrahimlahouar/argocd.git
-    path: charts/airflow
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: airflow
   syncPolicy:
     automated:
       prune: true

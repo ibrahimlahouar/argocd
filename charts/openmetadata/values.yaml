@@ -33,7 +33,7 @@ openmetadata:
       idleThreadTimeout: "1 minute"
     elasticsearch:
       enabled: true
-      host: opensearch
+      host: opensearch-opensearch.opensearch.svc.cluster.local
       searchType: opensearch
       port: 9200
       scheme: http
@@ -83,9 +83,9 @@ openmetadata:
       enabled: true
       className: "org.openmetadata.service.clients.pipeline.airflow.AirflowRESTClient"
       # endpoint url for airflow
-      apiEndpoint: http://airflow-webserver.airflow.svc.cluster.local:8080
+      apiEndpoint: http://airflow-web.airflow.svc.cluster.local:8080
       # this will be the api endpoint url of OpenMetadata Server
-      metadataApiEndpoint: http://openmetadata:8585/api
+      metadataApiEndpoint: http://openmetadata.openmetadata.svc.cluster.local:8585/api
       # possible values are "no-ssl", "ignore", "validate"
       verifySsl: "no-ssl"
       hostIp: ""

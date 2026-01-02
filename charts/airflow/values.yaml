@@ -1,85 +1,75 @@
 airflow:
-  airflowVersion: "2.8.0"
-  executor: KubernetesExecutor
-  
-  # GitSync pour nos DAGs
-  dags:
-    gitSync:
-      enabled: true
-      repo: https://github.com/ibrahimlahouar/airflow-dags.git
-      branch: main
-      rev: HEAD
-      depth: 1
-      maxFailures: 0
-      subPath: ""
-      
-  # Utilisation des secrets gérés par nous
-  fernetKeySecretName: airflow-fernet-key
-  webserverSecretKeySecretName: airflow-webserver-secret-key
+  airflow:
+    image:
+      repository: apache/airflow
+      tag: 2.7.3-python3.10
+      pullPolicy: IfNotPresent
+    
+    extraPipPackages:
+      - "openmetadata-ingestion[airflow-container]==1.5.4"
+    
+    extraVolumes:
+      - name: openmetadata-libs
+        emptyDir: {}
+    
+    extraVolumeMounts:
+      - name: openmetadata-libs
+        mountPath: /opt/openmetadata-libs
+    
+    extraInitContainers:
+      - name: install-managed-apis
+        image: apache/airflow:2.7.3-python3.10
+        command: ["bash", "-c", "PIP_USER=false pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.5.4 --no-deps Flask-Admin==1.6.0"]
+        volumeMounts:
+          - name: openmetadata-libs
+            mountPath: /opt/openmetadata-libs
+    
+    extraEnv:
+      - name: PYTHONPATH
+        value: "/opt/openmetadata-libs"
+        
+    config:
+      AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
+      AIRFLOW__OPENMETADATA_AIRFLOW_APIS__DAG_GENERATED_CONFIGS: "/opt/airflow/dags"
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
 
-  # Désactivation de PostgreSQL embarqué
-  postgresql:
-    enabled: false
+    users:
+    - username: admin
+      password: admin
+      role: Admin
+      email: admin@example.com
+      firstName: Admin
+      lastName: User
 
-  # Configuration Database externe (standardisée)
-  data:
-    metadataConnection:
-      user: airflow_user
-      pass: airflow_pass
-      protocol: postgresql
-      host: postgres-shared-postgresql.infra.svc.cluster.local
-      port: 5432
-      db: airflow_db
-      
-  ingress:
-    web:
-      enabled: true
-      ingressClassName: "nginx"
-      hosts:
-        - name: airflow.data-platform.local
-      tls:
-        enabled: true
-        secretName: airflow-tls
-  
-  config:
-    core:
-      dags_are_paused_at_creation: 'False'
-      load_examples: 'False'
-    webserver:
-      expose_config: 'True'
-    api:
-      auth_backends: airflow.api.auth.backend.basic_auth
-  
+  web:
+    service:
+      type: NodePort
+      ports:
+        - name: airflow-ui
+          port: 8080
+          nodePort: 32080
+
+  externalDatabase:
+    type: postgres
+    host: postgres-shared-postgresql.infra.svc.cluster.local
+    port: 5432
+    database: airflow_db
+    user: airflow_user
+    passwordSecret: postgres-shared-secrets
+    passwordSecretKey: airflow-password
+
   serviceAccount:
     create: true
-    name: airflow-sa
-  rbac:
-    create: true
-    
+    name: "airflow"
+
+  dags:
+    persistence:
+      enabled: true
+      size: 1Gi
+      accessMode: ReadWriteOnce
+  
   logs:
     persistence:
       enabled: true
-      storageClassName: local-path
-      size: 10Gi
-
-  scheduler:
-    livenessProbe:
-      initialDelaySeconds: 60
-      timeoutSeconds: 30
-      failureThreshold: 5
-      periodSeconds: 60
-    
-  webserver:
-    service:
-      type: NodePort
-      nodePort: 32080
-    livenessProbe:
-      initialDelaySeconds: 60
-      timeoutSeconds: 30
-      failureThreshold: 5
-      periodSeconds: 60
-    startupProbe:
-      initialDelaySeconds: 30
-      timeoutSeconds: 30
-      failureThreshold: 10
-      periodSeconds: 15
+      size: 1Gi
+      accessMode: ReadWriteOnce

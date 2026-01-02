@@ -1,73 +1,55 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-airflow-web
-  namespace: airflow
+  name: allow-airflow-access
+  namespace: {{ .Release.Namespace }}
 spec:
-  podSelector:
-    matchLabels:
-      component: webserver
+  podSelector: {}
   policyTypes:
-    - Ingress
+  - Ingress
+  - Egress
   ingress:
-    # Autoriser l'accès UI (internet/interne)
-    - from: [] # Tout le monde pour l'instant (NodePort)
-      ports:
-        - protocol: TCP
-          port: 8080
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-airflow-git-sync
-  namespace: airflow
-spec:
-  podSelector:
-    matchLabels:
-      component: scheduler # et worker
-  policyTypes:
-    - Egress
+  # Allow from OpenMetadata
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openmetadata
+    ports:
+    - protocol: TCP
+      port: 8080
+  # Allow Web UI access (NodePort)
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 8080
+  
   egress:
-    # Autoriser la sortie vers GitHub
-    - to:
-        - ipBlock: # GitHub IPs (simplifié 0.0.0.0/0 port 443 pour git sync)
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: 443 
-    # Autoriser Kubernetes API (pour KubernetesExecutor)
-    - to:
-        - ipBlock:
-             cidr: 10.96.0.1/32 # IP Service Kube API typique
-      ports:
-        - protocol: TCP
-          port: 443
-    # Autoriser DNS (Indispensable pour GitHub, S3, etc.)
-    - ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
-    # Autoriser PostgreSQL (Interne namespace airflow)
-    - to:
-        - podSelector: {} # Tout le namespace airflow (simplifié)
-      ports:
-        - protocol: TCP
-          port: 5432
-    # Autoriser MinIO (namespace minio)
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: minio
-      ports:
-        - protocol: TCP
-          port: 9000
-    # Autoriser Nessie (namespace nessie)
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: nessie
-      ports:
-        - protocol: TCP
-          port: 19120
+  # Allow PostgreSQL
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: infra
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Allow DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow Git Sync (Internet)
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80

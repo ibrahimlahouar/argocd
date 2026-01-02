@@ -1,0 +1,32 @@
+opensearch:
+  clusterName: opensearch-cluster
+  nodeGroup: "master"
+  replicas: 1
+  singleNode: true
+  
+  image:
+    repository: opensearchproject/opensearch
+    tag: "2.11.1"
+  
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+  
+  opensearchJavaOpts: "-Xmx512M -Xms512M"
+  
+  config:
+    opensearch.yml: |
+      plugins.security.disabled: true
+      network.host: 0.0.0.0
+  
+  service:
+    type: ClusterIP
+    port: 9200

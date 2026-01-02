@@ -65,7 +65,7 @@ postgresql:
 # -----------------------------------------------------------------------------
 images:
   postgresql:
-    repository: bitnami/postgresql
+    repository: public.ecr.aws/bitnami/postgresql
     tag: "16"
   minio:
     repository: minio/mc
