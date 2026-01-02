@@ -81,3 +81,10 @@ airflow:
   workers:
     logCleanup:
       enabled: false
+
+  # Enable migration job explicitly
+  migrateDatabaseJob:
+    enabled: true
+    jobAnnotations:
+      "argocd.argoproj.io/hook": "PreSync"
+      "argocd.argoproj.io/hook-delete-policy": "BeforeHookCreation"
