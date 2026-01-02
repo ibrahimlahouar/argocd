@@ -137,6 +137,12 @@ protectedNamespaces:
     needsKubeAPI: true  # Pour scraper les métriques K8s
     needsExternal: true  # Grafana télécharge des plugins
 
+  # Velero namespace (db-backups jobs need PostgreSQL + MinIO + DNS)
+  - name: velero
+    hasIngress: false
+    needsMinio: true
+    needsPostgreSQL: true
+
 # -----------------------------------------------------------------------------
 # CONFIGURATION INGRESS CONTROLLER
 # -----------------------------------------------------------------------------
