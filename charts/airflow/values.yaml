@@ -64,9 +64,7 @@ airflow:
 
   dags:
     persistence:
-      enabled: true
-      size: 1Gi
-      accessMode: ReadWriteOnce
+      enabled: false
   
   logs:
     persistence:
