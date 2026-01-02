@@ -1,0 +1,41 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-db-backups-egress
+  namespace: {{ .Values.global.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: db-backup
+  policyTypes:
+  - Egress
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow PostgreSQL (postgres-shared)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: infra
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Allow MinIO uploads
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: minio
+    ports:
+    - protocol: TCP
+      port: 9000
+{{- end }}
+
