@@ -377,6 +377,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: infra
+  ignoreDifferences:
+  - group: apps
+    kind: StatefulSet
+    jsonPointers:
+    - /spec/volumeClaimTemplates/0/status
+    - /spec/volumeClaimTemplates/0/metadata/creationTimestamp
   syncPolicy:
     automated:
       prune: true
