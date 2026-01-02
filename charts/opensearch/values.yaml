@@ -1,5 +1,6 @@
 opensearch:
   clusterName: opensearch-cluster
+  fullnameOverride: "opensearch"
   nodeGroup: "master"
   replicas: 1
   singleNode: true

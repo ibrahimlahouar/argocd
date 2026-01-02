@@ -33,7 +33,7 @@ openmetadata:
       idleThreadTimeout: "1 minute"
     elasticsearch:
       enabled: true
-      host: opensearch-opensearch.opensearch.svc.cluster.local
+      host: opensearch-cluster-master.opensearch.svc.cluster.local
       searchType: opensearch
       port: 9200
       scheme: http
