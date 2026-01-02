@@ -53,6 +53,13 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
+  # Allow Kubernetes API (required for KubernetesExecutor)
+  - to:
+    - ipBlock:
+        cidr: {{ .Values.airflowChart.kubeAPI.serviceIP }}/32
+    ports:
+    - protocol: TCP
+      port: {{ .Values.airflowChart.kubeAPI.port }}
   # Allow Git Sync (Internet)
   - to:
     - ipBlock:

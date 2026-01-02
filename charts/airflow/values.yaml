@@ -1,4 +1,8 @@
 airflowChart:
+  # Kubernetes API (for KubernetesExecutor)
+  kubeAPI:
+    serviceIP: "10.233.0.1"
+    port: 443
   airflow:
     image:
       repository: apache/airflow
