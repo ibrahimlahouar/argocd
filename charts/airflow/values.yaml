@@ -44,10 +44,8 @@ airflow:
   web:
     service:
       type: NodePort
-      ports:
-        - name: airflow-ui
-          port: 8080
-          nodePort: 32080
+      nodePort:
+        http: 32180
 
   postgresql:
     enabled: false
