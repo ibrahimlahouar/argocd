@@ -49,6 +49,9 @@ airflow:
           port: 8080
           nodePort: 32080
 
+  postgresql:
+    enabled: false
+
   externalDatabase:
     type: postgres
     host: postgres-shared-postgresql.infra.svc.cluster.local
