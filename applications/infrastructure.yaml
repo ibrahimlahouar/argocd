@@ -279,7 +279,33 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Network Policies disabled due to cluster lockout
+# Network Policies (Zero Trust)
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: network-policies
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Apply after core infra is ready, before app services rely on it
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: data-platform
+  source:
+    repoURL: https://github.com/ibrahimlahouar/argocd.git
+    path: charts/network-policies
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
