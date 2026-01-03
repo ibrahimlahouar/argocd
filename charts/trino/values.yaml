@@ -124,7 +124,8 @@ additionalCatalogs:
     iceberg.nessie-catalog.uri=http://nessie.nessie.svc:19120/api/v1
     iceberg.nessie-catalog.ref=main
     iceberg.file-format=PARQUET
-    iceberg.nessie-catalog.warehouse-dir=s3://warehouse
+    # Trino expects `default-warehouse-dir` for Nessie Iceberg catalog
+    iceberg.nessie-catalog.default-warehouse-dir=s3://warehouse
     fs.native-s3.enabled=true
     s3.endpoint=http://minio.minio.svc:9000
     s3.path-style-access=true
