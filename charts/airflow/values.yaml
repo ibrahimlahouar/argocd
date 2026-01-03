@@ -24,7 +24,7 @@ airflowChart:
     extraInitContainers:
       - name: install-managed-apis
         image: apache/airflow:2.7.3-python3.10
-        command: ["bash", "-c", "PIP_USER=false pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.5.4 \"openmetadata-ingestion[airflow-container]==1.5.4\" Flask-Admin==1.6.0 && PIP_USER=false pip install --target /opt/openmetadata-libs --force-reinstall \"pydantic<2.0.0\" && rm -rf /opt/openmetadata-libs/airflow /opt/openmetadata-libs/apache_airflow*"]
+        command: ["bash", "-c", "PIP_USER=false pip install --target /opt/openmetadata-libs openmetadata-managed-apis==1.5.4 \"openmetadata-ingestion[airflow-container]==1.5.4\" Flask-Admin==1.6.0 && PIP_USER=false pip install --target /opt/openmetadata-libs --force-reinstall \"pydantic<2.0.0\" \"pendulum<3.0.0\" && rm -rf /opt/openmetadata-libs/airflow /opt/openmetadata-libs/apache_airflow*"]
         volumeMounts:
           - name: openmetadata-libs
             mountPath: /opt/openmetadata-libs
