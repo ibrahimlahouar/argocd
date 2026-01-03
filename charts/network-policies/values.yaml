@@ -115,6 +115,7 @@ protectedNamespaces:
     hasIngress: true
     ingressPort: 8080
     needsKubeAPI: true
+    needsExternal: true  # GitSync + public API fetches in demo DAGs
     needsPostgreSQL: true  # For database
     
   - name: spark
