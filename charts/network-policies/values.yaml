@@ -124,6 +124,7 @@ protectedNamespaces:
     needsKubeAPI: true
     needsOpenMetadata: true
     needsNessie: true  # For Iceberg tables
+    needsExternal: true  # Download Maven packages for Iceberg/Nessie at runtime
     
   - name: spark-operator
     hasIngress: false

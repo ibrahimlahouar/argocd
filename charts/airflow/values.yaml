@@ -72,6 +72,14 @@ airflowChart:
   dags:
     persistence:
       enabled: false
+    gitSync:
+      enabled: true
+      repo: "https://github.com/ibrahimlahouar/airflow-dags.git"
+      branch: "main"
+      subPath: ""
+      # public repo -> no credentials required
+      sshSecret: ""
+      httpSecret: ""
   
   logs:
     persistence:
