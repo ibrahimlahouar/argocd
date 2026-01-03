@@ -12,8 +12,8 @@ airflowChart:
     executor: KubernetesExecutor
     
     extraPipPackages:
-      - "openmetadata-ingestion[airflow-container]==1.5.4"
       - "pydantic<2.0.0"
+      - "openmetadata-ingestion[airflow-container]==1.5.4"
     
     extraVolumes:
       - name: openmetadata-libs
