@@ -117,6 +117,7 @@ protectedNamespaces:
     needsKubeAPI: true
     needsExternal: true  # GitSync + public API fetches in demo DAGs
     needsPostgreSQL: true  # For database
+    needsMinio: true # For fetching/storing DAG data/scripts
     
   - name: spark
     hasIngress: false
