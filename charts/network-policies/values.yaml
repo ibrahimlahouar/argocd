@@ -132,6 +132,8 @@ protectedNamespaces:
     hasIngress: false
     needsKubeAPI: true
     needsOpenMetadata: true
+    needsMinio: true
+    needsExternal: true
 
   # Monitoring Stack
   - name: monitoring
