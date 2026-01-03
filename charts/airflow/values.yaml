@@ -69,17 +69,25 @@ airflowChart:
     create: true
     name: "airflow"
 
-  dags:
-    persistence:
-      enabled: false
-    gitSync:
+    dags:
+      persistence:
+        enabled: false
+      gitSync:
+        enabled: true
+        repo: "https://github.com/ibrahimlahouar/airflow-dags.git"
+        branch: "main"
+        subPath: ""
+        # public repo -> no credentials required
+        sshSecret: ""
+        httpSecret: ""
+
+    ingress:
       enabled: true
-      repo: "https://github.com/ibrahimlahouar/airflow-dags.git"
-      branch: "main"
-      subPath: ""
-      # public repo -> no credentials required
-      sshSecret: ""
-      httpSecret: ""
+      web:
+        path: ""
+        host: "airflow.data-platform.local"
+        annotations:
+          kubernetes.io/ingress.class: nginx
   
   logs:
     persistence:
