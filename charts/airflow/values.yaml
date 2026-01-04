@@ -19,7 +19,7 @@ airflowChart:
       # Needed for S3/MinIO remote logging handler
       - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
       # OpenMetadata Lineage integration
-      - "airflow-provider-openmetadata==1.3.0"
+      - "apache-airflow-providers-openmetadata"
         
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
