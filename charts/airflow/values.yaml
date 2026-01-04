@@ -18,8 +18,6 @@ airflowChart:
       - "kubernetes>=28.1.0"
       # Needed for S3/MinIO remote logging handler
       - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
-      # OpenMetadata Lineage integration
-      - "apache-airflow-providers-openmetadata"
         
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
