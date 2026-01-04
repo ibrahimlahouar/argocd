@@ -12,12 +12,15 @@ spec:
       containers:
         - name: import-variables
           image: {{ .Values.airflowChart.airflow.image.repository }}:{{ .Values.airflowChart.airflow.image.tag }}
+          envFrom:
+            - secretRef:
+                name: airflow-config-envs
           env:
-            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+            - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: airflow-airflow-metadata
-                  key: connection
+                  name: postgres-shared-secrets
+                  key: airflow-password
           volumeMounts:
             - name: variables-file
               mountPath: /tmp/variables.json
