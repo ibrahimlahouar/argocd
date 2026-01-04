@@ -16,10 +16,30 @@ airflowChart:
       - "boto3>=1.28.0"
       - "requests>=2.31.0"
       - "kubernetes>=28.1.0"
+      # Needed for S3/MinIO remote logging handler
+      - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
         
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+      # Remote logging to MinIO (S3-compatible)
+      AIRFLOW__LOGGING__REMOTE_LOGGING: "True"
+      AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER: "s3://warehouse/airflow-logs"
+      AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID: "minio_logs"
+      AIRFLOW__LOGGING__ENCRYPT_S3_LOGS: "False"
+
+    # Airflow connections (created automatically by the Helm chart)
+    connections:
+      - id: minio_logs
+        type: aws
+        description: "MinIO S3 connection for Airflow remote logs"
+        extra: |-
+          {
+            "aws_access_key_id": "minioadmin",
+            "aws_secret_access_key": "minioadmin123",
+            "region_name": "us-east-1",
+            "endpoint_url": "http://minio.minio.svc:9000"
+          }
 
     users:
     - username: admin

@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: airflow-import-variables
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: import-variables
+          image: {{ .Values.airflowChart.airflow.image.repository }}:{{ .Values.airflowChart.airflow.image.tag }}
+          env:
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-airflow-metadata
+                  key: connection
+          volumeMounts:
+            - name: variables-file
+              mountPath: /tmp/variables.json
+              subPath: variables.json
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              airflow variables import /tmp/variables.json
+      volumes:
+        - name: variables-file
+          secret:
+            secretName: airflow-variables
+      restartPolicy: OnFailure
