@@ -187,6 +187,36 @@ spec:
           port: {{ $.Values.services.nessie.port }}
 {{- end }}
 
+{{- if .needsOpenSearch }}
+---
+# =============================================================================
+# {{ .name | upper }} → OPENSEARCH
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-opensearch
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à OpenSearch"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.opensearch.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.opensearch.port }}
+{{- end }}
+
 {{- end }}
 
 # =============================================================================
@@ -403,3 +433,35 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.services.nessie.port }}
+
+# =============================================================================
+# OPENSEARCH - Accepter les connexions des services
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-services
+  namespace: {{ .Values.services.opensearch.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers OpenSearch depuis les services"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- range .Values.protectedNamespaces }}
+        {{- if .needsOpenSearch }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.opensearch.port }}

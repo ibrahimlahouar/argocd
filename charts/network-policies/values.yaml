@@ -110,6 +110,7 @@ protectedNamespaces:
     needsExternal: true  # Pour télécharger packages PyPI
     needsPostgreSQL: true  # For database
     needsNessie: true  # For data lineage
+    needsOpenSearch: true # For search index
     
   - name: airflow
     hasIngress: true
@@ -191,3 +192,9 @@ services:
     namespace: nessie
     port: 19120
     serviceName: nessie
+
+  # OpenSearch - Search Engine
+  opensearch:
+    namespace: opensearch
+    port: 9200
+    serviceName: opensearch-cluster-master
