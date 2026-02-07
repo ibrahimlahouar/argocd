@@ -11,14 +11,7 @@ service:
   type: ClusterIP
   port: 80
 
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    cert-manager.io/cluster-issuer: "data-platform-ca-issuer"
-  host: dashboard.data-platform.local
-  tls:
-    secretName: dashboard-tls
+# Ingress is managed by platform-ingress chart
 
 resources:
   limits:

@@ -143,6 +143,11 @@ protectedNamespaces:
     needsKubeAPI: true  # Pour scraper les métriques K8s
     needsExternal: true  # Grafana télécharge des plugins
 
+  # Dashboard - Static HTML dashboard
+  - name: dashboard
+    hasIngress: true
+    ingressPort: 80
+
   # Velero namespace (db-backups jobs need PostgreSQL + MinIO + DNS)
   - name: velero
     hasIngress: false

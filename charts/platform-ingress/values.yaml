@@ -81,3 +81,10 @@ services:
     serviceName: trino
     servicePort: 8080
 
+  dashboard:
+    enabled: true
+    host: dashboard
+    namespace: dashboard
+    serviceName: dashboard
+    servicePort: 80
+
