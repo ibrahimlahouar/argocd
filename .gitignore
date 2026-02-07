@@ -1,3 +1,4 @@
 *.ovpn
 data-platform-ca.crt
 vault-root-ca.crt
+.cursor/
