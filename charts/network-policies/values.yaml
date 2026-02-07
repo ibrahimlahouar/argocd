@@ -76,6 +76,7 @@ protectedNamespaces:
   - name: vault
     hasIngress: true
     ingressPort: 8200
+    needsKubeAPI: true  # Required for Kubernetes auth (TokenReview API)
     
   - name: minio
     hasIngress: true
