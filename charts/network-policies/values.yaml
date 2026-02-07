@@ -54,6 +54,7 @@ protectedNamespaces:
     hasIngress: false
     needsKubeAPI: true
     needsVault: true
+    needsWebhookFromAPIServer: true
     
   - name: metallb-system
     hasIngress: false

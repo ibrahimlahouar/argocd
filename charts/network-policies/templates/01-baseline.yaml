@@ -151,6 +151,50 @@ spec:
           port: 6443
 {{- end }}
 
+{{- if .needsWebhookFromAPIServer }}
+---
+# =============================================================================
+# {{ .name | upper }} - Allow Webhook from API Server
+# =============================================================================
+# Le kube-apiserver doit pouvoir appeler les webhooks (admission controllers)
+# depuis le réseau des masters. Sans cette policy, cert-manager ne peut pas
+# renouveler les certificats car le webhook est bloqué.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-webhook-from-apiserver
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: baseline
+  annotations:
+    description: "Autorise le kube-apiserver à appeler les webhooks"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    # Depuis les masters (kube-apiserver)
+    - from:
+        - ipBlock:
+            cidr: {{ $.Values.cluster.kubeAPI.mastersCIDR }}
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 9402
+    # Depuis le service IP du kube-apiserver
+    - from:
+        - ipBlock:
+            cidr: {{ $.Values.cluster.kubeAPI.serviceIP }}/32
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 9402
+{{- end }}
+
 {{- if .needsExternal }}
 ---
 # =============================================================================
