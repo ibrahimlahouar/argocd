@@ -121,6 +121,7 @@ protectedNamespaces:
     needsExternal: true  # GitSync + public API fetches in demo DAGs
     needsPostgreSQL: true  # For database
     needsMinio: true # For fetching/storing DAG data/scripts
+    needsOpenMetadata: true  # For quality monitoring DAGs
     
   - name: spark
     hasIngress: false
