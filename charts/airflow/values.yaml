@@ -19,7 +19,9 @@ airflowChart:
       # Needed for S3/MinIO remote logging handler
       - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
       # OpenMetadata Managed APIs for Airflow integration
-      - "openmetadata-managed-apis>=1.11.2"
+      # Note: Version 1.0.x is compatible with Airflow 2.7.x (pendulum<3.0)
+      # Version 1.11.x+ requires pendulum 3.0 which conflicts with Airflow 2.7.3
+      - "openmetadata-managed-apis>=1.0.0,<1.1.0"
         
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
