@@ -106,14 +106,7 @@ airflowChart:
               securityContext:
                 runAsUser: 50000
                 runAsGroup: 0
-              command:
-                - /bin/bash
-                - -c
-                - |
-                pip install \
-                  "apache-airflow-providers-amazon>=8.0.0,<9.0.0" \
-                  "sqlparse==0.5.0" && \
-                echo "Done installing pip packages."
+            command: ["/bin/bash", "-c", "pip install 'apache-airflow-providers-amazon>=8.0.0,<9.0.0' 'sqlparse==0.5.0' && echo Done"]
               envFrom:
                 - secretRef:
                     name: airflow-config-envs
@@ -130,13 +123,7 @@ airflowChart:
                   mountPath: /opt/airflow/dags
             - name: fix-dags-permissions
               image: busybox:1.36
-              command:
-                - sh
-                - -c
-                - |
-                  chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true
-                  mkdir -p /opt/airflow/dags/dag_generated_configs
-                  chmod 777 /opt/airflow/dags/dag_generated_configs
+              command: ["sh", "-c", "chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true; mkdir -p /opt/airflow/dags/dag_generated_configs; chmod 777 /opt/airflow/dags/dag_generated_configs"]
               volumeMounts:
                 - name: dags-data
                   mountPath: /opt/airflow/dags
