@@ -123,6 +123,8 @@ protectedNamespaces:
     needsPostgreSQL: true  # For database
     needsMinio: true # For fetching/storing DAG data/scripts
     needsOpenMetadata: true  # For quality monitoring DAGs
+    needsTrino: true  # OpenMetadata runs ingestion via Airflow -> needs Trino access
+    needsNessie: true  # For Iceberg catalog operations via Trino
     
   - name: spark
     hasIngress: false
