@@ -113,6 +113,7 @@ protectedNamespaces:
     needsPostgreSQL: true  # For database
     needsNessie: true  # For data lineage
     needsOpenSearch: true # For search index
+    needsAirflow: true # Pour se connecter à Airflow et ingérer les métadonnées
     
   - name: airflow
     hasIngress: true
@@ -184,6 +185,10 @@ services:
   openmetadata:
     namespace: openmetadata
     port: 8585
+
+  airflow:
+    namespace: airflow
+    port: 8080
 
   harbor:
     namespace: harbor

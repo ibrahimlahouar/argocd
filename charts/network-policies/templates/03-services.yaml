@@ -97,6 +97,36 @@ spec:
           port: {{ $.Values.services.trino.port }}
 {{- end }}
 
+{{- if .needsAirflow }}
+---
+# =============================================================================
+# {{ .name | upper }} → AIRFLOW
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-airflow
+  namespace: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise l'accès à Airflow pour l'ingestion de métadonnées"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Values.services.airflow.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ $.Values.services.airflow.port }}
+{{- end }}
+
 {{- if .needsOpenMetadata }}
 ---
 # =============================================================================
@@ -465,3 +495,31 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.services.opensearch.port }}
+
+# =============================================================================
+# AIRFLOW - Accepter les connexions depuis OpenMetadata
+# =============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openmetadata
+  namespace: {{ .Values.services.airflow.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: data-platform-security
+    policy-type: service-access
+  annotations:
+    description: "Autorise les connexions vers Airflow depuis OpenMetadata"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openmetadata
+      ports:
+        - protocol: TCP
+          port: {{ .Values.services.airflow.port }}
