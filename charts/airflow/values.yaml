@@ -110,10 +110,10 @@ airflowChart:
                 - /bin/bash
                 - -c
                 - |
-                  pip install --user \
-                    "apache-airflow-providers-amazon>=8.0.0,<9.0.0" \
-                    "sqlparse==0.5.0" && \
-                  echo "Done installing pip packages."
+                pip install \
+                  "apache-airflow-providers-amazon>=8.0.0,<9.0.0" \
+                  "sqlparse==0.5.0" && \
+                echo "Done installing pip packages."
               envFrom:
                 - secretRef:
                     name: airflow-config-envs
