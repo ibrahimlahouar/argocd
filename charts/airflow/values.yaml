@@ -26,9 +26,6 @@ airflowChart:
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
-      # Override dags_folder to the writable emptyDir root (default is /opt/airflow/dags/repo/ which is read-only git-sync)
-      # Airflow will recursively scan and find DAGs in repo/ (git-synced) and dag_generated_configs/ (OpenMetadata-generated)
-      AIRFLOW__CORE__DAGS_FOLDER: "/opt/airflow/dags"
       # OpenMetadata managed APIs - writable directory for generated DAG configs (JSON)
       AIRFLOW__OPENMETADATA_AIRFLOW_APIS__DAG_GENERATED_CONFIGS: "/opt/airflow/dags/dag_generated_configs"
       # Remote logging to MinIO (S3-compatible)
@@ -81,6 +78,9 @@ airflowChart:
     name: "airflow"
 
   dags:
+    # Use the emptyDir root (writable) instead of default repo/ (read-only git-sync)
+    # Airflow scans recursively: finds DAGs in repo/ and dag_generated_configs/
+    path: /opt/airflow/dags
     persistence:
       enabled: false
     gitSync:
