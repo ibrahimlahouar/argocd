@@ -40,6 +40,10 @@ airflowChart:
           - name: dags-data
             mountPath: /opt/airflow/dags
 
+    extraEnv:
+      - name: AIRFLOW__CORE__DAGS_FOLDER
+        value: "/opt/airflow/dags"
+
     # KubernetesExecutor pod template with install-pip-packages + fix-dags-permissions
     kubernetesPodTemplate:
       stringOverride: |
