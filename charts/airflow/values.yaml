@@ -118,24 +118,136 @@ airflowChart:
     persistence:
       enabled: false
 
-  # KubernetesExecutor pod template: needs same packages as main pods
+  # KubernetesExecutor pod template with install-pip-packages + fix-dags-permissions
   kubernetesPodTemplate:
-    extraPipPackages:
-      - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
-      - "sqlparse==0.5.0"
-    extraInitContainers:
-      - name: fix-dags-permissions
-        image: busybox:1.36
-        command:
-          - sh
-          - -c
-          - |
-            chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true
-            mkdir -p /opt/airflow/dags/dag_generated_configs
-            chmod 777 /opt/airflow/dags/dag_generated_configs
-        volumeMounts:
+    stringOverride: |
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: dummy-name
+      spec:
+        restartPolicy: Never
+        serviceAccountName: airflow
+        shareProcessNamespace: false
+        securityContext:
+          fsGroup: 0
+        initContainers:
+          - name: dags-git-clone
+            image: registry.k8s.io/git-sync/git-sync:v3.6.9
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              runAsUser: 65533
+              runAsGroup: 65533
+            envFrom:
+              - secretRef:
+                  name: airflow-config-envs
+            env:
+              - name: GIT_SYNC_ONE_TIME
+                value: "true"
+              - name: GIT_SYNC_ROOT
+                value: "/dags"
+              - name: GIT_SYNC_DEST
+                value: "repo"
+              - name: GIT_SYNC_REPO
+                value: "https://github.com/ibrahimlahouar/airflow-dags.git"
+              - name: GIT_SYNC_BRANCH
+                value: "main"
+              - name: GIT_SYNC_REV
+                value: "HEAD"
+              - name: GIT_SYNC_DEPTH
+                value: "1"
+              - name: GIT_SYNC_WAIT
+                value: "60"
+              - name: GIT_SYNC_TIMEOUT
+                value: "120"
+              - name: GIT_SYNC_ADD_USER
+                value: "true"
+              - name: GIT_SYNC_MAX_SYNC_FAILURES
+                value: "0"
+              - name: GIT_SYNC_SUBMODULES
+                value: "recursive"
+              - name: GIT_KNOWN_HOSTS
+                value: "false"
+              - name: DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-shared-secrets
+                    key: airflow-password
+              - name: CONNECTION_CHECK_MAX_COUNT
+                value: "0"
+            volumeMounts:
+              - name: dags-data
+                mountPath: /dags
+          - name: install-pip-packages
+            image: docker.getcollate.io/openmetadata/ingestion:1.5.4
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              runAsUser: 50000
+              runAsGroup: 0
+            command:
+              - /bin/bash
+              - -c
+              - |
+                pip install --user \
+                  "apache-airflow-providers-amazon>=8.0.0,<9.0.0" \
+                  "sqlparse==0.5.0" && \
+                echo "Done installing pip packages."
+            envFrom:
+              - secretRef:
+                  name: airflow-config-envs
+            env:
+              - name: DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-shared-secrets
+                    key: airflow-password
+              - name: CONNECTION_CHECK_MAX_COUNT
+                value: "0"
+            volumeMounts:
+              - name: dags-data
+                mountPath: /opt/airflow/dags
+          - name: fix-dags-permissions
+            image: busybox:1.36
+            command:
+              - sh
+              - -c
+              - |
+                chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true
+                mkdir -p /opt/airflow/dags/dag_generated_configs
+                chmod 777 /opt/airflow/dags/dag_generated_configs
+            volumeMounts:
+              - name: dags-data
+                mountPath: /opt/airflow/dags
+        containers:
+          - name: base
+            image: docker.getcollate.io/openmetadata/ingestion:1.5.4
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              runAsUser: 50000
+              runAsGroup: 0
+            envFrom:
+              - secretRef:
+                  name: airflow-config-envs
+            env:
+              - name: AIRFLOW__CORE__EXECUTOR
+                value: LocalExecutor
+              - name: DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-shared-secrets
+                    key: airflow-password
+              - name: CONNECTION_CHECK_MAX_COUNT
+                value: "20"
+            volumeMounts:
+              - name: dags-data
+                mountPath: /opt/airflow/dags
+              - name: logs-data
+                mountPath: /opt/airflow/logs
+        volumes:
           - name: dags-data
-            mountPath: /opt/airflow/dags
+            emptyDir: {}
+          - name: logs-data
+            emptyDir: {}
 
   scheduler:
     logCleanup:
