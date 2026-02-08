@@ -36,7 +36,7 @@ airflowChart:
             chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true
             mkdir -p /opt/airflow/dags/dag_generated_configs
             chmod 777 /opt/airflow/dags/dag_generated_configs
-            echo '^(?!repo|dag_generated_configs).*' > /opt/airflow/dags/.airflowignore
+            echo '^[a-f0-9]{40}$' > /opt/airflow/dags/.airflowignore
         volumeMounts:
           - name: dags-data
             mountPath: /opt/airflow/dags
@@ -130,7 +130,7 @@ airflowChart:
                   mountPath: /opt/airflow/dags
                           - name: fix-dags-permissions
                             image: busybox:1.36
-                            command: ["sh", "-c", "chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true; mkdir -p /opt/airflow/dags/dag_generated_configs; chmod 777 /opt/airflow/dags/dag_generated_configs; echo '^(?!repo|dag_generated_configs).*' > /opt/airflow/dags/.airflowignore"]
+                            command: ["sh", "-c", "chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true; mkdir -p /opt/airflow/dags/dag_generated_configs; chmod 777 /opt/airflow/dags/dag_generated_configs; echo '^[a-f0-9]{40}$' > /opt/airflow/dags/.airflowignore"]
                             volumeMounts:
                               - name: dags-data
                                 mountPath: /opt/airflow/dags
