@@ -21,6 +21,9 @@ spec:
                 secretKeyRef:
                   name: postgres-shared-secrets
                   key: airflow-password
+            # Disable remote logging so this job doesn't need apache-airflow-providers-amazon
+            - name: AIRFLOW__LOGGING__REMOTE_LOGGING
+              value: "False"
           volumeMounts:
             - name: variables-file
               mountPath: /tmp/variables.json
