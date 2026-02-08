@@ -18,9 +18,9 @@ airflowChart:
       - "kubernetes>=28.1.0"
       # Needed for S3/MinIO remote logging handler
       - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
-      # OpenMetadata Managed APIs - incompatible with Airflow 2.7.3 (pendulum conflict)
-      # All versions require pendulum>=3.0 but Airflow 2.7.3 requires pendulum<3.0
-      # Use openmetadata-ingestion instead (runs outside Airflow pods)
+      # OpenMetadata Managed APIs plugin for Airflow integration
+      # v1.0.0.0 requires pendulum~=2.1.2 (compatible with Airflow 2.7.3)
+      - "openmetadata-managed-apis==1.0.0.0"
         
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
