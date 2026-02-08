@@ -22,7 +22,24 @@ airflowChart:
       - "apache-airflow-providers-amazon>=8.0.0,<9.0.0"
       # Fix collate-sqllineage requiring sqlparse<=0.5 (image has 0.5.5)
       - "sqlparse==0.5.0"
-        
+
+    # Init container (runs AFTER dags-git-clone) to:
+    # 1. Make the git-synced repo/ dir writable for OpenMetadata DAG .py deploy
+    # 2. Create dag_generated_configs/ for OpenMetadata JSON config files
+    extraInitContainers:
+      - name: fix-dags-permissions
+        image: busybox:1.36
+        command:
+          - sh
+          - -c
+          - |
+            chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true
+            mkdir -p /opt/airflow/dags/dag_generated_configs
+            chmod 777 /opt/airflow/dags/dag_generated_configs
+        volumeMounts:
+          - name: dags-data
+            mountPath: /opt/airflow/dags
+
     config:
       AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
@@ -100,23 +117,6 @@ airflowChart:
   logs:
     persistence:
       enabled: false
-
-  # Init container (runs AFTER dags-git-clone) to:
-  # 1. Make the git-synced repo/ directory writable so OpenMetadata can deploy DAG .py files
-  # 2. Create dag_generated_configs/ for OpenMetadata JSON config files
-  extraInitContainers:
-    - name: fix-dags-permissions
-      image: busybox:1.36
-      command:
-        - sh
-        - -c
-        - |
-          chmod -R 777 /opt/airflow/dags/repo/ 2>/dev/null || true
-          mkdir -p /opt/airflow/dags/dag_generated_configs
-          chmod 777 /opt/airflow/dags/dag_generated_configs
-      volumeMounts:
-        - name: dags-data
-          mountPath: /opt/airflow/dags
 
   scheduler:
     logCleanup:
